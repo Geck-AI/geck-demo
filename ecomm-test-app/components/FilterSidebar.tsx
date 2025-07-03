@@ -54,34 +54,31 @@ export default function FilterSidebar() {
         return (
           <div key={group.title} className="mb-6">
             <div className="flex items-center justify-between mb-4">
-              <span className="font-medium text-stone-900">{group.title}</span>
-              <div className="items-center gap-2 hidden md:flex">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    clearGroup();
-                  }}
-                  className="text-xs text-stone-600 hover:text-stone-900 transition-colors duration-200 cursor-pointer"
-                >
-                  Clear
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setOpenGroups((prev) => ({
-                      ...prev,
-                      [group.title]: !prev[group.title],
-                    }));
-                  }}
-                  className="text-stone-500 hover:text-stone-700"
-                >
-                  {isOpen ? (
-                    <ChevronDown size={16} />
-                  ) : (
-                    <ChevronRight size={16} />
-                  )}
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() =>
+                  setOpenGroups((prev) => ({
+                    ...prev,
+                    [group.title]: !prev[group.title],
+                  }))
+                }
+                className="flex items-center gap-2 focus:outline-none bg-transparent border-0 p-0 m-0 cursor-pointer"
+                style={{ flex: 1, textAlign: "left" }}
+              >
+                <span className="font-medium text-stone-900">{group.title}</span>
+                <span className="text-stone-500 hover:text-stone-700 ml-2">
+                  {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                </span>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  clearGroup();
+                }}
+                className="text-xs text-stone-600 hover:text-stone-900 transition-colors duration-200 cursor-pointer ml-2"
+              >
+                Clear
+              </button>
             </div>
             {isOpen && (
               <div className="space-y-2">
