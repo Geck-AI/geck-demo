@@ -23,7 +23,9 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
     (s) => s.items.find((i) => i.id === item.id)?.quantity || 0
   );
 
-  const handleAddToCart = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleAddToCart = (
+    e: React.MouseEvent<HTMLDivElement | HTMLButtonElement, MouseEvent>
+  ) => {
     e.stopPropagation();
     addItem(item.id);
   };
@@ -83,7 +85,8 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
               </div>
             </div>
           ) : (
-            <div
+            <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddToCart(e);
@@ -91,7 +94,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
               className="text-[12px] md:text-xs font-medium whitespace-nowrap text-black bg-yellow-400 hover:bg-yellow-500 px-4 py-2 rounded-sm cursor-pointer transition-colors duration-200 text-left w-fit shadow"
             >
               Add to cart
-            </div>
+            </button>
           )}
         </div>
       </div>
