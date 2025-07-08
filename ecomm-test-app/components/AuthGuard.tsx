@@ -15,8 +15,8 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
-    // Redirect to login if not authenticated and not already on login page
-    if (!token && pathname !== "/login") {
+    // Redirect to login if not authenticated and not already on login or register page
+    if (!token && pathname !== "/login" && pathname !== "/register") {
       router.push(`/login?next=${pathname}`);
     } else {
       setAuthorized(true);
