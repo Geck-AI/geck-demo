@@ -5,8 +5,8 @@ export const filterConfig = [
     items: [
       { title: "Unisex", filterValue: "Unisex" },
       { title: "Girls", filterValue: "Girls" },
-      { title: "Women", filterValue: "Women" },
       { title: "Men", filterValue: "Men" },
+      { title: "Women", filterValue: "Women" },
       { title: "Boys", filterValue: "Boys" },
     ],
   },
