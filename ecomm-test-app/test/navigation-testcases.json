@@ -1,0 +1,175 @@
+[
+  {
+    "url": "http://localhost:3005",
+    "description": "Navigate to the website and login using following credentials:\nusername: test_user_name\npassword: test_password\n\nOn the home page, verify the following:\n1. banner image loads correctly.\n2. \"Just In\" section displays 4 products\n3. Category callouts are present: Clothes, Shoes, Accessories\n4. Verify \"Offers\" section is displayed.\n5. Verify that all navigation links in the header work correctly.",
+    "createdAt": 1756969103140,
+    "testname": "Home Page Elements",
+    "projectName": "Navigation",
+    "id": "TEST-slwy7ss",
+    "generatedSteps": {
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Open a web browser and navigate to the URL: http://localhost:3005"
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Enter the username 'test_user_name' and password 'test_password' in the login fields"
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Click on the login button to log into the website"
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify that the banner image loads correctly on the home page"
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify that the 'Just In' section displays exactly 4 products"
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify that category callouts for 'Clothes', 'Shoes', and 'Accessories' are present on the home page"
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify that the 'Offers' section is displayed on the home page"
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Verify that all navigation links in the header work correctly by clicking each link and confirming the corresponding page loads"
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Take a screenshot of the completed home page test results"
+        }
+      ],
+      "stepsSummary": "Login and verify home page sections"
+    }
+  },
+  {
+    "url": "http://localhost:3005",
+    "description": "Navigate to the website and use the following credentials to login.\nusername: test_user_name\npassword: test_password\n\nNavigate to shoes sub-menu.\n\nThen click on \"The Store\" home logo and verify that user cames back to the home page.",
+    "createdAt": 1756933838304,
+    "testname": "Logo Navigation",
+    "projectName": "Navigation",
+    "id": "TEST-bdia0el",
+    "generatedSteps": {
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Open a web browser and navigate to URL: http://localhost:3005"
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Enter the username 'test_user_name' and password 'test_password' in the login form."
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Click the login button to sign in."
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Navigate to the shoes sub-menu by clicking on the shoes section."
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Click on 'The Store' home logo to navigate back to the home page."
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify that the current URL is 'http://localhost:3005' to confirm navigation back to the home page."
+        }
+      ],
+      "stepsSummary": "Login, navigate shoes submenu, and return home"
+    }
+  },
+  {
+    "url": "http://localhost:3005",
+    "description": "Login to the websiste using the following credentialss\nusername: test_user_name\npassword: test_password\n\nMake sure the homepage loads, and user is able to click on \"cart\" and see an empty cart.",
+    "createdAt": 1757030387427,
+    "testname": "Cart Navigation",
+    "projectName": "Navigation",
+    "id": "TEST-47pkjxw",
+    "generatedSteps": {
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Open a web browser and navigate to the URL: http://localhost:3005"
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Enter username 'test_user_name' and password 'test_password' in the login form, and click login."
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify that the homepage loads by checking for expected content on the home page"
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Locate the 'cart' icon or link and click it to navigate to the cart view"
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify that the cart is empty by checking for an empty cart message or a lack of items"
+        }
+      ],
+      "generatedAt": 1757030387429,
+      "stepsSummary": "Login and verify empty cart"
+    }
+  },
+  {
+    "url": "http://localhost:3005",
+    "description": "Login to the websiste using the following credentialss\nusername: test_user_name\npassword: test_password\n\nGo to shoes category, and use the following filters:\nBlack shoes for Men with max prices upto $100.\n",
+    "createdAt": 1757292836349,
+    "testname": "Category Filters",
+    "projectName": "Navigation",
+    "id": "TEST-9mwqd5g",
+    "generatedSteps": {
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Open a web browser and navigate to the URL: http://localhost:3005"
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Enter username 'test_user_name' and password 'test_password' in the login form."
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Click the login button to submit the credentials and wait for the home page to load."
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Navigate to the 'Shoes' category page by clicking on the Shoes link on the homepage."
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify that the Shoes category page loads correctly."
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "In the filter sidebar, select the 'Men' filter under the Department or Gender section."
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "In the filter sidebar, select the 'Black' filter under the Color section (may have to click on the color section to expand)"
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "In the filter sidebar, set the Maximum Price filter to 100. (may have to click on max price section to expand)"
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Wait for the filtered results to update and verify that the first product meets the filter criteria"
+        },
+        {
+          "stepNumber": 11,
+          "stepDescription": "Take a screenshot of the filtered shoes products page to confirm successful filtering."
+        }
+      ],
+      "stepsSummary": "Login and apply filters on shoes products"
+    }
+  }
+]
