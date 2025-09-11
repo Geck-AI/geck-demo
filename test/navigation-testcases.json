@@ -121,8 +121,8 @@
   },
   {
     "url": "http://localhost:3005",
-    "description": "Login to the websiste using the following credentialss\nusername: test_user_name\npassword: test_password\n\nGo to shoes category, and use the following filters:\nBlack shoes for Men with max prices upto $100.\n",
-    "createdAt": 1757292836349,
+    "description": "Login to the websiste using the following credentialss\nusername: test_user_name\npassword: test_password\n\nGo to shoes category, and use the following filters:\nBlack shoes for Men with max prices upto $100.\nVerify that the first product that shows up is of color black, and it is priced for less than $100\n",
+    "createdAt": 1757544489049,
     "testname": "Category Filters",
     "projectName": "Navigation",
     "id": "TEST-9mwqd5g",
@@ -130,46 +130,58 @@
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Open a web browser and navigate to the URL: http://localhost:3005"
+          "stepDescription": "Open a web browser and navigate to URL: http://localhost:3005"
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Enter username 'test_user_name' and password 'test_password' in the login form."
+          "stepDescription": "Enter username 'test_user_name' in the username field"
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Click the login button to submit the credentials and wait for the home page to load."
+          "stepDescription": "Enter password 'test_password' in the password field"
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Navigate to the 'Shoes' category page by clicking on the Shoes link on the homepage."
+          "stepDescription": "Click on the login button and wait for the homepage to load"
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Verify that the Shoes category page loads correctly."
+          "stepDescription": "Navigate to the 'Shoes' category from the menu or homepage"
         },
         {
           "stepNumber": 6,
-          "stepDescription": "In the filter sidebar, select the 'Men' filter under the Department or Gender section."
+          "stepDescription": "Apply the filter for color by selecting 'Black'"
         },
         {
           "stepNumber": 7,
-          "stepDescription": "In the filter sidebar, select the 'Black' filter under the Color section (may have to click on the color section to expand)"
+          "stepDescription": "Apply the filter for gender by selecting 'Men'"
         },
         {
           "stepNumber": 8,
-          "stepDescription": "In the filter sidebar, set the Maximum Price filter to 100. (may have to click on max price section to expand)"
+          "stepDescription": "Apply the filter for price by setting the maximum price to $100"
         },
         {
           "stepNumber": 9,
-          "stepDescription": "Wait for the filtered results to update and verify that the first product meets the filter criteria"
+          "stepDescription": "Scroll down the page using PageDown key if needed to load more products"
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Locate the first product displayed in the list"
         },
         {
           "stepNumber": 11,
-          "stepDescription": "Take a screenshot of the filtered shoes products page to confirm successful filtering."
+          "stepDescription": "Verify that the first product is of color black"
+        },
+        {
+          "stepNumber": 12,
+          "stepDescription": "Verify that the first product's price is less than $100"
+        },
+        {
+          "stepNumber": 13,
+          "stepDescription": "Take a screenshot of the completed task for verification"
         }
       ],
-      "stepsSummary": "Login and apply filters on shoes products"
+      "stepsSummary": "Login, filter shoes and verify product details"
     }
   }
 ]

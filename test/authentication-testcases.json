@@ -42,8 +42,8 @@
   },
   {
     "url": "http://localhost:3005",
-    "description": "Navigate to the website and use the following credentials to login. \nusername: test_user_name, password: test_password.\n\nVerify that user lands on the home page.]",
-    "createdAt": 1757142098629,
+    "description": "Navigate to the website and use the following credentials to login. \nusername: test_user_name, password: test_password.\n\nVerify user successfully logged in. ",
+    "createdAt": 1757541872303,
     "testname": "Login - valid credentials",
     "projectName": "Authentication",
     "id": "TEST-yaxmo95",
@@ -51,38 +51,26 @@
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Open a web browser and navigate to 'http://localhost:3005'."
+          "stepDescription": "Open a web browser and navigate to the URL: http://localhost:3005"
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Wait for the login page to load."
+          "stepDescription": "Enter username 'test_user_name' and password 'test_password' into the login form fields"
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Enter username 'test_user_name' into the username input field."
+          "stepDescription": "Click the login button to submit the credentials"
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Enter password 'test_password' into the password input field."
+          "stepDescription": "Verify that the user has successfully logged in by checking for the presence of a user-specific dashboard or welcome element"
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Click the login button to submit the credentials."
-        },
-        {
-          "stepNumber": 6,
-          "stepDescription": "Wait for the home page to load and verify that the user lands on the home page."
-        },
-        {
-          "stepNumber": 7,
-          "stepDescription": "Scroll down using the PageDown key to check additional content on the home page."
-        },
-        {
-          "stepNumber": 8,
-          "stepDescription": "Take a screenshot of the home page to confirm successful login and landing."
+          "stepDescription": "Take a screenshot of the completed login process and successful login page"
         }
       ],
-      "stepsSummary": "Login and verify home page navigation"
+      "stepsSummary": "Login and verify authentication"
     }
   },
   {

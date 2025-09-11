@@ -112,8 +112,8 @@
   },
   {
     "url": "http://localhost:3005",
-    "description": "Navigate to the website and login using following credentials:\nusername: test_user_name\npassword: test_password\n\nVerify that user lands the page with title \"The Store\"\nAdd to cart the first product in \"Just In\" section of the page.\nGo to cart page and verify that cart is not empty\nDelete product from the cart and verify user gets \"Your cat is empty\" message (instead of button there is SVG image represenging delete icon)\n",
-    "createdAt": 1757285741946,
+    "description": "Navigate to the website and login using following credentials:\nusername: test_user_name\npassword: test_password\n\nVerify that user lands the page with title \"The Store\"\nAdd to cart the first product in \"Just In\" section of the page.\nGo to cart page and verify that cart is not empty\nClick the delete icon (svg) to remove the item\nverify user gets \"Your cart is empty\" message\n",
+    "createdAt": 1757557208581,
     "testname": "Empty Cart",
     "projectName": "Shopping Cart",
     "id": "TEST-x36zk1h",
@@ -121,50 +121,50 @@
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Open a web browser and navigate to the URL: http://localhost:3005."
+          "stepDescription": "Open a web browser and navigate to the URL: http://localhost:3005"
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Enter username 'test_user_name' and password 'test_password' into the respective login fields."
+          "stepDescription": "Enter username 'test_user_name' and password 'test_password' in the login form"
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Click the login button to submit the credentials."
+          "stepDescription": "Click on the login button"
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Verify that the landing page displays the title 'The Store'."
+          "stepDescription": "Verify that the landing page shows the title 'The Store'"
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Scroll down using the PageDown key if necessary to view the 'Just In' section."
+          "stepDescription": "Locate the 'Just In' section on the page"
         },
         {
           "stepNumber": 6,
-          "stepDescription": "Locate the first product in the 'Just In' section and click on its 'Add to Cart' button."
+          "stepDescription": "Add the first product from the 'Just In' section to the cart"
         },
         {
           "stepNumber": 7,
-          "stepDescription": "Click on the cart icon or navigate to the cart page to view your cart."
+          "stepDescription": "Navigate to the cart page"
         },
         {
           "stepNumber": 8,
-          "stepDescription": "Verify that the cart is not empty by confirming the added product is present."
+          "stepDescription": "Verify that the cart is not empty"
         },
         {
           "stepNumber": 9,
-          "stepDescription": "Click on the delete icon (SVG image) to remove the product from the cart."
+          "stepDescription": "Click the delete icon (svg) to remove the item from the cart"
         },
         {
           "stepNumber": 10,
-          "stepDescription": "Verify that the cart displays the message 'Your cat is empty' indicating that it is now empty."
+          "stepDescription": "Verify that the message 'Your cart is empty' is displayed"
         },
         {
           "stepNumber": 11,
-          "stepDescription": "Take a screenshot of the completed task to confirm the test outcome."
+          "stepDescription": "Take a screenshot of the completed task to confirm successful test execution"
         }
       ],
-      "stepsSummary": "Login, add product, verify cart deletion"
+      "stepsSummary": "Login, add product to cart, delete product"
     }
   }
 ]

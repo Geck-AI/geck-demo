@@ -2,7 +2,7 @@
   {
     "url": "http://localhost:3005",
     "description": "Login to the websiste using the following credentialss\nusername: test_user_name\npassword: test_password\n\nVerify that \"The Store\" title is visible on the home page.\nGo to shoes category\nClick on the first item that shows up on the page.\nAdd that product to the cart.\nGo to the cart and verify that the product is in the cart.\nAdd shipping details as follows:\n   - Name: \"Amanda Kim\"\n   - Email: \"amanda.kim@example.com\"\n   - Street Address: \"123 Main Street\"\n   - City: \"Anytown\"\n   - State: \"CA\"\n   - Zipcode: \"12345\"\n5. Click \"Checkout\" button\n6. Verify redirect to order success page\n7. Verify order confirmation number is displayed.",
-    "createdAt": 1757287778214,
+    "createdAt": 1757542117101,
     "testname": "Simple Checkout",
     "projectName": "Checkout",
     "id": "TEST-0ta40sk",
@@ -27,10 +27,6 @@
         {
           "stepNumber": 5,
           "stepDescription": "Click on the 'Shoes' category from the navigation menu or category list."
-        },
-        {
-          "stepNumber": 6,
-          "stepDescription": "Press the PageDown key to scroll down and ensure the products are visible."
         },
         {
           "stepNumber": 7,
