@@ -54,8 +54,8 @@
   },
   {
     "url": "http://localhost:3005",
-    "description": "Navigate to the website and login using following credentials:\nusername: test_user_name\npassword: test_password\n\nVerify that user lands the page with title \"The Store\"\nAdd to cart the first product in \"Just In\" section of the page.\nGo to cart page and verify that price is reflected correctly.\nIncrease quality by 1 and verify that the prices adjusts accordingly.",
-    "createdAt": 1757250805481,
+    "description": "Navigate to the website and login using following credentials:\nusername: test_user_name\npassword: test_password\n\nVerify that user lands the page with title \"The Store\"\nAdd to cart the first product in \"Just In\" section of the page.\nGo to cart page and verify that price is reflected correctly.\nIncrease quality by 1 using dropdown, and verify that the prices adjusts accordingly.",
+    "createdAt": 1757657572098,
     "testname": "Cart Item Management",
     "projectName": "Shopping Cart",
     "id": "TEST-mw8lw47",
@@ -63,51 +63,50 @@
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Open a web browser and navigate to the URL: http://localhost:3005."
+          "stepDescription": "Open a web browser and navigate to the URL: http://localhost:3005"
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Enter the username 'test_user_name' and password 'test_password' in the login form."
+          "stepDescription": "Enter username 'test_user_name' and password 'test_password' into the login form fields."
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Click the login button and wait for the page to load."
+          "stepDescription": "Click the login button to log in."
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Verify that the landing page has the title 'The Store'."
+          "stepDescription": "Verify that the landing page title is 'The Store'."
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Scroll down using PageDown to bring the 'Just In' section into view."
+          "stepDescription": "Scroll down using PageDown if needed to view the 'Just In' section."
         },
         {
           "stepNumber": 6,
-          "stepDescription": "Locate the first product in the 'Just In' section and click the 'Add to Cart' button."
+          "stepDescription": "Locate the 'Just In' section and click on the 'Add to Cart' button for the first product."
         },
         {
           "stepNumber": 7,
-          "stepDescription": "Navigate to the cart page (e.g., click the cart icon or go to /cart) and wait for it to load."
+          "stepDescription": "Navigate to the cart page by clicking the cart icon or link."
         },
         {
           "stepNumber": 8,
-          "stepDescription": "Verify that the correct price of the added product is displayed in the cart."
+          "stepDescription": "Verify that the product price in the cart is displayed correctly."
         },
         {
           "stepNumber": 9,
-          "stepDescription": "Increase the product quantity by 1 using the increment (plus) button."
+          "stepDescription": "Select the quantity dropdown and increase the product quantity by 1."
         },
         {
           "stepNumber": 10,
-          "stepDescription": "Verify that the cart's total price updates accordingly based on the increased quantity."
+          "stepDescription": "Verify that the cart price adjusts accordingly after updating the quantity."
         },
         {
           "stepNumber": 11,
-          "stepDescription": "Take a screenshot of the completed cart page to document the final state."
+          "stepDescription": "Take a screenshot of the completed cart page to confirm the test was successful."
         }
       ],
-      "generatedAt": 1757250805482,
-      "stepsSummary": "Login, add product, verify price update"
+      "stepsSummary": "Login and update shopping cart"
     }
   },
   {
