@@ -42,8 +42,8 @@
   },
   {
     "url": "http://localhost:3005",
-    "description": "Navigate to the website and use the following credentials to login. \nusername: test_user_name, password: test_password.\n\nVerify user successfully logged in. ",
-    "createdAt": 1757541872303,
+    "description": "Navigate to the website and use the following credentials to login. \nusername: test_user_name, password: test_password.\n\nVerify user successfully logged in; logged in users see a banner image.",
+    "createdAt": 1758164190413,
     "testname": "Login - valid credentials",
     "projectName": "Authentication",
     "id": "TEST-yaxmo95",
@@ -55,22 +55,22 @@
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Enter username 'test_user_name' and password 'test_password' into the login form fields"
+          "stepDescription": "Enter the username 'test_user_name' and password 'test_password' into the login form fields"
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Click the login button to submit the credentials"
+          "stepDescription": "Submit the login form by clicking the login button"
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Verify that the user has successfully logged in by checking for the presence of a user-specific dashboard or welcome element"
+          "stepDescription": "Verify that the banner image is displayed to confirm successful login"
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Take a screenshot of the completed login process and successful login page"
+          "stepDescription": "Take a screenshot of the completed page to capture the logged in state with the banner image"
         }
       ],
-      "stepsSummary": "Login and verify authentication"
+      "stepsSummary": "Login and verify banner image"
     }
   },
   {

@@ -70,15 +70,15 @@
           "stepDescription": "Click the login button to sign in."
         },
         {
-          "stepNumber": 5,
+          "stepNumber": 4,
           "stepDescription": "Navigate to the shoes sub-menu by clicking on the shoes section."
         },
         {
-          "stepNumber": 6,
+          "stepNumber": 5,
           "stepDescription": "Click on 'The Store' home logo to navigate back to the home page."
         },
         {
-          "stepNumber": 7,
+          "stepNumber": 6,
           "stepDescription": "Verify that the current URL is 'http://localhost:3005' to confirm navigation back to the home page."
         }
       ],
@@ -122,7 +122,7 @@
   {
     "url": "http://localhost:3005",
     "description": "Login to the websiste using the following credentialss\nusername: test_user_name\npassword: test_password\n\nGo to shoes category, and use the following filters:\nBlack shoes for Men with max prices upto $100.\nVerify that the first product that shows up is of color black, and it is priced for less than $100\n",
-    "createdAt": 1757544489049,
+    "createdAt": 1758222860929,
     "testname": "Category Filters",
     "projectName": "Navigation",
     "id": "TEST-9mwqd5g",
@@ -161,20 +161,16 @@
           "stepDescription": "Apply the filter for price by setting the maximum price to $100"
         },
         {
-          "stepNumber": 9,
-          "stepDescription": "Scroll down the page using PageDown key if needed to load more products"
-        },
-        {
           "stepNumber": 10,
-          "stepDescription": "Locate the first product displayed in the list"
+          "stepDescription": "Click on the first product displayed in the filtered list of products."
         },
         {
           "stepNumber": 11,
-          "stepDescription": "Verify that the first product is of color black"
+          "stepDescription": "Verify that the product is of color black"
         },
         {
           "stepNumber": 12,
-          "stepDescription": "Verify that the first product's price is less than $100"
+          "stepDescription": "Verify that the product's price is less than $100"
         },
         {
           "stepNumber": 13,
