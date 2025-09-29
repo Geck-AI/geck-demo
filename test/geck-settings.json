@@ -1,10 +1,10 @@
 [
   {
     "frameworkContext": {
-      "cssFramework": "auto",
+      "cssFramework": "bootstrap",
       "domainType": "custom",
       "uiLibrary": "none",
-      "applicationContext": "Sign In/Out need to be clicked for the login form to be visible. \nAfter enterning the email address, user must click continue to see the password field. \nHome page shows text like \"Global Reach, Local Expertise\"\n",
+      "applicationContext": "Sign In/Out need to be clicked for the login form to be visible. \nAfter enterning the email address, user must click continue to see the password field. \nHome page shows text like \"Global Reach, Local Expertise\"\n\nFiltering Results: \n1. It is better to click on the icon to open options - example, click on caret,chevron, search, or arrow icon to see the option options. Clicking text would select \"all possible options\" which we don't want unless the text matches exactly.\n2. Properties or Property Sales is used interchangably. So, user can click on Property Sale on the homepage, or they can go to hamburger icon, click it, and then click on properties.\n\n",
       "technicalNotes": "",
       "enableOptimizations": true
     }

@@ -1,0 +1,67 @@
+[
+  {
+    "url": "https://www.marcusmillichap.com/",
+    "description": "Using the following credentials to Sign In\nemail address: p.s.farwaha@gmail.com\npassword: GeckDemo05\n\nMake sure user lands on the home page\n\nGo to properties, and search for multifamily appartments located in Sunnyvale.\n\nValidate that there is only one result.\n\n",
+    "createdAt": 1759167834131,
+    "testname": "Multifamily Properties in Sunnyvale",
+    "projectName": "Navigation",
+    "id": "TEST-nlk7iud",
+    "generatedSteps": {
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Open a web browser and navigate to the https://www.marcusmillichap.com/ website."
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on the Sign In/Out button to display the login form."
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Enter the email address 'p.s.farwaha@gmail.com' in the email field."
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Click the Continue button to proceed and reveal the password field."
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Enter the password 'GeckDemo05' in the password field."
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Click the Sign In button to log into the application."
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify that the home page is displayed by checking for the text 'Global Reach, Local Expertise'."
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Navigate to the Properties section by selecting the appropriate properties link or icon."
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Click on the filter or search icon within the properties section to display search options."
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Enter 'multifamily apartments' as the property type and 'Sunnyvale' as the location in the search filters."
+        },
+        {
+          "stepNumber": 11,
+          "stepDescription": "Execute the search for properties using the applied filters."
+        },
+        {
+          "stepNumber": 12,
+          "stepDescription": "Validate that the search results display exactly one property listing."
+        },
+        {
+          "stepNumber": 13,
+          "stepDescription": "Take a screenshot of the completed task to confirm the test outcome."
+        }
+      ],
+      "stepsSummary": "Login, navigate properties, search and validate result"
+    }
+  }
+]

@@ -2,46 +2,46 @@
   {
     "url": "https://www.marcusmillichap.com/",
     "description": "Using the following credentials to Sign In\nemail address: p.s.farwaha@gmail.com\npassword: GeckDemo05\n\nMake sure user lands on the home page",
-    "createdAt": 1759118301057,
+    "createdAt": 1759123366637,
     "testname": "Login",
-    "projectName": "authorization",
+    "projectName": "Authorization",
     "id": "TEST-scz2y0u",
     "generatedSteps": {
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Open the web browser and navigate to https://www.marcusmillichap.com/"
+          "stepDescription": "Open the web browser and navigate to the URL https://www.marcusmillichap.com/"
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Click on the Sign In button to display the login form"
+          "stepDescription": "Click the Sign In/Out option to reveal the login form on the page"
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Enter the email address 'p.s.farwaha@gmail.com' in the email input field"
+          "stepDescription": "Enter the email address 'p.s.farwaha@gmail.com' into the email field"
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Click the Continue button to reveal the password field"
+          "stepDescription": "Click the Continue button to display the password field"
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Fill in the password field with the password 'GeckDemo05'"
+          "stepDescription": "Enter the password 'GeckDemo05' into the password field"
         },
         {
           "stepNumber": 6,
-          "stepDescription": "Submit the login form by clicking the appropriate Sign In or Login button"
+          "stepDescription": "Submit the login form to attempt sign in"
         },
         {
           "stepNumber": 7,
-          "stepDescription": "Verify that the user lands on the home page by checking for the text 'Global Reach, Local Expertise'"
+          "stepDescription": "Verify that the home page loads by checking for the text 'Global Reach, Local Expertise'"
         },
         {
           "stepNumber": 8,
-          "stepDescription": "Take a screenshot of the completed home page to confirm the successful login"
+          "stepDescription": "Capture a screenshot of the home page to confirm successful sign in"
         }
       ],
-      "stepsSummary": "Sign in and verify home page"
+      "stepsSummary": "Authenticate and verify home page display"
     }
   }
 ]
