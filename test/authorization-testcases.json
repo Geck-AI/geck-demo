@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://www.marcusmillichap.com/",
+    "description": "Using the following credentials to Sign In\nemail address: p.s.farwaha@gmail.com\npassword: GeckDemo05\n\nMake sure user lands on the home page",
+    "createdAt": 1759118301057,
+    "testname": "Login",
+    "projectName": "authorization",
+    "id": "TEST-scz2y0u",
+    "generatedSteps": {
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Open the web browser and navigate to https://www.marcusmillichap.com/"
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on the Sign In button to display the login form"
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Enter the email address 'p.s.farwaha@gmail.com' in the email input field"
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Click the Continue button to reveal the password field"
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Fill in the password field with the password 'GeckDemo05'"
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Submit the login form by clicking the appropriate Sign In or Login button"
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify that the user lands on the home page by checking for the text 'Global Reach, Local Expertise'"
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Take a screenshot of the completed home page to confirm the successful login"
+        }
+      ],
+      "stepsSummary": "Sign in and verify home page"
+    }
+  }
+]

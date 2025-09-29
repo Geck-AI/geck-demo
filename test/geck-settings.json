@@ -1,0 +1,12 @@
+[
+  {
+    "frameworkContext": {
+      "cssFramework": "auto",
+      "domainType": "custom",
+      "uiLibrary": "none",
+      "applicationContext": "Sign In/Out need to be clicked for the login form to be visible. \nAfter enterning the email address, user must click continue to see the password field. \nHome page shows text like \"Global Reach, Local Expertise\"\n",
+      "technicalNotes": "",
+      "enableOptimizations": true
+    }
+  }
+]
