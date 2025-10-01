@@ -13,7 +13,20 @@ export async function POST(request: Request) {
 
   // Check admin credentials from env
   if (username === expectedUser && password === expectedPass) {
-    return Response.json({ token: "dummy-jwt-token" });
+    const token = "dummy-jwt-token";
+    
+    // Create response with cookie
+    const response = Response.json({ token });
+    
+    // Set cookie accessible to JavaScript (for Playwright compatibility)
+    response.headers.set(
+      'Set-Cookie',
+      `auth-token=${token}; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Strict; ${
+        process.env.NODE_ENV === 'production' ? 'Secure;' : ''
+      }`
+    );
+    
+    return response;
   }
 
   // Check users.json with password verification
@@ -24,7 +37,20 @@ export async function POST(request: Request) {
       const user = users.find((u: any) => u.username === username);
       
       if (user && password && await verifyPassword(password, user.password)) {
-        return Response.json({ token: "dummy-jwt-token" });
+        const token = "dummy-jwt-token";
+        
+        // Create response with cookie
+        const response = Response.json({ token });
+        
+        // Set cookie accessible to JavaScript (for Playwright compatibility)
+        response.headers.set(
+          'Set-Cookie',
+          `auth-token=${token}; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Strict; ${
+            process.env.NODE_ENV === 'production' ? 'Secure;' : ''
+          }`
+        );
+        
+        return response;
       }
     } catch {}
   }

@@ -1,13 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCart, Heart } from "lucide-react";
+import { ShoppingCart, Heart, LogOut } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
+import { useAuthStore } from "@/stores/authStore";
+import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
   const totalQty = useCartStore((s) =>
     s.items.reduce((acc, i) => acc + i.quantity, 0)
   );
+  const token = useAuthStore((s) => s.token);
+  const logout = useAuthStore((s) => s.logout);
+
+  const handleLogout = async () => {
+    try {
+      // Call logout API to clear server-side cookies
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch (error) {
+      console.error("Logout API call failed:", error);
+    } finally {
+      // Always clear client-side state
+      logout();
+      window.location.href = "/login";
+    }
+  };
+
   // Link to shop categories under /shop/[category]
   const navItems = [
     { label: "Just In", href: "/shop/just-in" },
@@ -52,6 +70,17 @@ export default function Navbar() {
               </span>
             )}
           </Link>
+          {token && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="flex items-center space-x-2"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Logout</span>
+            </Button>
+          )}
         </div>
       </div>
     </nav>
