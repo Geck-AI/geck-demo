@@ -1,8 +1,8 @@
 [
   {
     "url": "http://localhost:3005",
-    "description": "Navigate to the website and login using following credentials:\nusername: test_user_name\npassword: test_password\n\nVerify that user lands the page with title \"The Store\"\nGo to shoes category\nClick on the first product and verify user lands on PDP page\nAdd product to the cart.\nGo to the cart and verify that the product is there.",
-    "createdAt": 1757247086452,
+    "description": "Navigate to the website and login using following credentials:\nusername: test_user_name\npassword: test_password\n\nVerify that user lands on the home page.\nGo to shoes category\nClick on the first product and verify user lands on PDP page\nAdd product to the cart.\nGo to the cart and verify that the product is there.",
+    "createdAt": 1759713669274,
     "testname": "Add to Cart",
     "projectName": "Shopping Cart",
     "id": "TEST-frsuxdo",
@@ -10,52 +10,49 @@
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Open a web browser and navigate to the URL: http://localhost:3005"
+          "stepDescription": "Open a web browser and navigate to http://localhost:3005"
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Enter username 'test_user_name' and password 'test_password' into the respective login fields."
+          "stepDescription": "Verify that the home page is displayed after navigation"
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Click the login button to submit the credentials."
+          "stepDescription": "Select the shoes category to view relevant products"
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Verify that the landing page displays the title 'The Store'."
+          "stepDescription": "Choose the first product in the shoes category to view its details"
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Click on the 'Shoes' category from the navigation menu or category list."
+          "stepDescription": "Confirm that the Product Detail Page is properly loaded and displayed"
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Add the displayed product to the shopping cart"
         },
         {
           "stepNumber": 7,
-          "stepDescription": "Click on the first product, and verify that user lands on PDP page by verifying product name."
+          "stepDescription": "Navigate to the shopping cart page to review added items"
         },
         {
           "stepNumber": 8,
-          "stepDescription": "Click on the 'Add to Cart' button on the product detail page."
+          "stepDescription": "Verify that the shopping cart contains the added product"
         },
         {
           "stepNumber": 9,
-          "stepDescription": "Navigate to the cart page by clicking on the cart icon or link."
-        },
-        {
-          "stepNumber": 10,
-          "stepDescription": "Verify that the product added is present in the cart."
-        },
-        {
-          "stepNumber": 11,
-          "stepDescription": "Take a screenshot of the completed task to confirm successful operation."
+          "stepDescription": "Take a screenshot of the final shopping cart view to validate the test outcome"
         }
       ],
-      "stepsSummary": "Login, navigate, add product and verify cart"
-    }
+      "stepsSummary": "Navigate, select product, and verify cart"
+    },
+    "useSavedLoginState": true
   },
   {
     "url": "http://localhost:3005",
-    "description": "Navigate to the website and login using following credentials:\nusername: test_user_name\npassword: test_password\n\nVerify that user lands the page with title \"The Store\"\nAdd to cart the first product in \"Just In\" section of the page.\nGo to cart page and verify that price is reflected correctly.\nIncrease quality by 1 using dropdown, and verify that the prices adjusts accordingly.",
-    "createdAt": 1757657572098,
+    "description": "Navigate to the website and login using following credentials:\nusername: test_user_name\npassword: test_password\n\nVerify that user lands on the home page.\nAdd to cart the first product in \"Just In\" section of the page.\nGo to cart page and verify that price is reflected correctly.\nIncrease quality by 1 using dropdown, and verify that the prices adjusts accordingly.",
+    "createdAt": 1759713857043,
     "testname": "Cart Item Management",
     "projectName": "Shopping Cart",
     "id": "TEST-mw8lw47",
@@ -63,56 +60,45 @@
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Open a web browser and navigate to the URL: http://localhost:3005"
+          "stepDescription": "Open a web browser and navigate to http://localhost:3005."
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Enter username 'test_user_name' and password 'test_password' into the login form fields."
+          "stepDescription": "Confirm that the home page loads by verifying the presence of the banner image."
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Click the login button to log in."
+          "stepDescription": "Scroll to the 'Just In' section and add the first product to the cart."
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Verify that the landing page title is 'The Store'."
+          "stepDescription": "Navigate to the cart page to review the items in the cart."
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Scroll down using PageDown if needed to view the 'Just In' section."
+          "stepDescription": "Verify that the displayed price for the added product is correct on the cart page."
         },
         {
           "stepNumber": 6,
-          "stepDescription": "Locate the 'Just In' section and click on the 'Add to Cart' button for the first product."
+          "stepDescription": "Increase the product quantity by one using the dropdown option."
         },
         {
           "stepNumber": 7,
-          "stepDescription": "Navigate to the cart page by clicking the cart icon or link."
+          "stepDescription": "Confirm that the total price is recalculated correctly after increasing the quantity."
         },
         {
           "stepNumber": 8,
-          "stepDescription": "Verify that the product price in the cart is displayed correctly."
-        },
-        {
-          "stepNumber": 9,
-          "stepDescription": "Select the quantity dropdown and increase the product quantity by 1."
-        },
-        {
-          "stepNumber": 10,
-          "stepDescription": "Verify that the cart price adjusts accordingly after updating the quantity."
-        },
-        {
-          "stepNumber": 11,
-          "stepDescription": "Take a screenshot of the completed cart page to confirm the test was successful."
+          "stepDescription": "Take a screenshot of the final cart page to capture the updated pricing details."
         }
       ],
-      "stepsSummary": "Login and update shopping cart"
-    }
+      "stepsSummary": "Verify home page and cart functionality"
+    },
+    "useSavedLoginState": true
   },
   {
     "url": "http://localhost:3005",
-    "description": "Navigate to the website and login using following credentials:\nusername: test_user_name\npassword: test_password\n\nVerify that user lands the page with title \"The Store\"\nAdd to cart the first product in \"Just In\" section of the page.\nGo to cart page and verify that cart is not empty\nClick the delete icon (svg) to remove the item\nverify user gets \"Your cart is empty\" message\n",
-    "createdAt": 1757557208581,
+    "description": "Navigate to the website and login using following credentials:\nusername: test_user_name\npassword: test_password\n\nVerify that user lands on the home page.\nAdd to cart the first product in \"Just In\" section of the page.\nGo to cart page and verify that cart is not empty\nClick the delete icon (svg) to remove the item\nverify user gets \"Your cart is empty\" message\n",
+    "createdAt": 1759713885642,
     "testname": "Empty Cart",
     "projectName": "Shopping Cart",
     "id": "TEST-x36zk1h",
@@ -120,50 +106,39 @@
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Open a web browser and navigate to the URL: http://localhost:3005"
+          "stepDescription": "Open a web browser and navigate to the website at http://localhost:3005"
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Enter username 'test_user_name' and password 'test_password' in the login form"
+          "stepDescription": "Verify that the home page is displayed by confirming the presence of the banner image"
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Click on the login button"
+          "stepDescription": "Scroll to the 'Just In' section and add the first product to the shopping cart"
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Verify that the landing page shows the title 'The Store'"
+          "stepDescription": "Navigate to the cart page to review the shopping cart contents"
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Locate the 'Just In' section on the page"
+          "stepDescription": "Confirm that the cart is not empty and the added product is present"
         },
         {
           "stepNumber": 6,
-          "stepDescription": "Add the first product from the 'Just In' section to the cart"
+          "stepDescription": "Click on the delete icon to remove the item from the cart"
         },
         {
           "stepNumber": 7,
-          "stepDescription": "Navigate to the cart page"
+          "stepDescription": "Verify that the message 'Your cart is empty' is displayed after deletion"
         },
         {
           "stepNumber": 8,
-          "stepDescription": "Verify that the cart is not empty"
-        },
-        {
-          "stepNumber": 9,
-          "stepDescription": "Click the delete icon (svg) to remove the item from the cart"
-        },
-        {
-          "stepNumber": 10,
-          "stepDescription": "Verify that the message 'Your cart is empty' is displayed"
-        },
-        {
-          "stepNumber": 11,
-          "stepDescription": "Take a screenshot of the completed task to confirm successful test execution"
+          "stepDescription": "Take a screenshot of the final cart state to confirm the test completion"
         }
       ],
-      "stepsSummary": "Login, add product to cart, delete product"
-    }
+      "stepsSummary": "Home page navigation and cart item flow"
+    },
+    "useSavedLoginState": true
   }
 ]

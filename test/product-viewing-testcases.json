@@ -1,8 +1,8 @@
 [
   {
     "url": "http://localhost:3005",
-    "description": "Login to the websiste using the following credentialss\nusername: test_user_name\npassword: test_password\n\nGo to shoes category and click on the first product that shows up.\nVerify that user is directed to a product detail view page that has the following information: \n- Product image\n- Product name (productDisplayName)\n- Color information (baseColour)\n- Price in USD\n- Add to Cart button",
-    "createdAt": 1757033124121,
+    "description": "Login to the websiste using the following credentialss\nusername: test_user_name\npassword: test_password\n\nMake sure user lands on the home page.\nGo to shoes category and click on the first product that shows up.\nVerify that user is directed to a product detail view page that has the following information: \n- Product image\n- Product name (productDisplayName)\n- Color information (baseColour)\n- Price in USD\n- Add to Cart button",
+    "createdAt": 1759713212725,
     "testname": "Product Detail Page",
     "projectName": "Product Viewing",
     "id": "TEST-jm49xha",
@@ -10,49 +10,37 @@
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Open a web browser and navigate to the login page at http://localhost:3005"
+          "stepDescription": "Open a web browser and navigate to http://localhost:3005"
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Enter username 'test_user_name' and password 'test_password' in the login form, and click login."
+          "stepDescription": "Verify that the home page displays the banner image correctly"
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Locate and click on the Shoes category to view available products"
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Navigate to the shoes category page"
+          "stepDescription": "Identify and select the first product listed in the Shoes category"
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Click on the first product displayed in the shoes category"
+          "stepDescription": "Verify that the product detail view page shows the product image, product name, color information, price in USD, and an Add to Cart button"
         },
         {
           "stepNumber": 6,
-          "stepDescription": "Verify the product detail view page displays the product image"
-        },
-        {
-          "stepNumber": 7,
-          "stepDescription": "Verify the product detail view page displays the product name"
-        },
-        {
-          "stepNumber": 8,
-          "stepDescription": "Verify the product detail view page displays the color information"
-        },
-        {
-          "stepNumber": 9,
-          "stepDescription": "Verify the product detail view page displays the price in USD"
-        },
-        {
-          "stepNumber": 10,
-          "stepDescription": "Verify that there is Add to Cart button on the PDP page."
+          "stepDescription": "Take a screenshot of the product detail page to confirm the successful test completion"
         }
       ],
-      "generatedAt": 1757033124123,
-      "stepsSummary": "Login, navigate to shoes, verify details"
-    }
+      "stepsSummary": "Navigate to shoes category and verify product details"
+    },
+    "useSavedLoginState": true
   },
   {
     "url": "http://localhost:3005",
-    "description": "Login to the websiste using the following credentialss\nusername: test_user_name\npassword: test_password\n\nGo to shoes category and click on the first product that shows up.\nVerify that user is directed to a product detail view page. \nGo back to the previous page and verify that we are back in shoes category page.\nNow select the second product and verify that user can navigate again to the PDP page.",
-    "createdAt": 1757295763131,
+    "description": "Login to the websiste using the following credentialss\nusername: test_user_name\npassword: test_password\n\nOnce the homepage is loaded, go to shoes category and click on the first product that shows up.\nVerify that user is directed to a product detail view page. \nGo back to the previous page and verify that we are back in shoes category page.\nNow select the second product and verify that user can navigate again to the PDP page.",
+    "createdAt": 1759713261070,
     "testname": "PDP Back Navigation",
     "projectName": "Product Viewing",
     "id": "TEST-ob8dl2y",
@@ -60,55 +48,48 @@
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Open a web browser and navigate to the URL: http://localhost:3005"
+          "stepDescription": "Open a web browser and navigate to http://localhost:3005"
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Enter the username 'test_user_name' in the username field"
+          "stepDescription": "Wait until the homepage loads and ensure the banner image is visible"
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Enter the password 'test_password' in the password field"
+          "stepDescription": "Select the Shoes category from the available navigation options"
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Click the login button to authenticate"
+          "stepDescription": "Click on the first product displayed in the Shoes category"
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify that the product detail view page is successfully displayed"
         },
         {
           "stepNumber": 6,
-          "stepDescription": "Navigate to the shoes category page from the homepage"
+          "stepDescription": "Return to the Shoes category page using the browser back function"
         },
         {
           "stepNumber": 7,
-          "stepDescription": "Click on the first product displayed in the shoes category"
+          "stepDescription": "Confirm that the Shoes category page is visible upon navigating back"
         },
         {
           "stepNumber": 8,
-          "stepDescription": "Verify that the user is directed to the product detail view (PDP) page for the selected product"
+          "stepDescription": "Select and click on the second product displayed in the Shoes category"
         },
         {
           "stepNumber": 9,
-          "stepDescription": "Click the browser's back button to return to the shoes category page"
+          "stepDescription": "Verify that the product detail view page is shown for the second product"
         },
         {
           "stepNumber": 10,
-          "stepDescription": "Verify that the shoes category page is displayed after navigating back"
-        },
-        {
-          "stepNumber": 11,
-          "stepDescription": "Click on the second product in the shoes category"
-        },
-        {
-          "stepNumber": 12,
-          "stepDescription": "Verify that the user navigates to the PDP page for the second product"
-        },
-        {
-          "stepNumber": 13,
-          "stepDescription": "Take a screenshot of the completed task to ensure the test was successful"
+          "stepDescription": "Take a screenshot of the final product detail view to confirm the successful navigation"
         }
       ],
-      "stepsSummary": "Login, navigate shoes category, verify PDP navigation"
-    }
+      "stepsSummary": "Navigate shoes category and validate product pages"
+    },
+    "useSavedLoginState": true
   },
   {
     "url": "http://localhost:3005/product/99999",

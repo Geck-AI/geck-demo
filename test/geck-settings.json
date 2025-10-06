@@ -1,0 +1,12 @@
+[
+  {
+    "frameworkContext": {
+      "cssFramework": "auto",
+      "domainType": "custom",
+      "uiLibrary": "none",
+      "applicationContext": "When user lands on the home page, they see a banner image.",
+      "technicalNotes": "",
+      "enableOptimizations": true
+    }
+  }
+]
