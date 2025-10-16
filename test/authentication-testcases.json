@@ -108,45 +108,58 @@
     }
   },
   {
-    "id": "test_1760643152723",
+    "id": "test_1760648848240",
     "testname": "Login Form Validation Test",
     "url": "http://localhost:3005/login",
-    "description": "Test form validation on the login page by attempting to submit the form with various invalid inputs including empty fields, whitespace-only inputs, and verify that appropriate validation behavior occurs. Check that the form prevents submission with empty username, empty password, and handles whitespace inputs properly. ",
+    "description": "Test form validation on the login page by attempting to submit the form with various invalid inputs including empty fields, whitespace-only inputs, and verify that appropriate validation behavior occurs. Check that the form prevents submission with empty username, empty password, and handles whitespace inputs properly.",
     "projectName": "Authentication",
     "useSavedLoginState": false,
-    "createdAt": 1760643806017,
+    "createdAt": 1760648848241,
     "generatedSteps": {
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Open the browser and navigate to the login page at http://localhost:3005/login."
+          "stepDescription": "Open a web browser and navigate to the login page at http://localhost:3005/login."
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Verify that the login page loads correctly and that the input fields for username and password are visible."
+          "stepDescription": "Attempt to submit the login form without entering any data in the username and password fields."
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Attempt to submit the login form without entering any data in the username or password fields."
+          "stepDescription": "Verify that the login form prevents submission and displays error messages for empty username and password fields."
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Check that the form validation prevents submission and displays error messages for the empty username and password fields."
+          "stepDescription": "Clear any inputs, then enter only whitespace in the username field while leaving the password field empty, and submit the form."
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Enter whitespace-only values in the username field while leaving the password field empty, and then attempt to submit the form."
+          "stepDescription": "Confirm that the login form displays a validation error for a whitespace-only username input."
         },
         {
           "stepNumber": 6,
-          "stepDescription": "Verify that the form correctly identifies the whitespace-only input as invalid and shows appropriate validation errors."
+          "stepDescription": "Clear any inputs, then enter only whitespace in the password field while leaving the username field empty, and submit the form."
         },
         {
           "stepNumber": 7,
-          "stepDescription": "Take a screenshot of the final state of the login page to confirm that all validation messages are displayed as expected."
+          "stepDescription": "Confirm that the login form displays a validation error for a whitespace-only password input."
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Enter whitespace-only values in both username and password fields, then attempt to submit the form."
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify that the login form does not proceed with submission and that appropriate validation messages are shown for both fields."
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Take a screenshot of the login page with the displayed validation messages to confirm proper handling of invalid inputs."
         }
       ],
-      "stepsSummary": "Validate login form with invalid inputs"
+      "generatedAt": 1760648848241,
+      "stepsSummary": "Test form validation on the login page"
     }
   }
 ]
