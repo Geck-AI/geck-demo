@@ -106,5 +106,47 @@
       "generatedAt": 1756923095007,
       "stepsSummary": "Attempt login and validate failure message"
     }
+  },
+  {
+    "id": "test_1760643152723",
+    "testname": "Login Form Validation Test",
+    "url": "http://localhost:3005/login",
+    "description": "Test form validation on the login page by attempting to submit the form with various invalid inputs including empty fields, whitespace-only inputs, and verify that appropriate validation behavior occurs. Check that the form prevents submission with empty username, empty password, and handles whitespace inputs properly. ",
+    "projectName": "Authentication",
+    "useSavedLoginState": false,
+    "createdAt": 1760643806017,
+    "generatedSteps": {
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Open the browser and navigate to the login page at http://localhost:3005/login."
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Verify that the login page loads correctly and that the input fields for username and password are visible."
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Attempt to submit the login form without entering any data in the username or password fields."
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Check that the form validation prevents submission and displays error messages for the empty username and password fields."
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Enter whitespace-only values in the username field while leaving the password field empty, and then attempt to submit the form."
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify that the form correctly identifies the whitespace-only input as invalid and shows appropriate validation errors."
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Take a screenshot of the final state of the login page to confirm that all validation messages are displayed as expected."
+        }
+      ],
+      "stepsSummary": "Validate login form with invalid inputs"
+    }
   }
 ]
