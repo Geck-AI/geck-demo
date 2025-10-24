@@ -1,0 +1,42 @@
+name: GECK CLI Demo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-geck-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install GECK CLI
+      run: npm install -g @geck-ai/geck-cli
+      
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps chromium
+      
+    - name: Run GECK CLI tests
+      run: |
+        geck test \
+          --token "${{ secrets.GECK_TOKEN }}" \
+          --api-key "${{ secrets.GECK_OPENAI_API_KEY }}" \
+          --run-mode headless \
+          --browser chromium \
+          --ux-report \
+          --execution-tracing
+          
+    - name: Upload results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: geck-test-results
+        path: |
+          .geck/
+        retention-days: 7
