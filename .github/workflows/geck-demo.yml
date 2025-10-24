@@ -16,15 +16,26 @@ jobs:
       with:
         node-version: '18'
         
-    - name: Install GECK CLI
-      run: npm install -g @geck-ai/geck-cli
-      
-    - name: Install Playwright browsers
-      run: npx playwright install --with-deps chromium
+    - name: Setup GECK CLI from source
+      run: |
+        # Clone the GECK repository
+        git clone https://github.com/geck-ai/geck-plugin.git geck-cli-source
+        cd geck-cli-source
+        
+        # Install dependencies and build CLI
+        npm ci
+        npm run build:cli
+        
+        # Install Playwright browsers
+        npx playwright install --with-deps chromium
+        
+        # Make CLI executable
+        chmod +x out/cli/index.js
       
     - name: Run GECK CLI tests
       run: |
-        geck test \
+        cd geck-cli-source
+        node out/cli/index.js test \
           --token "${{ secrets.GECK_TOKEN }}" \
           --api-key "${{ secrets.GECK_OPENAI_API_KEY }}" \
           --run-mode headless \
