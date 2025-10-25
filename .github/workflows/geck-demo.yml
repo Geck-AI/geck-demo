@@ -8,28 +8,31 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout repository
+    - name: Checkout this repo (optional)
       uses: actions/checkout@v4
-      
+
+    - name: Checkout GECK CLI repository
+      uses: actions/checkout@v4
+      with:
+        repository: Geck-AI/geck-plugin   # replace with actual owner/repo
+        token: ${{ secrets.GITHUB_TOKEN }} # or PAT if cross-org
+        path: geck-cli-source
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
         
-    - name: Setup GECK CLI from source
+    - name: Build GECK CLI
       run: |
-        # Clone the GECK repository
-        git clone https://nomaan-appening:${{ secrets.GIT_TOKEN }}@github.com/Geck-AI/geck-plugin.git geck-cli-source
         cd geck-cli-source
-        
-        # Install dependencies and build CLI
         npm ci
         npm run build:cli
         
         # Install Playwright browsers
         npx playwright install --with-deps chromium
         
-        # Make CLI executable
+        # Make CLI executable (optional)
         chmod +x out/cli/index.js
       
     - name: Run GECK CLI tests
@@ -48,6 +51,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: geck-test-results
-        path: |
-          .geck/
+        path: .geck/
         retention-days: 7
