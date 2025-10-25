@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: Geck-AI/geck-plugin   # replace with actual owner/repo
-        token: ${{ secrets.GITHUB_TOKEN }} # or PAT if cross-org
+        token: ${{ secrets.GIT_PAT }} # or PAT if cross-org
         path: geck-cli-source
 
     - name: Setup Node.js
