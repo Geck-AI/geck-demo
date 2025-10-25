@@ -19,7 +19,7 @@ jobs:
     - name: Setup GECK CLI from source
       run: |
         # Clone the GECK repository
-        git clone https://"${{ secrets.GITHUB_TOKEN }}"@github.com/geck-ai/geck-plugin.git geck-cli-source
+        git clone https://nomaan-appening:${{ secrets.GITHUB_TOKEN }}@github.com/geck-ai/geck-plugin.git geck-cli-source
         cd geck-cli-source
         
         # Install dependencies and build CLI
