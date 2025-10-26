@@ -27,20 +27,17 @@ jobs:
           npm i
           npm run build:cli
 
+      - name: Install geck CLI
+        run: npm link
+
       - name: Install Playwright browsers
         run: |
           cd geck-cli-source
           npx playwright install --with-deps chromium
 
-      - name: Make CLI executable
-        run: chmod +x geck-cli-source/out/cli/index.js
-
       - name: Run GECK CLI tests
         run: |
-          cd /home/runner/work/geck-demo
-          pwd
-          ls -a
-          node geck-demo/geck-cli-source/out/cli/index.js test \
+          geck test \
             --token "${{ secrets.GECK_TOKEN }}" \
             --api-key "${{ secrets.GECK_OPENAI_API_KEY }}" \
             --run-mode headless \
