@@ -37,7 +37,7 @@ jobs:
 
       - name: Run GECK CLI tests
         run: |
-          node geck-cli-source/out/cli/index.js test \
+          node geck-cli-source/out/cli/index.js test --test-folder ../test \
             --token "${{ secrets.GECK_TOKEN }}" \
             --api-key "${{ secrets.GECK_OPENAI_API_KEY }}" \
             --run-mode headless \
