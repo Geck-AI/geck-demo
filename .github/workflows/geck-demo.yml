@@ -50,9 +50,11 @@ jobs:
       - name: Run GECK CLI tests
         working-directory: .  # This runs from your project root
         run: |
+          npm run dev 
           geck test \
             --token "${{ secrets.GECK_TOKEN }}" \
             --api-key "${{ secrets.GECK_OPENAI_API_KEY }}" \
             --run-mode headless \
             --browser chromium \
+            --ai-mode generatePlaywrightCode
 
