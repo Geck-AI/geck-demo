@@ -39,7 +39,7 @@ jobs:
 
       - name: Run GECK CLI tests
         run: |
-          geck test \
+          geck test
             --token "${{ secrets.GECK_TOKEN }}" \
             --api-key "${{ secrets.GECK_OPENAI_API_KEY }}" \
             --run-mode headless \
