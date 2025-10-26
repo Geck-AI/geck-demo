@@ -37,6 +37,7 @@ jobs:
 
       - name: Run GECK CLI tests
         run: |
+          cd ..
           pwd
           ls -a
           node geck-cli-source/out/cli/index.js test \
