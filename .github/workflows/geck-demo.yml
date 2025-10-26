@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies and build GECK CLI
         run: |
           cd geck-cli-source
-          npm ci
+          npm i
           npm run build:cli
 
       - name: Install Playwright browsers
