@@ -42,13 +42,4 @@ jobs:
             --api-key "${{ secrets.GECK_OPENAI_API_KEY }}" \
             --run-mode headless \
             --browser chromium \
-            --ux-report \
-            --execution-tracing
 
-      - name: Upload results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: geck-test-results
-          path: geck-cli-source/.geck/
-          retention-days: 7
