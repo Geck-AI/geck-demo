@@ -8,6 +8,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # STEP 1: Checkout YOUR project (where your test cases are)
+      - name: Checkout your project
+        uses: actions/checkout@v4
+        # This is YOUR repo - where your test cases live
+
+      # STEP 2: Checkout GECK CLI repository
       - name: Checkout GECK CLI repository
         uses: actions/checkout@v4
         with:
@@ -16,15 +22,17 @@ jobs:
           path: geck-cli-source
           ref: cli-changes
 
+      # STEP 3: Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
+      # STEP 4: Build and install GECK CLI
       - name: Install dependencies and build GECK CLI
         run: |
           cd geck-cli-source
-          npm i
+          npm ci
           npm run build:cli
 
       - name: Install geck CLI
@@ -32,12 +40,15 @@ jobs:
           cd geck-cli-source
           npm link
 
+      # STEP 5: Install Playwright browsers
       - name: Install Playwright browsers
         run: |
-          cd geck-cli-source
           npx playwright install --with-deps chromium
 
+      # STEP 6: Run GECK CLI tests from YOUR project directory
+      # The key is to go back to the root (your project) and run geck from there
       - name: Run GECK CLI tests
+        working-directory: .  # This runs from your project root
         run: |
           geck test \
             --token "${{ secrets.GECK_TOKEN }}" \
