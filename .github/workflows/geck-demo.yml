@@ -14,7 +14,8 @@ jobs:
     - name: Checkout GECK CLI repository
       uses: actions/checkout@v4
       with:
-        repository: geck-plugin   # replace with actual owner/repo
+        repository: Geck-AI/geck-plugin   # replace with actual owner/repo
+        branch: main
         token: ${{ secrets.GIT_PAT }} # or PAT if cross-org
         path: geck-cli-source
 
