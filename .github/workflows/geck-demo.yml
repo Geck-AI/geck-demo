@@ -6,51 +6,49 @@ on:
 jobs:
   run-geck-tests:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout this repo (optional)
-      uses: actions/checkout@v4
+      - name: Checkout GECK CLI repository
+        uses: actions/checkout@v4
+        with:
+          repository: Geck-AI/geck-plugin
+          token: ${{ secrets.GIT_PAT }}
+          path: geck-cli-source
 
-    - name: Checkout GECK CLI repository
-      uses: actions/checkout@v4
-      with:
-        repository: Geck-AI/geck-plugin   # replace with actual owner/repo
-        branch: main
-        token: ${{ secrets.GIT_PAT }} # or PAT if cross-org
-        path: geck-cli-source
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        
-    - name: Build GECK CLI
-      run: |
-        cd geck-cli-source
-        npm ci
-        npm run build:cli
-        
-        # Install Playwright browsers
-        npx playwright install --with-deps chromium
-        
-        # Make CLI executable (optional)
-        chmod +x out/cli/index.js
-      
-    - name: Run GECK CLI tests
-      run: |
-        cd geck-cli-source
-        node out/cli/index.js test \
-          --token "${{ secrets.GECK_TOKEN }}" \
-          --api-key "${{ secrets.GECK_OPENAI_API_KEY }}" \
-          --run-mode headless \
-          --browser chromium \
-          --ux-report \
-          --execution-tracing
-          
-    - name: Upload results
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: geck-test-results
-        path: .geck/
-        retention-days: 7
+      - name: Install dependencies and build GECK CLI
+        run: |
+          cd geck-cli-source
+          npm ci
+          npm run build:cli
+
+      - name: Install Playwright browsers
+        run: |
+          cd geck-cli-source
+          npx playwright install --with-deps chromium
+
+      - name: Make CLI executable
+        run: chmod +x geck-cli-source/out/cli/index.js
+
+      - name: Run GECK CLI tests
+        run: |
+          cd geck-cli-source
+          node out/cli/index.js test \
+            --token "${{ secrets.GECK_TOKEN }}" \
+            --api-key "${{ secrets.GECK_OPENAI_API_KEY }}" \
+            --run-mode headless \
+            --browser chromium \
+            --ux-report \
+            --execution-tracing
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: geck-test-results
+          path: geck-cli-source/.geck/
+          retention-days: 7
