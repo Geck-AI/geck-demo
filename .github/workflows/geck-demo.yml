@@ -14,6 +14,7 @@ jobs:
           repository: Geck-AI/geck-plugin
           token: ${{ secrets.GIT_PAT }}
           path: geck-cli-source
+          ref: cli-changes
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
