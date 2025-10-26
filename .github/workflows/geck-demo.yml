@@ -40,17 +40,29 @@ jobs:
           cd geck-cli-source
           npm link
 
-      # STEP 5: Install Playwright browsers
+      # STEP 5: Install your project dependencies
+      - name: Install project dependencies
+        run: |
+          npm ci
+
+      # STEP 6: Start your application in the background
+      - name: Start application server
+        run: |
+          npm run dev &
+          # Wait for the server to be ready
+          sleep 10
+          # Verify the server is running
+          curl -f http://localhost:3005 || exit 1
+
+      # STEP 7: Install Playwright browsers
       - name: Install Playwright browsers
         run: |
           npx playwright install --with-deps chromium
 
-      # STEP 6: Run GECK CLI tests from YOUR project directory
-      # The key is to go back to the root (your project) and run geck from there
+      # STEP 8: Run GECK CLI tests from YOUR project directory
       - name: Run GECK CLI tests
         working-directory: .  # This runs from your project root
-        run: |
-          npm run dev 
+        run: | 
           geck test \
             --token "${{ secrets.GECK_TOKEN }}" \
             --api-key "${{ secrets.GECK_OPENAI_API_KEY }}" \
