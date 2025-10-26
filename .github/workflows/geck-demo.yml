@@ -37,7 +37,7 @@ jobs:
 
       - name: Run GECK CLI tests
         run: |
-          cd geck-demo
+          pwd
           node geck-cli-source/out/cli/index.js test \
             --token "${{ secrets.GECK_TOKEN }}" \
             --api-key "${{ secrets.GECK_OPENAI_API_KEY }}" \
