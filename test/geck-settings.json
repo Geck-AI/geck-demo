@@ -1,10 +1,10 @@
 [
   {
     "frameworkContext": {
-      "cssFramework": "auto",
+      "cssFramework": "tailwind",
       "domainType": "custom",
       "uiLibrary": "none",
-      "applicationContext": "When user lands on the home page, they see a banner image.",
+      "applicationContext": "When user lands on the home page, they see a banner image.\nApplication has navigation categories like shoes, just in, offers, clothes\nAdd shipping details as follows:\n   - Name: \"Amanda Kim\"\n   - Email: \"amanda.kim@example.com\"\n   - Street Address: \"123 Main Street\"\n   - City: \"Anytown\"\n   - State: \"CA\"\n   - Zipcode: \"12345\"",
       "technicalNotes": "",
       "enableOptimizations": true
     }
