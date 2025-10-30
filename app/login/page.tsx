@@ -3,14 +3,21 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
-import { login } from "@/lib/authService";
+import { login, requestOtp, verifyOtp } from "@/lib/authService";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [mode, setMode] = useState<"password" | "otp">("password");
+  const [identifier, setIdentifier] = useState("");
+  const [otp, setOtp] = useState("");
+  const [otpRequested, setOtpRequested] = useState(false);
+  const [demoCode, setDemoCode] = useState<string | undefined>(undefined);
+  const [staticCode, setStaticCode] = useState<string | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const token = useAuthStore((s) => s.token);
@@ -20,6 +27,22 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextPath = searchParams.get("next") ?? "/";
+  const { toast } = useToast();
+
+  // signup modal state
+  const [showSignup, setShowSignup] = useState(false);
+  const [signupStep, setSignupStep] = useState<1 | 2>(1);
+  const [signup, setSignup] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    street: "",
+    city: "",
+    state: "",
+    zipcode: "",
+  });
+  const [signupErrors, setSignupErrors] = useState<Record<string, string>>({});
+  const [signupSuccess, setSignupSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     // Initialize from cookies first
@@ -50,6 +73,64 @@ export default function LoginPage() {
     }
   };
 
+  const handleRequestOtp = async () => {
+    setIsLoading(true);
+    setErrorMessage("");
+    try {
+      const res = await requestOtp(identifier);
+      setOtpRequested(true);
+      setDemoCode(res.demoCode);
+      setStaticCode(res.staticCode);
+    } catch {
+      setErrorMessage("Failed to send OTP");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    setIsLoading(true);
+    setErrorMessage("");
+    try {
+      const token = await verifyOtp(identifier, otp);
+      setToken(token);
+      router.push(nextPath);
+    } catch {
+      setErrorMessage("Invalid or expired OTP");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Real Google OAuth initiation: redirect to backend handler
+  function handleGoogleLogin() {
+    if (typeof window !== 'undefined') {
+      const width = 500, height = 600;
+      const left = window.screenX + (window.outerWidth - width) / 2;
+      const top = window.screenY + (window.outerHeight - height) / 4;
+      const popup = window.open(
+        "/api/auth/google",
+        "GoogleLogin",
+        `width=${width},height=${height},left=${left},top=${top},popup=yes`
+      );
+      if (!popup) return;
+
+      // Avoid duplicate listeners (only one at a time)
+      let finished = false;
+      function handleMsg(ev: MessageEvent) {
+        if (ev.origin !== window.location.origin) return;
+        if (ev.data === "google-auth-success" && !finished) {
+          finished = true;
+          window.removeEventListener("message", handleMsg);
+          popup.close?.();
+          // Rely on cookie/session login, reload or route
+          window.location.href = "/";
+        }
+      }
+      window.addEventListener("message", handleMsg);
+    }
+  }
+
   // Show loading while initializing
   if (!isInitialized) {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
@@ -67,30 +148,287 @@ export default function LoginPage() {
           Log into your account
         </h1>
         <Card className="w-full max-w-md p-6">
+          {/* Toggle action – prefer a single button for OTP entry */}
+          {mode === "password" ? (
+            <div className="flex justify-end mb-2">
+              <button
+                className="text-sm text-blue-600 hover:underline"
+                onClick={() => setMode("otp")}
+                disabled={isLoading}
+              >
+                Login with OTP
+              </button>
+            </div>
+          ) : (
+            <div className="flex justify-end mb-2">
+              <button
+                className="text-sm text-stone-700 hover:underline"
+                onClick={() => setMode("password")}
+                disabled={isLoading}
+              >
+                Back to password login
+              </button>
+            </div>
+          )}
           {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              disabled={isLoading}
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={isLoading}
-            />
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Logging in..." : "Login"}
-            </Button>
-          </form>
+
+          {mode === "password" ? (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <Input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                disabled={isLoading}
+              />
+              <Input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={isLoading}
+              />
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Logging in..." : "Login"}
+              </Button>
+            </form>
+          ) : (
+            <div className="space-y-4">
+              <Input
+                type="text"
+                placeholder="Email or phone"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                disabled={isLoading || otpRequested}
+              />
+              {!otpRequested ? (
+                <Button className="w-full" onClick={handleRequestOtp} disabled={isLoading || !identifier}>
+                  {isLoading ? "Sending..." : "Send OTP"}
+                </Button>
+              ) : (
+                <>
+                  {(demoCode || staticCode) && (
+                    <div className="text-xs text-stone-600 -mt-2">
+                      {demoCode ? `Demo code: ${demoCode}` : null}
+                      {staticCode ? `  •  Static code: ${staticCode}` : null}
+                    </div>
+                  )}
+                  <Input
+                    type="text"
+                    placeholder="Enter OTP"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    disabled={isLoading}
+                  />
+                  <Button className="w-full" onClick={handleVerifyOtp} disabled={isLoading || otp.length < 4}>
+                    {isLoading ? "Verifying..." : "Verify & Login"}
+                  </Button>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Google login divider */}
+          <div className="flex items-center my-6">
+            <span className="flex-1 h-px bg-stone-200" />
+            <span className="mx-3 text-xs text-stone-500">or</span>
+            <span className="flex-1 h-px bg-stone-200" />
+          </div>
+          <Button
+            variant="outline"
+            className="w-full flex items-center justify-center mb-2"
+            onClick={handleGoogleLogin}
+            disabled={isLoading}
+          >
+            {/* Ideally, use a Google icon */}
+            <svg className="w-5 h-5 mr-2" viewBox="0 0 48 48">
+              <g>
+                <path fill="#4285F4" d="M24 9.5c3.54 0 6.02 1.52 7.42 2.8l5.48-5.43C33.17 3.54 28.83 1.5 24 1.5 14.82 1.5 6.94 6.81 2.82 14.16l6.65 5.17C11.45 14.02 17.19 9.5 24 9.5z"/>
+                <path fill="#34A853" d="M46.73 24.55c0-1.81-.16-3.54-.47-5.18H24v9.8h12.83c-.55 2.9-2.23 5.36-4.74 7.07l7.25 5.65C43.6 37.24 46.73 31.48 46.73 24.55z"/>
+                <path fill="#FBBC05" d="M9.47 28.28A15.9 15.9 0 018 24c0-1.49.23-2.94.64-4.28l-6.65-5.17A23.972 23.972 0 000 24c0 3.89.93 7.57 2.56 10.83l7.1-5.55c-.04-.43-.09-.86-.09-1.34z"/>
+                <path fill="#EA4335" d="M24 46.5c6.48 0 11.91-2.14 15.87-5.83l-7.25-5.65c-2 1.36-4.53 2.17-8.62 2.17-6.81 0-12.55-4.52-14.68-10.57l-7.1 5.55C6.94 41.19 14.82 46.5 24 46.5z"/>
+                <path fill="none" d="M0 0h48v48H0z"/>
+              </g>
+            </svg>
+            Login with Google
+          </Button>
         </Card>
         <div className="mt-4 text-center text-sm">
-          New here? <a href="/register" className="text-blue-600 hover:underline">Create an account</a>
+          New here? {" "}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setShowSignup(true);
+              setSignupStep(1);
+              setSignupErrors({});
+            }}
+            className="text-blue-600 hover:underline"
+          >
+            Create an account
+          </button>
         </div>
+
+        {showSignup && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div
+              className="absolute inset-0 bg-black/40"
+              onClick={() => setShowSignup(false)}
+            />
+            <div className="relative bg-white rounded-md shadow-xl w-full max-w-lg p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold">Create your account</h2>
+                <button
+                  className="text-stone-600 hover:text-stone-900"
+                  onClick={() => setShowSignup(false)}
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="mb-3 text-sm text-stone-600">Step {signupStep} of 2</div>
+              {signupSuccess ? (
+                <div className="text-green-600 font-semibold text-center my-8 min-h-[100px] flex items-center justify-center">
+                  {signupSuccess}
+                </div>
+              ) : signupStep === 1 ? (
+                <div className="grid gap-3">
+                  <div>
+                    <label className="block text-sm mb-1">Name</label>
+                    <Input
+                      value={signup.name}
+                      onChange={(e) => setSignup((p) => ({ ...p, name: e.target.value }))}
+                      className={signupErrors.name ? "border-red-500" : ""}
+                    />
+                    {signupErrors.name && (
+                      <p className="text-xs text-red-600 mt-1">{signupErrors.name}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">Email</label>
+                    <Input
+                      type="email"
+                      value={signup.email}
+                      onChange={(e) => setSignup((p) => ({ ...p, email: e.target.value }))}
+                      className={signupErrors.email ? "border-red-500" : ""}
+                    />
+                    {signupErrors.email && (
+                      <p className="text-xs text-red-600 mt-1">{signupErrors.email}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">Phone</label>
+                    <Input
+                      value={signup.phone}
+                      onChange={(e) => setSignup((p) => ({ ...p, phone: e.target.value }))}
+                      className={signupErrors.phone ? "border-red-500" : ""}
+                    />
+                    {signupErrors.phone && (
+                      <p className="text-xs text-red-600 mt-1">{signupErrors.phone}</p>
+                    )}
+                  </div>
+                  <div className="flex justify-end gap-2 mt-2">
+                    <Button
+                      onClick={() => {
+                        const errs: Record<string, string> = {};
+                        if (!signup.name.trim()) errs.name = "Name is required";
+                        const emailOk = /.+@.+\..+/.test(signup.email);
+                        if (!signup.email.trim()) errs.email = "Email is required";
+                        else if (!emailOk) errs.email = "Enter a valid email";
+                        const phoneOk = /^[0-9+()\-\s]{7,}$/.test(signup.phone);
+                        if (!signup.phone.trim()) errs.phone = "Phone is required";
+                        else if (!phoneOk) errs.phone = "Enter a valid phone number";
+                        setSignupErrors(errs);
+                        if (Object.keys(errs).length === 0) setSignupStep(2);
+                      }}
+                    >
+                      Continue
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid gap-3">
+                  <div>
+                    <label className="block text-sm mb-1">Street Address</label>
+                    <Input
+                      value={signup.street}
+                      onChange={(e) => setSignup((p) => ({ ...p, street: e.target.value }))}
+                      className={signupErrors.street ? "border-red-500" : ""}
+                    />
+                    {signupErrors.street && (
+                      <p className="text-xs text-red-600 mt-1">{signupErrors.street}</p>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-sm mb-1">City</label>
+                      <Input
+                        value={signup.city}
+                        onChange={(e) => setSignup((p) => ({ ...p, city: e.target.value }))}
+                        className={signupErrors.city ? "border-red-500" : ""}
+                      />
+                      {signupErrors.city && (
+                        <p className="text-xs text-red-600 mt-1">{signupErrors.city}</p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm mb-1">State</label>
+                      <Input
+                        value={signup.state}
+                        onChange={(e) => setSignup((p) => ({ ...p, state: e.target.value }))}
+                        className={signupErrors.state ? "border-red-500" : ""}
+                      />
+                      {signupErrors.state && (
+                        <p className="text-xs text-red-600 mt-1">{signupErrors.state}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">Zipcode</label>
+                    <Input
+                      value={signup.zipcode}
+                      onChange={(e) => setSignup((p) => ({ ...p, zipcode: e.target.value }))}
+                      className={signupErrors.zipcode ? "border-red-500" : ""}
+                    />
+                    {signupErrors.zipcode && (
+                      <p className="text-xs text-red-600 mt-1">{signupErrors.zipcode}</p>
+                    )}
+                  </div>
+                  <div className="flex justify-between gap-2 mt-2">
+                    <Button variant="secondary" onClick={() => setSignupStep(1)}>
+                      Back
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        const errs: Record<string, string> = {};
+                        if (!signup.street.trim()) errs.street = "Street is required";
+                        if (!signup.city.trim()) errs.city = "City is required";
+                        if (!signup.state.trim()) errs.state = "State is required";
+                        const zipOk = /^[A-Za-z0-9\-\s]{3,10}$/.test(signup.zipcode);
+                        if (!signup.zipcode.trim()) errs.zipcode = "Zipcode is required";
+                        else if (!zipOk) errs.zipcode = "Enter a valid code";
+                        setSignupErrors(errs);
+                        if (Object.keys(errs).length === 0) {
+                          setSignupSuccess("Account created successfully, redirecting to home page…");
+                          toast({ title: "Account created (demo)", description: `${signup.name} • ${signup.email}` });
+                          // Set auth state (simulate logged in as demo user)
+                          import("@/stores/authStore").then(({ useAuthStore }) => {
+                            useAuthStore.getState().setToken("dummy-jwt-token");
+                          });
+                          setTimeout(() => {
+                            setShowSignup(false);
+                            setSignupSuccess(null);
+                            router.push("/");
+                          }, 1500);
+                        }
+                      }}
+                    >
+                      Create account
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -31,15 +31,79 @@ function PaymentMethod({
     name: string;
     email: string;
     streetAddress: string;
+    country: string;
     city: string;
     state: string;
     zipcode: string;
   }) => Promise<void>;
 }) {
+  const countryOptions = [
+    "United States",
+    "Canada",
+    "United Kingdom",
+    "India",
+    "Australia",
+  ];
+  const citiesByCountry: Record<string, string[]> = {
+    "United States": ["New York", "San Francisco", "Los Angeles", "Chicago"],
+    Canada: ["Toronto", "Vancouver", "Montreal", "Calgary"],
+    "United Kingdom": ["London", "Manchester", "Birmingham", "Leeds"],
+    India: ["Mumbai", "Delhi", "Bengaluru", "Chennai"],
+    Australia: ["Sydney", "Melbourne", "Brisbane", "Perth"],
+  };
+
+  function SelectField({
+    id,
+    name,
+    placeholder,
+    value,
+    onChange,
+    error,
+    countryValue,
+  }: {
+    id: string;
+    name: string;
+    placeholder: string;
+    value: string;
+    onChange: (v: string) => void;
+    error: boolean;
+    countryValue: string;
+  }) {
+    const isCountry = name === "country";
+    const options = isCountry
+      ? countryOptions
+      : countryValue && citiesByCountry[countryValue]
+      ? citiesByCountry[countryValue]
+      : [];
+    return (
+      <div className="relative">
+        <select
+          id={id}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={clsx(
+            "peer h-9 w-full cursor-pointer rounded-md border border-input bg-white px-3 pr-8 text-sm outline-none",
+            "hover:bg-accent/30 focus-visible:ring-1 focus-visible:ring-ring/50",
+            error ? "border-red-500 focus:ring-red-500" : ""
+          )}
+        >
+          <option value="" disabled>
+            {placeholder}
+          </option>
+          {options.map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  }
   const [address, setAddress] = useState<{
     name: string;
     email: string;
     streetAddress: string;
+    country: string;
     city: string;
     state: string;
     zipcode: string;
@@ -48,6 +112,7 @@ function PaymentMethod({
     name: "",
     email: "",
     streetAddress: "",
+    country: "",
     city: "",
     state: "",
     zipcode: "",
@@ -82,6 +147,11 @@ function PaymentMethod({
       placeholder: "100, Main St",
     },
     {
+      label: "Country",
+      name: "country",
+      placeholder: "Country",
+    },
+    {
       label: "City",
       name: "city",
       placeholder: "City",
@@ -109,23 +179,38 @@ function PaymentMethod({
         </span>
       </div>
       <div className="grid gap-4">
-        {fields.map(({ label, name, placeholder }) => (
-          <div className="grid gap-1" key={name}>
-            <Label htmlFor={name}>{label}</Label>
-            <Input
-              id={name}
-              placeholder={placeholder}
-              value={address[name]}
-              onChange={(e) =>
-                setAddress((p) => ({ ...p, [name]: e.target.value }))
-              }
-              className={clsx(
-                "bg-white",
-                errors[name] ? "border-red-500 focus:ring-red-500" : ""
+        {fields.map(({ label, name, placeholder }) => {
+          const isSelect = name === "country" || name === "city";
+          return (
+            <div className="grid gap-1" key={name}>
+              <Label htmlFor={name}>{label}</Label>
+              {isSelect ? (
+                <SelectField
+                  id={name}
+                  name={name}
+                  placeholder={placeholder}
+                  value={address[name]}
+                  onChange={(v) => setAddress((p) => ({ ...p, [name]: v }))}
+                  error={!!errors[name]}
+                  countryValue={address["country"]}
+                />
+              ) : (
+                <Input
+                  id={name}
+                  placeholder={placeholder}
+                  value={address[name]}
+                  onChange={(e) =>
+                    setAddress((p) => ({ ...p, [name]: e.target.value }))
+                  }
+                  className={clsx(
+                    "bg-white",
+                    errors[name] ? "border-red-500 focus:ring-red-500" : ""
+                  )}
+                />
               )}
-            />
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </div>
       <Button className="w-full mt-2" onClick={validateAndCheckout}>
         Checkout
@@ -181,6 +266,7 @@ export default function CartView() {
     name: string;
     email: string;
     streetAddress: string;
+    country: string;
     city: string;
     state: string;
     zipcode: string;

@@ -2,6 +2,11 @@ import fs from "fs";
 import path from "path";
 import { verifyPassword } from "@/lib/authUtils";
 
+interface User {
+  username: string;
+  password: string;
+}
+
 export async function POST(request: Request) {
   const { username, password } = (await request.json()) as {
     username?: string;
@@ -34,7 +39,7 @@ export async function POST(request: Request) {
   if (fs.existsSync(USERS_PATH)) {
     try {
       const users = JSON.parse(fs.readFileSync(USERS_PATH, "utf-8"));
-      const user = users.find((u: any) => u.username === username);
+      const user = (users as User[]).find((u) => u.username === username);
       
       if (user && password && await verifyPassword(password, user.password)) {
         const token = "dummy-jwt-token";
