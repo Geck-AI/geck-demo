@@ -1,8 +1,42 @@
 import { NextRequest, NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID!;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET!;
 const REDIRECT_URI = "http://localhost:3005/api/auth/google/callback";
+const USERS_PATH = path.join(process.cwd(), "public", "data", "users.json");
+
+// Helper function to decode JWT payload (simple base64url decode)
+function decodeJWTPayload(token: string): any {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    
+    const payload = parts[1];
+    // Base64URL decode
+    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = base64 + "=".repeat((4 - (base64.length % 4)) % 4);
+    const decoded = Buffer.from(padded, "base64").toString("utf-8");
+    return JSON.parse(decoded);
+  } catch {
+    return null;
+  }
+}
+
+function readUsers() {
+  if (!fs.existsSync(USERS_PATH)) return [];
+  try {
+    const raw = fs.readFileSync(USERS_PATH, "utf-8");
+    return JSON.parse(raw);
+  } catch {
+    return [];
+  }
+}
+
+function writeUsers(users: any[]) {
+  fs.writeFileSync(USERS_PATH, JSON.stringify(users, null, 2));
+}
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -26,12 +60,86 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect("/login?error=token_exchange_failed");
   }
   const tokenData = await tokenRes.json();
-  const {  id_token } = tokenData;
+  const { id_token, access_token } = tokenData;
 
-  // Step 3: Fetch user info (optional, mostly for demo)
-  // (Optional: Fetch user info using access_token here if needed for your own logic)
+  // Step 3: Decode ID token to get user info
+  let userInfo: { email?: string; name?: string; picture?: string; sub?: string } = {};
+  
+  if (id_token) {
+    const decoded = decodeJWTPayload(id_token);
+    if (decoded) {
+      userInfo = {
+        email: decoded.email,
+        name: decoded.name || decoded.given_name || "Google User",
+        picture: decoded.picture,
+        sub: decoded.sub,
+      };
+    }
+  }
 
-  // Step 4: Set cookie and show popup-close script to post message and close
+  // Fallback: Fetch user info using access token if ID token decode failed
+  if (!userInfo.email && access_token) {
+    try {
+      const userRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+        headers: { Authorization: `Bearer ${access_token}` }
+      });
+      if (userRes.ok) {
+        const userData = await userRes.json();
+        userInfo = {
+          email: userData.email,
+          name: userData.name || userData.given_name || "Google User",
+          picture: userData.picture,
+          sub: userData.id,
+        };
+      }
+    } catch (error) {
+      console.error("Failed to fetch user info:", error);
+    }
+  }
+
+  // Step 4: Save or update user in users.json
+  if (userInfo.email) {
+    const users = readUsers();
+    const existingUserIndex = users.findIndex(
+      (u: any) => u.email?.toLowerCase() === userInfo.email?.toLowerCase() || 
+                  u.username?.toLowerCase() === userInfo.email?.toLowerCase()
+    );
+
+    if (existingUserIndex >= 0) {
+      // User exists, update Google info if needed
+      const existingUser = users[existingUserIndex];
+      if (!existingUser.googleId) {
+        users[existingUserIndex] = {
+          ...existingUser,
+          googleId: userInfo.sub,
+          googlePicture: userInfo.picture,
+          lastLogin: new Date().toISOString(),
+        };
+        writeUsers(users);
+      } else {
+        // Update last login
+        users[existingUserIndex].lastLogin = new Date().toISOString();
+        writeUsers(users);
+      }
+    } else {
+      // New user from Google, create entry
+      const newUser = {
+        username: userInfo.email,
+        email: userInfo.email,
+        name: userInfo.name || "Google User",
+        password: "", // No password for Google users
+        googleId: userInfo.sub,
+        googlePicture: userInfo.picture,
+        createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
+        authProvider: "google",
+      };
+      users.push(newUser);
+      writeUsers(users);
+    }
+  }
+
+  // Step 5: Set cookie and show popup-close script to post message and close
   const jwt = id_token || "dummy-jwt-token";
   const html = `
 <html><body><script>

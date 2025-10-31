@@ -2,5 +2,30 @@
   {
     "username": "test_user_name",
     "password": "$2b$12$xJ087.ajbVu4varhNJqr7.9fzEfcftCDO8gvr6nMz.cK3EqxMtb4K"
+  },
+  {
+    "username": "mukesh@appening.xyz",
+    "password": "$2b$12$KBWMfWDqeGQU69Cdzac3HO5AUdgEkqQ8CHZnyR45qH8IIdGuHjhn.",
+    "name": "Mukesh",
+    "email": "mukesh@appening.xyz",
+    "phone": "9310099270",
+    "address": {
+      "street": "MG Road",
+      "city": "Bhiwadi",
+      "state": "Rajasthan",
+      "zipcode": "301019"
+    },
+    "createdAt": "2025-10-31T11:13:59.344Z"
+  },
+  {
+    "username": "mkverma541@gmail.com",
+    "email": "mkverma541@gmail.com",
+    "name": "Mukesh Verma",
+    "password": "",
+    "googleId": "116857810406863829583",
+    "googlePicture": "https://lh3.googleusercontent.com/a/ACg8ocJmvxNTGQC6SWPdfRHXt_g6qnn3a6IXRLZTSuvTth9MIdVrf6c=s96-c",
+    "createdAt": "2025-10-31T11:24:10.300Z",
+    "lastLogin": "2025-10-31T11:24:10.300Z",
+    "authProvider": "google"
   }
 ]

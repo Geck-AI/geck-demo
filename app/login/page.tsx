@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
-import { login, requestOtp, verifyOtp } from "@/lib/authService";
+import { login, requestOtp, verifyOtp, register } from "@/lib/authService";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -16,8 +16,6 @@ export default function LoginPage() {
   const [identifier, setIdentifier] = useState("");
   const [otp, setOtp] = useState("");
   const [otpRequested, setOtpRequested] = useState(false);
-  const [demoCode, setDemoCode] = useState<string | undefined>(undefined);
-  const [staticCode, setStaticCode] = useState<string | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const token = useAuthStore((s) => s.token);
@@ -31,7 +29,7 @@ export default function LoginPage() {
 
   // signup modal state
   const [showSignup, setShowSignup] = useState(false);
-  const [signupStep, setSignupStep] = useState<1 | 2>(1);
+  const [signupStep, setSignupStep] = useState<1 | 2 | 3>(1);
   const [signup, setSignup] = useState({
     name: "",
     email: "",
@@ -40,6 +38,8 @@ export default function LoginPage() {
     city: "",
     state: "",
     zipcode: "",
+    password: "",
+    confirmedPassword: "",
   });
   const [signupErrors, setSignupErrors] = useState<Record<string, string>>({});
   const [signupSuccess, setSignupSuccess] = useState<string | null>(null);
@@ -66,8 +66,13 @@ export default function LoginPage() {
       const token = await login(username, password);
       setToken(token);
       router.push(nextPath);
-    } catch {
-      setErrorMessage("Invalid username or password");
+    } catch (error) {
+      // Try to extract error message from API response
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("Login failed. Please check your credentials and try again.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -77,12 +82,15 @@ export default function LoginPage() {
     setIsLoading(true);
     setErrorMessage("");
     try {
-      const res = await requestOtp(identifier);
+      await requestOtp(identifier);
       setOtpRequested(true);
-      setDemoCode(res.demoCode);
-      setStaticCode(res.staticCode);
-    } catch {
-      setErrorMessage("Failed to send OTP");
+      toast({ title: "OTP sent", description: "Please check your email or phone for the OTP code." });
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("Failed to send OTP. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -95,8 +103,12 @@ export default function LoginPage() {
       const token = await verifyOtp(identifier, otp);
       setToken(token);
       router.push(nextPath);
-    } catch {
-      setErrorMessage("Invalid or expired OTP");
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("Invalid or expired OTP. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -207,12 +219,9 @@ export default function LoginPage() {
                 </Button>
               ) : (
                 <>
-                  {(demoCode || staticCode) && (
-                    <div className="text-xs text-stone-600 -mt-2">
-                      {demoCode ? `Demo code: ${demoCode}` : null}
-                      {staticCode ? `  •  Static code: ${staticCode}` : null}
-                    </div>
-                  )}
+                  <div className="text-xs text-stone-600 mb-2">
+                    Enter the OTP code sent to your email or phone.
+                  </div>
                   <Input
                     type="text"
                     placeholder="Enter OTP"
@@ -223,6 +232,17 @@ export default function LoginPage() {
                   <Button className="w-full" onClick={handleVerifyOtp} disabled={isLoading || otp.length < 4}>
                     {isLoading ? "Verifying..." : "Verify & Login"}
                   </Button>
+                  <button
+                    className="text-sm text-blue-600 hover:underline mt-2"
+                    onClick={() => {
+                      setOtpRequested(false);
+                      setOtp("");
+                      setErrorMessage("");
+                    }}
+                    disabled={isLoading}
+                  >
+                    Request new OTP
+                  </button>
                 </>
               )}
             </div>
@@ -261,6 +281,19 @@ export default function LoginPage() {
               setShowSignup(true);
               setSignupStep(1);
               setSignupErrors({});
+              setSignupSuccess(null);
+              // Reset form data
+              setSignup({
+                name: "",
+                email: "",
+                phone: "",
+                street: "",
+                city: "",
+                state: "",
+                zipcode: "",
+                password: "",
+                confirmedPassword: "",
+              });
             }}
             className="text-blue-600 hover:underline"
           >
@@ -284,7 +317,7 @@ export default function LoginPage() {
                   ✕
                 </button>
               </div>
-              <div className="mb-3 text-sm text-stone-600">Step {signupStep} of 2</div>
+              <div className="mb-3 text-sm text-stone-600">Step {signupStep} of 3</div>
               {signupSuccess ? (
                 <div className="text-green-600 font-semibold text-center my-8 min-h-[100px] flex items-center justify-center">
                   {signupSuccess}
@@ -344,7 +377,7 @@ export default function LoginPage() {
                     </Button>
                   </div>
                 </div>
-              ) : (
+              ) : signupStep === 2 ? (
                 <div className="grid gap-3">
                   <div>
                     <label className="block text-sm mb-1">Street Address</label>
@@ -406,22 +439,102 @@ export default function LoginPage() {
                         if (!signup.zipcode.trim()) errs.zipcode = "Zipcode is required";
                         else if (!zipOk) errs.zipcode = "Enter a valid code";
                         setSignupErrors(errs);
-                        if (Object.keys(errs).length === 0) {
-                          setSignupSuccess("Account created successfully, redirecting to home page…");
-                          toast({ title: "Account created (demo)", description: `${signup.name} • ${signup.email}` });
-                          // Set auth state (simulate logged in as demo user)
-                          import("@/stores/authStore").then(({ useAuthStore }) => {
-                            useAuthStore.getState().setToken("dummy-jwt-token");
-                          });
-                          setTimeout(() => {
-                            setShowSignup(false);
-                            setSignupSuccess(null);
-                            router.push("/");
-                          }, 1500);
-                        }
+                        if (Object.keys(errs).length === 0) setSignupStep(3);
                       }}
                     >
-                      Create account
+                      Continue
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid gap-3">
+                  <div>
+                    <label className="block text-sm mb-1">Password</label>
+                    <Input
+                      type="password"
+                      value={signup.password}
+                      onChange={(e) => setSignup((p) => ({ ...p, password: e.target.value }))}
+                      className={signupErrors.password ? "border-red-500" : ""}
+                    />
+                    {signupErrors.password && (
+                      <p className="text-xs text-red-600 mt-1">{signupErrors.password}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">Confirm Password</label>
+                    <Input
+                      type="password"
+                      value={signup.confirmedPassword}
+                      onChange={(e) => setSignup((p) => ({ ...p, confirmedPassword: e.target.value }))}
+                      className={signupErrors.confirmedPassword ? "border-red-500" : ""}
+                    />
+                    {signupErrors.confirmedPassword && (
+                      <p className="text-xs text-red-600 mt-1">{signupErrors.confirmedPassword}</p>
+                    )}
+                  </div>
+                  <div className="flex justify-between gap-2 mt-2">
+                    <Button variant="secondary" onClick={() => setSignupStep(2)}>
+                      Back
+                    </Button>
+                    <Button
+                      onClick={async () => {
+                        const errs: Record<string, string> = {};
+                        if (!signup.password.trim()) errs.password = "Password is required";
+                        else if (signup.password.length < 6) errs.password = "Password must be at least 6 characters";
+                        if (!signup.confirmedPassword.trim()) errs.confirmedPassword = "Please confirm your password";
+                        else if (signup.password !== signup.confirmedPassword) errs.confirmedPassword = "Passwords do not match";
+                        setSignupErrors(errs);
+                        if (Object.keys(errs).length === 0) {
+                          setIsLoading(true);
+                          try {
+                            // Register the user
+                            await register({
+                              name: signup.name,
+                              email: signup.email,
+                              phone: signup.phone,
+                              street: signup.street,
+                              city: signup.city,
+                              state: signup.state,
+                              zipcode: signup.zipcode,
+                              password: signup.password,
+                            });
+                            
+                            // Automatically log in the user after registration
+                            try {
+                              const token = await login(signup.email, signup.password);
+                              setToken(token);
+                              setSignupSuccess("Account created successfully, redirecting to home page…");
+                              toast({ title: "Account created", description: `${signup.name} • ${signup.email}` });
+                              setTimeout(() => {
+                                setShowSignup(false);
+                                setSignupSuccess(null);
+                                router.push("/");
+                              }, 1500);
+                            } catch {
+                              // Registration succeeded but login failed - still show success but ask to login
+                              setSignupSuccess("Account created successfully! Please log in.");
+                              toast({ title: "Account created", description: "Please log in with your credentials" });
+                              setTimeout(() => {
+                                setShowSignup(false);
+                                setSignupSuccess(null);
+                              }, 2000);
+                            }
+                          } catch (error) {
+                            const errorMessage = error instanceof Error ? error.message : "Registration failed";
+                            if (errorMessage.includes("already exists")) {
+                              setSignupErrors({ email: "This email is already registered" });
+                            } else {
+                              setSignupErrors({ password: errorMessage });
+                            }
+                            toast({ title: "Registration failed", description: errorMessage, variant: "destructive" });
+                          } finally {
+                            setIsLoading(false);
+                          }
+                        }
+                      }}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Creating account..." : "Create account"}
                     </Button>
                   </div>
                 </div>

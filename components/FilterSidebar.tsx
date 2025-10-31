@@ -149,7 +149,6 @@ export default function FilterSidebar() {
                                         type="button"
                                         onClick={() => {
                                           toggleFilter({ key, value: item.filterValue });
-                                          setColorPickerOpen(false);
                                         }}
                                         className={`w-full flex items-center gap-3 px-2 py-1.5 rounded hover:bg-stone-50 text-left ${
                                           isSelected ? "bg-stone-50" : ""
@@ -193,7 +192,8 @@ export default function FilterSidebar() {
                     })()}
                   </div>
                 )}
-                {group.items.map((item) => {
+                {/* Skip checkbox list for Color and Max Price groups since they have custom UI */}
+                {group.title !== "Color" && group.title !== "Max Price" && group.items.map((item) => {
                   const key = group.filterKey as keyof StyleFilters;
                   const filterList = (filters as unknown as StyleFilters)[key];
                   const checked =

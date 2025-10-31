@@ -19,21 +19,65 @@ function writeUsers(users: any[]) {
   fs.writeFileSync(USERS_PATH, JSON.stringify(users, null, 2));
 }
 
+interface UserData {
+  name: string;
+  email: string;
+  phone: string;
+  street: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  password: string;
+}
+
 export async function POST(request: Request) {
-  const { username, password } = await request.json();
-  if (!username || !password) {
-    return NextResponse.json({ error: "Username and password required" }, { status: 400 });
+  const data: UserData = await request.json();
+  const { name, email, phone, street, city, state, zipcode, password } = data;
+  
+  // Validate required fields
+  if (!name || !email || !phone || !street || !city || !state || !zipcode || !password) {
+    return NextResponse.json({ error: "All fields are required" }, { status: 400 });
+  }
+  
+  // Validate email format
+  const emailRegex = /.+@.+\..+/;
+  if (!emailRegex.test(email)) {
+    return NextResponse.json({ error: "Invalid email format" }, { status: 400 });
+  }
+  
+  // Validate password length
+  if (password.length < 6) {
+    return NextResponse.json({ error: "Password must be at least 6 characters" }, { status: 400 });
   }
   
   const users = readUsers();
-  if (users.some((u: any) => u.username === username)) {
-    return NextResponse.json({ error: "Username already exists" }, { status: 409 });
+  
+  // Check if email (username) already exists
+  if (users.some((u: any) => u.username === email || u.email === email)) {
+    return NextResponse.json({ error: "Email already exists" }, { status: 409 });
   }
   
   // Hash the password before storing
   const hashedPassword = await hashPassword(password);
-  users.push({ username, password: hashedPassword });
+  
+  // Create user object with all information
+  const newUser = {
+    username: email, // Use email as username for login
+    password: hashedPassword,
+    name,
+    email,
+    phone,
+    address: {
+      street,
+      city,
+      state,
+      zipcode,
+    },
+    createdAt: new Date().toISOString(),
+  };
+  
+  users.push(newUser);
   writeUsers(users);
   
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ success: true, user: { name, email } });
 } 
