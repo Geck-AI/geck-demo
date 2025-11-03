@@ -27,5 +27,33 @@
     "createdAt": "2025-10-31T11:24:10.300Z",
     "lastLogin": "2025-10-31T11:24:10.300Z",
     "authProvider": "google"
+  },
+  {
+    "username": "john@gmail.com",
+    "password": "$2b$12$DHvf18rdxfIy22ArvaqLJuguAKQJyYub3Bu.u3RL4nGbMzGOEsZNi",
+    "name": "John Dee",
+    "email": "john@gmail.com",
+    "phone": "939313343",
+    "address": {
+      "street": "MG Road",
+      "city": "Norway",
+      "state": "Norway",
+      "zipcode": "56444"
+    },
+    "createdAt": "2025-11-03T03:55:00.826Z"
+  },
+  {
+    "username": "test@yopmail.com",
+    "password": "$2b$12$OST2MEjMzQRBcUThqqid0eV4pb8ILs7Dyg2gJZ9fAoSTetp/OthHe",
+    "name": "John dee",
+    "email": "test@yopmail.com",
+    "phone": "93847363",
+    "address": {
+      "street": "Nio",
+      "city": "Norway",
+      "state": "State",
+      "zipcode": "334534"
+    },
+    "createdAt": "2025-11-03T03:56:59.655Z"
   }
 ]

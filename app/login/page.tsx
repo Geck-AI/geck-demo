@@ -499,26 +499,18 @@ export default function LoginPage() {
                               password: signup.password,
                             });
                             
-                            // Automatically log in the user after registration
-                            try {
-                              const token = await login(signup.email, signup.password);
-                              setToken(token);
-                              setSignupSuccess("Account created successfully, redirecting to home page…");
-                              toast({ title: "Account created", description: `${signup.name} • ${signup.email}` });
-                              setTimeout(() => {
-                                setShowSignup(false);
-                                setSignupSuccess(null);
-                                router.push("/");
-                              }, 1500);
-                            } catch {
-                              // Registration succeeded but login failed - still show success but ask to login
-                              setSignupSuccess("Account created successfully! Please log in.");
-                              toast({ title: "Account created", description: "Please log in with your credentials" });
-                              setTimeout(() => {
-                                setShowSignup(false);
-                                setSignupSuccess(null);
-                              }, 2000);
-                            }
+                            // Show success message and close modal for user to sign in
+                            setSignupSuccess("Account created successfully! Please sign in with your credentials.");
+                            toast({ 
+                              title: "Account created", 
+                              description: `Welcome ${signup.name}! Please sign in to continue.` 
+                            });
+                            setTimeout(() => {
+                              setShowSignup(false);
+                              setSignupSuccess(null);
+                              // Pre-fill the email in the login form
+                              setUsername(signup.email);
+                            }, 2000);
                           } catch (error) {
                             const errorMessage = error instanceof Error ? error.message : "Registration failed";
                             if (errorMessage.includes("already exists")) {
