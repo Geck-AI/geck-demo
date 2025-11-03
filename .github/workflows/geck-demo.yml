@@ -72,6 +72,7 @@ jobs:
             --run-mode headless \
             --browser chromium \
             --ai-mode generatePlaywrightCode
+            --ci
 
       # STEP 9: Upload test reports as artifacts
       - name: Upload test reports as artifacts
