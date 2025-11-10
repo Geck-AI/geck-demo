@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 import { getAuthToken, setAuthToken, removeAuthToken, areCookiesAvailable } from "@/lib/cookieUtils";
+import { getSafeStorage } from "@/lib/safeStorage";
 
 interface AuthState {
   token: string | null;
@@ -50,6 +51,7 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "auth",
       // Don't use onRehydrateStorage as it conflicts with cookie initialization
+      storage: createJSONStorage(getSafeStorage),
       partialize: (state) => ({ token: state.token }),
     }
   )

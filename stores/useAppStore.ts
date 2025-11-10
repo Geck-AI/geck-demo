@@ -1,8 +1,9 @@
 // src/store/useAppStore.ts
 import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { devtools, persist, createJSONStorage } from "zustand/middleware";
 import { fetchAllStyles } from "@/lib/styleService";
 import { StyleItem } from "./stylesStore";
+import { getSafeStorage } from "@/lib/safeStorage";
 
 export interface OrderItem {
   id: number;
@@ -76,6 +77,7 @@ export const useAppStore = create<AppState>()(
       {
         name: "app-storage",
         /* Persist only what really matters across sessions */
+        storage: createJSONStorage(getSafeStorage),
         partialize: (s) => ({
           token: s.token,
           orders: s.orders,
