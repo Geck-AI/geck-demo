@@ -5,6 +5,7 @@ import { verifyPassword } from "@/lib/authUtils";
 interface User {
   username: string;
   password: string;
+  email?: string;
 }
 
 export async function POST(request: Request) {
@@ -71,6 +72,7 @@ export async function POST(request: Request) {
       return Response.json({ error: "Incorrect password. Please try again." }, { status: 401 });
     }
   } catch (error) {
+    console.error("Login failed:", error);
     return Response.json({ error: "Login failed. Please try again." }, { status: 500 });
   }
 }

@@ -5,17 +5,36 @@ import { hashPassword } from "@/lib/authUtils";
 
 const USERS_PATH = path.join(process.cwd(), "public", "data", "users.json");
 
-function readUsers() {
+interface StoredUser {
+  username?: string;
+  email?: string;
+  password?: string;
+  name?: string;
+  phone?: string;
+  address?: Record<string, unknown>;
+  createdAt?: string;
+  [key: string]: unknown;
+}
+
+function isStoredUser(value: unknown): value is StoredUser {
+  return typeof value === "object" && value !== null;
+}
+
+function readUsers(): StoredUser[] {
   if (!fs.existsSync(USERS_PATH)) return [];
   const raw = fs.readFileSync(USERS_PATH, "utf-8");
   try {
-    return JSON.parse(raw);
+    const parsed: unknown = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed.filter(isStoredUser);
+    }
   } catch {
-    return [];
+    // Ignore parse errors and fall through to return empty array
   }
+  return [];
 }
 
-function writeUsers(users: any[]) {
+function writeUsers(users: StoredUser[]) {
   fs.writeFileSync(USERS_PATH, JSON.stringify(users, null, 2));
 }
 
@@ -53,7 +72,13 @@ export async function POST(request: Request) {
   const users = readUsers();
   
   // Check if email (username) already exists
-  if (users.some((u: any) => u.username === email || u.email === email)) {
+  if (
+    users.some(
+      (u) =>
+        (typeof u.username === "string" && u.username === email) ||
+        (typeof u.email === "string" && u.email === email)
+    )
+  ) {
     return NextResponse.json({ error: "Email already exists" }, { status: 409 });
   }
   

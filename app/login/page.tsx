@@ -126,6 +126,7 @@ export default function LoginPage() {
         `width=${width},height=${height},left=${left},top=${top},popup=yes`
       );
       if (!popup) return;
+      const popupRef = popup;
 
       // Avoid duplicate listeners (only one at a time)
       let finished = false;
@@ -134,7 +135,7 @@ export default function LoginPage() {
         if (ev.data === "google-auth-success" && !finished) {
           finished = true;
           window.removeEventListener("message", handleMsg);
-          popup.close?.();
+          popupRef.close?.();
           // Rely on cookie/session login, reload or route
           window.location.href = "/";
         }

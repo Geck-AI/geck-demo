@@ -2,6 +2,17 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
+interface StoredUser {
+  email?: string;
+  phone?: string;
+  username?: string;
+  [key: string]: unknown;
+}
+
+function isStoredUser(value: unknown): value is StoredUser {
+  return typeof value === "object" && value !== null;
+}
+
 // Simple in-memory OTP store
 declare global {
   var __otpStore: Map<string, { code: string; expiresAt: number }> | undefined;
@@ -21,18 +32,31 @@ function isUserRegistered(identifier: string): boolean {
   }
 
   try {
-    const users = JSON.parse(fs.readFileSync(USERS_PATH, "utf-8"));
+    const raw: unknown = JSON.parse(fs.readFileSync(USERS_PATH, "utf-8"));
+    if (!Array.isArray(raw)) {
+      return false;
+    }
     const normalizedIdentifier = identifier.trim().toLowerCase();
-    
+    const normalizedPhone = identifier.trim();
+
     // Check if identifier matches email or phone of any user
-    return users.some((u: any) => {
-      const email = (u.email || "").trim().toLowerCase();
-      const phone = (u.phone || "").trim();
-      const username = (u.username || "").trim().toLowerCase();
-      
-      return email === normalizedIdentifier || 
-             phone === identifier.trim() || 
-             username === normalizedIdentifier;
+    return raw.some((entry) => {
+      if (!isStoredUser(entry)) {
+        return false;
+      }
+      const email =
+        typeof entry.email === "string" ? entry.email.trim().toLowerCase() : "";
+      const phone = typeof entry.phone === "string" ? entry.phone.trim() : "";
+      const username =
+        typeof entry.username === "string"
+          ? entry.username.trim().toLowerCase()
+          : "";
+
+      return (
+        email === normalizedIdentifier ||
+        phone === normalizedPhone ||
+        username === normalizedIdentifier
+      );
     });
   } catch (error) {
     console.error("Error reading users.json:", error);

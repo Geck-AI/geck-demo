@@ -7,34 +7,81 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET!;
 const REDIRECT_URI = "http://localhost:3005/api/auth/google/callback";
 const USERS_PATH = path.join(process.cwd(), "public", "data", "users.json");
 
-// Helper function to decode JWT payload (simple base64url decode)
-function decodeJWTPayload(token: string): any {
+interface GoogleJwtPayload {
+  email?: string;
+  name?: string;
+  given_name?: string;
+  picture?: string;
+  sub?: string;
+  id?: string;
+  [key: string]: unknown;
+}
+
+interface GoogleTokenResponse {
+  access_token?: string;
+  id_token?: string;
+  refresh_token?: string;
+  expires_in?: number;
+  token_type?: string;
+  scope?: string;
+  [key: string]: unknown;
+}
+
+interface StoredUser {
+  username?: string;
+  email?: string;
+  password?: string;
+  name?: string;
+  googleId?: string;
+  googlePicture?: string;
+  createdAt?: string;
+  lastLogin?: string;
+  authProvider?: string;
+  [key: string]: unknown;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isStoredUser(value: unknown): value is StoredUser {
+  return isRecord(value);
+}
+
+function decodeJWTPayload(token: string): GoogleJwtPayload | null {
   try {
     const parts = token.split(".");
     if (parts.length !== 3) return null;
-    
+
     const payload = parts[1];
-    // Base64URL decode
     const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
     const padded = base64 + "=".repeat((4 - (base64.length % 4)) % 4);
     const decoded = Buffer.from(padded, "base64").toString("utf-8");
-    return JSON.parse(decoded);
+    const parsed: unknown = JSON.parse(decoded);
+    if (isRecord(parsed)) {
+      return parsed as GoogleJwtPayload;
+    }
+    return null;
   } catch {
     return null;
   }
 }
 
-function readUsers() {
+function readUsers(): StoredUser[] {
   if (!fs.existsSync(USERS_PATH)) return [];
   try {
     const raw = fs.readFileSync(USERS_PATH, "utf-8");
-    return JSON.parse(raw);
+    const parsed: unknown = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed.filter(isStoredUser);
+    }
   } catch {
-    return [];
+    // Ignore parse errors and fall through to return empty array
   }
+  return [];
 }
 
-function writeUsers(users: any[]) {
+function writeUsers(users: StoredUser[]) {
   fs.writeFileSync(USERS_PATH, JSON.stringify(users, null, 2));
 }
 
@@ -59,7 +106,7 @@ export async function GET(req: NextRequest) {
   if (!tokenRes.ok) {
     return NextResponse.redirect("/login?error=token_exchange_failed");
   }
-  const tokenData = await tokenRes.json();
+  const tokenData: GoogleTokenResponse = await tokenRes.json();
   const { id_token, access_token } = tokenData;
 
   // Step 3: Decode ID token to get user info
@@ -84,7 +131,7 @@ export async function GET(req: NextRequest) {
         headers: { Authorization: `Bearer ${access_token}` }
       });
       if (userRes.ok) {
-        const userData = await userRes.json();
+        const userData: GoogleJwtPayload = await userRes.json();
         userInfo = {
           email: userData.email,
           name: userData.name || userData.given_name || "Google User",
@@ -101,8 +148,9 @@ export async function GET(req: NextRequest) {
   if (userInfo.email) {
     const users = readUsers();
     const existingUserIndex = users.findIndex(
-      (u: any) => u.email?.toLowerCase() === userInfo.email?.toLowerCase() || 
-                  u.username?.toLowerCase() === userInfo.email?.toLowerCase()
+      (u) =>
+        u.email?.toLowerCase() === userInfo.email?.toLowerCase() ||
+        u.username?.toLowerCase() === userInfo.email?.toLowerCase()
     );
 
     if (existingUserIndex >= 0) {
@@ -123,7 +171,7 @@ export async function GET(req: NextRequest) {
       }
     } else {
       // New user from Google, create entry
-      const newUser = {
+      const newUser: StoredUser = {
         username: userInfo.email,
         email: userInfo.email,
         name: userInfo.name || "Google User",
