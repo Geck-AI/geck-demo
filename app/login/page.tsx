@@ -326,8 +326,9 @@ export default function LoginPage() {
               ) : signupStep === 1 ? (
                 <div className="grid gap-3">
                   <div>
-                    <label className="block text-sm mb-1">Name</label>
+                    <label htmlFor="signup-name" className="block text-sm mb-1">Name</label>
                     <Input
+                      id="signup-name"
                       value={signup.name}
                       onChange={(e) => setSignup((p) => ({ ...p, name: e.target.value }))}
                       className={signupErrors.name ? "border-red-500" : ""}
@@ -337,8 +338,9 @@ export default function LoginPage() {
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm mb-1">Email</label>
+                    <label htmlFor="signup-email" className="block text-sm mb-1">Email</label>
                     <Input
+                      id="signup-email"
                       type="email"
                       value={signup.email}
                       onChange={(e) => setSignup((p) => ({ ...p, email: e.target.value }))}
@@ -349,8 +351,9 @@ export default function LoginPage() {
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm mb-1">Phone</label>
+                    <label htmlFor="signup-phone" className="block text-sm mb-1">Phone</label>
                     <Input
+                      id="signup-phone"
                       value={signup.phone}
                       onChange={(e) => setSignup((p) => ({ ...p, phone: e.target.value }))}
                       className={signupErrors.phone ? "border-red-500" : ""}
@@ -381,8 +384,9 @@ export default function LoginPage() {
               ) : signupStep === 2 ? (
                 <div className="grid gap-3">
                   <div>
-                    <label className="block text-sm mb-1">Street Address</label>
+                    <label htmlFor="signup-street" className="block text-sm mb-1">Street Address</label>
                     <Input
+                      id="signup-street"
                       value={signup.street}
                       onChange={(e) => setSignup((p) => ({ ...p, street: e.target.value }))}
                       className={signupErrors.street ? "border-red-500" : ""}
@@ -393,8 +397,9 @@ export default function LoginPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-sm mb-1">City</label>
+                      <label htmlFor="signup-city" className="block text-sm mb-1">City</label>
                       <Input
+                        id="signup-city"
                         value={signup.city}
                         onChange={(e) => setSignup((p) => ({ ...p, city: e.target.value }))}
                         className={signupErrors.city ? "border-red-500" : ""}
@@ -404,8 +409,9 @@ export default function LoginPage() {
                       )}
                     </div>
                     <div>
-                      <label className="block text-sm mb-1">State</label>
+                      <label htmlFor="signup-state" className="block text-sm mb-1">State</label>
                       <Input
+                        id="signup-state"
                         value={signup.state}
                         onChange={(e) => setSignup((p) => ({ ...p, state: e.target.value }))}
                         className={signupErrors.state ? "border-red-500" : ""}
@@ -416,8 +422,9 @@ export default function LoginPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm mb-1">Zipcode</label>
+                    <label htmlFor="signup-zipcode" className="block text-sm mb-1">Zipcode</label>
                     <Input
+                      id="signup-zipcode"
                       value={signup.zipcode}
                       onChange={(e) => setSignup((p) => ({ ...p, zipcode: e.target.value }))}
                       className={signupErrors.zipcode ? "border-red-500" : ""}
@@ -450,8 +457,9 @@ export default function LoginPage() {
               ) : (
                 <div className="grid gap-3">
                   <div>
-                    <label className="block text-sm mb-1">Password</label>
+                    <label htmlFor="signup-password" className="block text-sm mb-1">Password</label>
                     <Input
+                      id="signup-password"
                       type="password"
                       value={signup.password}
                       onChange={(e) => setSignup((p) => ({ ...p, password: e.target.value }))}
@@ -462,8 +470,9 @@ export default function LoginPage() {
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm mb-1">Confirm Password</label>
+                    <label htmlFor="signup-confirm-password" className="block text-sm mb-1">Confirm Password</label>
                     <Input
+                      id="signup-confirm-password"
                       type="password"
                       value={signup.confirmedPassword}
                       onChange={(e) => setSignup((p) => ({ ...p, confirmedPassword: e.target.value }))}
