@@ -1,23 +1,30 @@
 "use client";
 
-import { ToastContainer } from "react-toastify";
+import { Toaster } from "react-hot-toast";
 import { ReactNode } from "react";
 
 export default function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <>
       {children}
-      <ToastContainer
+      <Toaster
         position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
+        reverseOrder={false}
+        gutter={8}
+        toastOptions={{
+          duration: 5000,
+          style: {
+            background: '#fff',
+            color: '#363636',
+          },
+          success: {
+            duration: 5000,
+            iconTheme: {
+              primary: '#10b981',
+              secondary: '#fff',
+            },
+          },
+        }}
       />
     </>
   );

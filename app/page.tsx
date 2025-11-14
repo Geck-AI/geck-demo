@@ -6,7 +6,7 @@ import { useStylesStore } from "@/stores/stylesStore";
 import StyleCard from "@/components/ItemCard";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 function HomeCallout({
   title,
@@ -46,14 +46,7 @@ export default function HomePage() {
       const userName = decodeURIComponent(name);
       
       // Show toast notification
-      toast.success(`Registered user: ${userName}`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      toast.success(`Registered user: ${userName}`);
       
       // Remove query params from URL
       const newUrl = new URL(window.location.href);
