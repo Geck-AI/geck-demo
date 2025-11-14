@@ -43,6 +43,7 @@ export default function LoginPage() {
   });
   const [signupErrors, setSignupErrors] = useState<Record<string, string>>({});
   const [signupSuccess, setSignupSuccess] = useState<string | null>(null);
+  const [signupGeneralError, setSignupGeneralError] = useState<string | null>(null);
 
   useEffect(() => {
     // Initialize from cookies first
@@ -283,6 +284,7 @@ export default function LoginPage() {
               setSignupStep(1);
               setSignupErrors({});
               setSignupSuccess(null);
+              setSignupGeneralError(null);
               // Reset form data
               setSignup({
                 name: "",
@@ -306,19 +308,38 @@ export default function LoginPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center">
             <div
               className="absolute inset-0 bg-black/40"
-              onClick={() => setShowSignup(false)}
+              onClick={() => {
+                setShowSignup(false);
+                setSignupGeneralError(null);
+                setSignupErrors({});
+                setSignupSuccess(null);
+              }}
             />
             <div className="relative bg-white rounded-md shadow-xl w-full max-w-lg p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold">Create your account</h2>
                 <button
                   className="text-stone-600 hover:text-stone-900"
-                  onClick={() => setShowSignup(false)}
+                  onClick={() => {
+                    setShowSignup(false);
+                    setSignupGeneralError(null);
+                    setSignupErrors({});
+                    setSignupSuccess(null);
+                  }}
                 >
                   ✕
                 </button>
               </div>
               <div className="mb-3 text-sm text-stone-600">Step {signupStep} of 3</div>
+              
+              {/* General Error Message */}
+              {signupGeneralError && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                  <p className="text-sm text-red-800">{signupGeneralError}</p>
+                </div>
+              )}
+              
+              {/* Success Message */}
               {signupSuccess ? (
                 <div className="text-green-600 font-semibold text-center my-8 min-h-[100px] flex items-center justify-center">
                   {signupSuccess}
@@ -374,6 +395,7 @@ export default function LoginPage() {
                         if (!signup.phone.trim()) errs.phone = "Phone is required";
                         else if (!phoneOk) errs.phone = "Enter a valid phone number";
                         setSignupErrors(errs);
+                        setSignupGeneralError(null);
                         if (Object.keys(errs).length === 0) setSignupStep(2);
                       }}
                     >
@@ -434,7 +456,10 @@ export default function LoginPage() {
                     )}
                   </div>
                   <div className="flex justify-between gap-2 mt-2">
-                    <Button variant="secondary" onClick={() => setSignupStep(1)}>
+                    <Button variant="secondary" onClick={() => {
+                      setSignupStep(1);
+                      setSignupGeneralError(null);
+                    }}>
                       Back
                     </Button>
                     <Button
@@ -447,6 +472,7 @@ export default function LoginPage() {
                         if (!signup.zipcode.trim()) errs.zipcode = "Zipcode is required";
                         else if (!zipOk) errs.zipcode = "Enter a valid code";
                         setSignupErrors(errs);
+                        setSignupGeneralError(null);
                         if (Object.keys(errs).length === 0) setSignupStep(3);
                       }}
                     >
@@ -483,7 +509,10 @@ export default function LoginPage() {
                     )}
                   </div>
                   <div className="flex justify-between gap-2 mt-2">
-                    <Button variant="secondary" onClick={() => setSignupStep(2)}>
+                    <Button variant="secondary" onClick={() => {
+                      setSignupStep(2);
+                      setSignupGeneralError(null);
+                    }}>
                       Back
                     </Button>
                     <Button
@@ -494,11 +523,14 @@ export default function LoginPage() {
                         if (!signup.confirmedPassword.trim()) errs.confirmedPassword = "Please confirm your password";
                         else if (signup.password !== signup.confirmedPassword) errs.confirmedPassword = "Passwords do not match";
                         setSignupErrors(errs);
+                        setSignupGeneralError(null);
                         if (Object.keys(errs).length === 0) {
                           setIsLoading(true);
+                          setSignupGeneralError(null);
+                          setSignupErrors({});
                           try {
                             // Register the user
-                            await register({
+                            const result = await register({
                               name: signup.name,
                               email: signup.email,
                               phone: signup.phone,
@@ -509,26 +541,29 @@ export default function LoginPage() {
                               password: signup.password,
                             });
                             
-                            // Show success message and close modal for user to sign in
-                            setSignupSuccess("Account created successfully! Please sign in with your credentials.");
-                            toast({ 
-                              title: "Account created", 
-                              description: `Welcome ${signup.name}! Please sign in to continue.` 
-                            });
+                            // Auto-login: Set token in auth store if received
+                            if (result.token) {
+                              setToken(result.token);
+                            }
+                            
+                            // Show success message inside popup
+                            setSignupSuccess(`Account created successfully! Welcome ${signup.name}!`);
+                            
+                            // Redirect to home page after a brief delay
                             setTimeout(() => {
-                              setShowSignup(false);
-                              setSignupSuccess(null);
-                              // Pre-fill the email in the login form
-                              setUsername(signup.email);
-                            }, 2000);
+                              router.push(`/?registered=true&name=${encodeURIComponent(signup.name)}`);
+                            }, 1500);
                           } catch (error) {
                             const errorMessage = error instanceof Error ? error.message : "Registration failed";
-                            if (errorMessage.includes("already exists")) {
+                            if (errorMessage.includes("already exists") || errorMessage.includes("email")) {
+                              // Redirect to step 1 to fix email
+                              setSignupStep(1);
                               setSignupErrors({ email: "This email is already registered" });
+                              setSignupGeneralError("This email is already registered. Please use a different email.");
                             } else {
+                              setSignupGeneralError(errorMessage);
                               setSignupErrors({ password: errorMessage });
                             }
-                            toast({ title: "Registration failed", description: errorMessage, variant: "destructive" });
                           } finally {
                             setIsLoading(false);
                           }

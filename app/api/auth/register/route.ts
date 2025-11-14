@@ -104,5 +104,21 @@ export async function POST(request: Request) {
   users.push(newUser);
   writeUsers(users);
   
-  return NextResponse.json({ success: true, user: { name, email } });
+  // Auto-login: Generate token and set cookie (same as login endpoint)
+  const token = "dummy-jwt-token";
+  const response = NextResponse.json({ 
+    success: true, 
+    token,
+    user: { name, email } 
+  });
+  
+  // Set cookie for auto-login
+  response.headers.set(
+    'Set-Cookie',
+    `auth-token=${token}; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Strict; ${
+      process.env.NODE_ENV === 'production' ? 'Secure;' : ''
+    }`
+  );
+  
+  return response;
 } 

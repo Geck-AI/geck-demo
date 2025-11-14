@@ -88,7 +88,7 @@ interface RegisterData {
   password: string;
 }
 
-export async function register(userData: RegisterData): Promise<{ success: boolean; user?: { name: string; email: string } }> {
+export async function register(userData: RegisterData): Promise<{ success: boolean; token?: string; user?: { name: string; email: string } }> {
   const res = await fetch("/api/auth/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -100,7 +100,14 @@ export async function register(userData: RegisterData): Promise<{ success: boole
     throw new Error(errorData.error || "Registration failed");
   }
   
-  return res.json();
+  const data = await res.json();
+  
+  // Set token in cookies if provided (for auto-login)
+  if (data.token) {
+    setAuthToken(data.token);
+  }
+  
+  return data;
 }
 
 /**

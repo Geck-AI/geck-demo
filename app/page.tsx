@@ -1,10 +1,12 @@
 "use client";
 import React, { useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useStylesStore } from "@/stores/stylesStore";
 import StyleCard from "@/components/ItemCard";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { toast } from "react-toastify";
 
 function HomeCallout({
   title,
@@ -28,9 +30,39 @@ function HomeCallout({
 
 export default function HomePage() {
   const { data, loading, fetchStyles } = useStylesStore();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   useEffect(() => {
     fetchStyles();
   }, [fetchStyles]);
+
+  useEffect(() => {
+    // Check if user just registered
+    const registered = searchParams.get("registered");
+    const name = searchParams.get("name");
+    
+    if (registered === "true" && name) {
+      const userName = decodeURIComponent(name);
+      
+      // Show toast notification
+      toast.success(`Registered user: ${userName}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      
+      // Remove query params from URL
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete("registered");
+      newUrl.searchParams.delete("name");
+      router.replace(newUrl.pathname + newUrl.search, { scroll: false });
+    }
+  }, [searchParams, router]);
+
   const justIn = data.slice(0, 4);
 
   const callouts = [
