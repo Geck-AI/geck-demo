@@ -60,6 +60,7 @@ function PaymentMethod({
     onChange,
     error,
     countryValue,
+    "aria-invalid": ariaInvalid,
   }: {
     id: string;
     name: string;
@@ -68,6 +69,7 @@ function PaymentMethod({
     onChange: (v: string) => void;
     error: boolean;
     countryValue: string;
+    "aria-invalid"?: boolean;
   }) {
     const isCountry = name === "country";
     const options = isCountry
@@ -81,6 +83,7 @@ function PaymentMethod({
           id={id}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          aria-invalid={ariaInvalid}
           className={clsx(
             "peer h-9 w-full cursor-pointer rounded-md border border-input bg-white px-3 pr-8 text-sm outline-none",
             "hover:bg-accent/30 focus-visible:ring-1 focus-visible:ring-ring/50",
@@ -193,6 +196,7 @@ function PaymentMethod({
                   onChange={(v) => setAddress((p) => ({ ...p, [name]: v }))}
                   error={!!errors[name]}
                   countryValue={address["country"]}
+                  aria-invalid={!!errors[name]}
                 />
               ) : (
                 <Input
@@ -206,6 +210,7 @@ function PaymentMethod({
                     "bg-white",
                     errors[name] ? "border-red-500 focus:ring-red-500" : ""
                   )}
+                  aria-invalid={!!errors[name]}
                 />
               )}
             </div>
@@ -341,10 +346,14 @@ export default function CartView() {
               cartItems.map(({ id, quantity }) => {
                 const product = productData[id];
                 if (!product) return null;
-                const itemTotal = (product.priceUSD || 0) * quantity;
+                const unitPrice = product.priceUSD ?? 0;
+                const itemTotal = unitPrice * quantity;
                 return (
                   <div
                     key={id}
+                    data-testid={`cart-item-${id}`}
+                    data-price={unitPrice}
+                    data-quantity={quantity}
                     className="flex items-center gap-4 bg-stone-50 rounded-sm p-4 min-h-[64px]"
                   >
                     {/* Product image */}
@@ -355,7 +364,10 @@ export default function CartView() {
                     />
                     {/* Product name */}
                     <div className="flex-1 min-w-0">
-                      <span className="font-medium text-sm line-clamp-2">
+                      <span 
+                        className="font-medium text-sm line-clamp-2"
+                        data-testid="cart-item-name"
+                      >
                         {product.productDisplayName}
                       </span>
                     </div>
@@ -369,13 +381,18 @@ export default function CartView() {
                       />
                       <Trash
                         className="w-6 h-6 cursor-pointer text-gray-500 hover:text-gray-700"
+                        aria-label="Remove item from cart"
+                        data-testid="remove-item-button"
                         onClick={() => {
                           useCartStore.getState().removeItem(id);
                         }}
                       />
                     </div>
                     {/* Total price for this item */}
-                    <div className="text-base font-semibold w-20 text-right">
+                    <div 
+                      className="text-base font-semibold w-20 text-right"
+                      data-testid="cart-item-total"
+                    >
                       ${itemTotal.toFixed(2)}
                     </div>
                   </div>
@@ -383,9 +400,9 @@ export default function CartView() {
               })
             )}
           </div>
-          <div className="mt-8 px-2 text-xl flex justify-between">
+          <div className="mt-8 px-2 text-xl flex justify-between" data-testid="cart-total">
             <span className="text-stone-600 font-medium">Total</span>
-            <span className="text-stone-800">${total.toFixed(2)}</span>
+            <span className="text-stone-800" data-testid="cart-total-amount">${total.toFixed(2)}</span>
           </div>
         </div>
 
