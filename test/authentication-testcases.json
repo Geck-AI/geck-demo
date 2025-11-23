@@ -1,8 +1,8 @@
 [
   {
     "url": "http://localhost:3005",
-    "description": "Please navigate to the website and register a new user with the following details:\n\n* **Name:** `User` + *current timestamp*\n* **Email:** `max568@appening.xyz`\n* **Phone:** `8654587923`\n\nThen click **Continue**, fill in the **Address** section, and click **Continue** again.\nAfter that, set the **Password** to `max123` and also fill the **Confirm Password**, and finally click **“Create Account”** to successfully complete the registration.\n",
-    "createdAt": 1762855703298,
+    "description": "Please navigate to the website and register a new user with the following details:\n\nName: `User` + *current timestamp*\nEmail: Name (from above) +  @appening.xyz`\nPhone: `8654587923`\n\nThen click **Continue**, fill in the **Address** section, and click **Continue** again.\nAfter that, set the **Password** to `max123` and also fill the **Confirm Password**, and finally click **“Create Account”**. \nVerify that user lands on the home page.\n",
+    "createdAt": 1763689450114,
     "testname": "User Registration",
     "projectName": "Authentication",
     "id": "TEST-o6lnoso",
@@ -10,42 +10,54 @@
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Open the web browser and navigate to the URL http://localhost:3005."
+          "stepDescription": "Open a web browser and navigate to the URL http://localhost:3005."
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Locate and click the registration section available on the home page."
+          "stepDescription": "Locate and click the Register or Sign Up option on the homepage to open the registration form."
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Fill out the registration form by entering a dynamic name in the format 'User' followed by the current timestamp, input the email 'max568@appening.xyz', and provide the phone number '8654587923'."
+          "stepDescription": "Enter the Name field with 'User' followed by the current timestamp."
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Click the Continue button to proceed to the next section of the registration process."
+          "stepDescription": "Fill in the Email field using the entered name appended by '@appening.xyz'."
         },
         {
           "stepNumber": 5,
-          "stepDescription": "In the Address section, enter the required address details as prompted by the registration form."
+          "stepDescription": "Enter the provided Phone number '8654587923' in the phone field."
         },
         {
           "stepNumber": 6,
-          "stepDescription": "Click the Continue button after completing the Address section to move to the password creation step."
+          "stepDescription": "Click the Continue button to proceed after entering registration details."
         },
         {
           "stepNumber": 7,
-          "stepDescription": "Set the Password field to 'max123' and fill the Confirm Password field with 'max123' to ensure they match."
+          "stepDescription": "Fill in the Address section with following details (use what is needed for the form, skip others): Name 'Amanda Kim', Email 'amanda.kim@example.com', Street Address '123 Main Street', City 'San Francisco', State 'CA', Country 'United States', and Zipcode '12345'."
         },
         {
           "stepNumber": 8,
-          "stepDescription": "Click the 'Create Account' button to complete the registration process."
+          "stepDescription": "Click the Continue button after completing the Address section."
         },
         {
           "stepNumber": 9,
-          "stepDescription": "Verify that the registration is successful by checking for a confirmation message and then take a screenshot of the completed account creation screen."
+          "stepDescription": "In the Password section, set both the Password and Confirm Password fields to 'max123'."
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Click the Create Account button to submit the registration form."
+        },
+        {
+          "stepNumber": 11,
+          "stepDescription": "Verify that the user lands on the home page by checking for the banner image or other home page elements."
+        },
+        {
+          "stepNumber": 12,
+          "stepDescription": "Take a screenshot of the final home page to confirm successful account creation."
         }
       ],
-      "stepsSummary": "User registration and account creation"
+      "stepsSummary": "Register new user and verify home page landing"
     },
     "useSavedLoginState": false
   },
@@ -120,54 +132,42 @@
     "id": "test_1760648848240",
     "testname": "Login Form Validation Test",
     "url": "http://localhost:3005/login",
-    "description": "Test form validation on the login page by attempting to submit the form with various invalid inputs including empty fields, whitespace-only inputs, and verify that appropriate validation behavior occurs. Check that the form prevents submission with empty username, empty password, and handles whitespace inputs properly.",
+    "description": "Test form validation on the login page by attempting to submit the form with various invalid inputs including empty fields, whitespace-only inputs, and verify that appropriate validation behavior occurs. Check that the form prevents submission with empty username, empty password, and handles whitespace inputs properly. ",
     "projectName": "Authentication",
     "useSavedLoginState": false,
-    "createdAt": 1761611731026,
+    "createdAt": 1763613588644,
     "generatedSteps": {
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Open a web browser and navigate to the login page at http://localhost:3005/login."
+          "stepDescription": "Launch the web browser and navigate to the login page at http://localhost:3005/login"
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Attempt to submit the login form without entering any data in the username and password fields."
+          "stepDescription": "Verify that the login form is displayed with visible username and password fields"
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Verify that the login form prevents submission and displays a error message."
+          "stepDescription": "Attempt to submit the login form with both username and password fields empty and observe that the form does not submit"
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Clear any inputs, then enter only whitespace in the username field while leaving the password field empty, and submit the form."
+          "stepDescription": "Enter only whitespace in the username field, leave the password field empty, and then try to submit the form to check for proper validation messages"
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Confirm that the login form displays a generic error message."
+          "stepDescription": "Enter only whitespace in the password field while leaving the username field empty, submit the form, and verify that the appropriate validation errors are shown"
         },
         {
           "stepNumber": 6,
-          "stepDescription": "Clear any inputs, then enter only whitespace in the password field while leaving the username field empty, and submit the form."
+          "stepDescription": "Enter whitespace-only values in both the username and password fields, submit the form, and confirm that user see an error message."
         },
         {
           "stepNumber": 7,
-          "stepDescription": "Confirm that the login form displays a generic error message."
-        },
-        {
-          "stepNumber": 8,
-          "stepDescription": "Enter whitespace-only values in both username and password fields, then attempt to submit the form."
-        },
-        {
-          "stepNumber": 9,
-          "stepDescription": "Verify that the login form does not proceed with submission and shows a generic validation error."
-        },
-        {
-          "stepNumber": 10,
-          "stepDescription": "Take a screenshot of the login page with the displayed validation messages to confirm proper handling of invalid inputs."
+          "stepDescription": "Capture a screenshot of the displayed validation error messages to ensure the validation behavior is as expected"
         }
       ],
-      "stepsSummary": "Test form validation on the login page"
+      "stepsSummary": "Validate login form with invalid inputs"
     }
   }
 ]

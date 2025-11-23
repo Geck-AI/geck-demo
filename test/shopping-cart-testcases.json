@@ -52,7 +52,7 @@
   {
     "url": "http://localhost:3005",
     "description": "Navigate to the website and login using following credentials:\nusername: test_user_name\npassword: test_password\n\nVerify that user lands on the home page.\nAdd to cart the first product in \"Just In\" section of the page.\nGo to cart page and verify that price is reflected correctly.\nIncrease quality by 1 using dropdown, and verify that the prices adjusts accordingly.",
-    "createdAt": 1759713857043,
+    "createdAt": 1763776377018,
     "testname": "Cart Item Management",
     "projectName": "Shopping Cart",
     "id": "TEST-mw8lw47",
@@ -76,18 +76,14 @@
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Verify that the displayed price for the added product is correct on the cart page."
+          "stepDescription": "Verify that there is a product added in the cart"
         },
         {
           "stepNumber": 6,
-          "stepDescription": "Increase the product quantity by one using the dropdown option."
+          "stepDescription": "Update the quantity to 2, and verify that the total price increments accordingly."
         },
         {
           "stepNumber": 7,
-          "stepDescription": "Confirm that the total price is recalculated correctly after increasing the quantity."
-        },
-        {
-          "stepNumber": 8,
           "stepDescription": "Take a screenshot of the final cart page to capture the updated pricing details."
         }
       ],

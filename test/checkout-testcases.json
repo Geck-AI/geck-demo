@@ -1,8 +1,8 @@
 [
   {
     "url": "http://localhost:3005",
-    "description": "Verify that the user lands on home page.\nGo to shoes category\nClick on the first item that shows up on the page.\nAdd that product to the cart.\nGo to the cart and verify that the product is in the cart.\nAdd shipping details as follows:\n   - Name: \"Amanda Kim\"\n   - Email: \"amanda.kim@example.com\"\n   - Street Address: \"123 Main Street\"\n   - City: \"Anytown\"\n   - State: \"CA\"\n   - Zipcode: \"12345\"\n5. Click \"Checkout\" button\n6. Verify redirect to order success page\n7. Verify order confirmation number is displayed.",
-    "createdAt": 1759696794548,
+    "description": "Verify that the user lands on home page.\nGo to shoes category\nClick on the first item that shows up on the page.\nAdd that product to the cart.\nGo to the cart and verify that the product is in the cart.\nAdd shipping details for Amanda Kim\nClick \"Checkout\" button. \nVerify redirect to order success page\nVerify order confirmation number is displayed.",
+    "createdAt": 1763614340466,
     "testname": "Simple Checkout",
     "projectName": "Checkout",
     "id": "TEST-0ta40sk",
@@ -10,19 +10,19 @@
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Launch a web browser and navigate to the homepage at http://localhost:3005."
+          "stepDescription": "Open a web browser and navigate to the website at http://localhost:3005."
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Verify that you have successfully landed on the home page by checking that the banner image is visible."
+          "stepDescription": "Verify that the home page loads and displays the banner image."
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Click on the Shoes category to browse all available shoe items."
+          "stepDescription": "Select the shoes category from the navigation menu."
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Select the first item that appears on the Shoes category page."
+          "stepDescription": "Click on the first item displayed in the shoes category listing."
         },
         {
           "stepNumber": 5,
@@ -30,11 +30,11 @@
         },
         {
           "stepNumber": 6,
-          "stepDescription": "Navigate to the shopping cart and verify the product has been added."
+          "stepDescription": "Go to the shopping cart page and confirm that the product is present."
         },
         {
           "stepNumber": 7,
-          "stepDescription": "Enter shipping details using the provided information: Name: Amanda Kim, Email: amanda.kim@example.com, Street Address: 123 Main Street, City: Anytown, State: CA, Zipcode: 12345."
+          "stepDescription": "Fill in the shipping details for Amanda Kim with Name: Amanda Kim, Email: amanda.kim@example.com, Street Address: 123 Main Street, City: San Francisco, State: CA, Country: United States, and Zipcode: 12345."
         },
         {
           "stepNumber": 8,
@@ -42,25 +42,21 @@
         },
         {
           "stepNumber": 9,
-          "stepDescription": "Confirm that the page redirects to an order success page."
+          "stepDescription": "Check that an order confirmation number is displayed on the success page."
         },
         {
           "stepNumber": 10,
-          "stepDescription": "Verify that an order confirmation number is displayed on the success page."
-        },
-        {
-          "stepNumber": 11,
-          "stepDescription": "Take a screenshot of the completed order process to validate the test results."
+          "stepDescription": "Take a screenshot of the completed order to validate the successful checkout."
         }
       ],
-      "stepsSummary": "Order checkout and verification"
+      "stepsSummary": "Browse product, add to cart, complete checkout"
     },
     "useSavedLoginState": true
   },
   {
     "url": "http://localhost:3005",
-    "description": "Open the url and verify that the user lands on home page.\nGo to shoes category\nClick on the first item that shows up on the page.\nAdd that product to the cart.\nGo to the cart and verify that there is one product in the cart.\nClick on the \"Checkout Button\" and verify user stays on the same page.\n\nVerify that: name, and email field shoes error state or red border.",
-    "createdAt": 1759708811060,
+    "description": "Open the url and verify that the user lands on home page.\nGo to shoes category\nClick on the first item that shows up on the page, and add that product to the cart.\nGo to the cart and verify that there is one product in the cart.\nClick on the \"Checkout Button\" and verify user stays on the same page.\n\nVerify that: name, and email field shows error state.",
+    "createdAt": 1763683320070,
     "testname": "Checkout Form Validation",
     "projectName": "Checkout",
     "id": "TEST-m20cal5",
@@ -68,42 +64,42 @@
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Launch the browser and navigate to the target URL http://localhost:3005 to load the home page."
+          "stepDescription": "Open a web browser and navigate to http://localhost:3005 and confirm the home page displays a banner image."
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Confirm that the home page has loaded successfully by checking for the banner image."
+          "stepDescription": "Select the 'shoes' category from the navigation menu on the home page."
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Navigate to the shoes category from the home page."
+          "stepDescription": "On the shoes category page, click on the first product that appears."
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Select the first product displayed in the shoes category."
+          "stepDescription": "Add the selected product to the shopping cart using the available add product option."
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Add the chosen product to the shopping cart."
+          "stepDescription": "Navigate to the shopping cart page and verify that exactly one product is present in the cart."
         },
         {
           "stepNumber": 6,
-          "stepDescription": "Access the shopping cart and verify that exactly one product is present in it."
+          "stepDescription": "Click on the 'Checkout Button' on the cart page to proceed with checkout."
         },
         {
           "stepNumber": 7,
-          "stepDescription": "Click the Checkout Button and verify that the page does not navigate away."
+          "stepDescription": "Confirm that the user remains on the same page after clicking the 'Checkout Button'."
         },
         {
           "stepNumber": 8,
-          "stepDescription": "Check that the name and email fields display an error state, indicated by a red border."
+          "stepDescription": "Verify that both the Name and Email fields on the checkout form display an error state."
         },
         {
           "stepNumber": 9,
-          "stepDescription": "Take a screenshot of the final state to document the completed test process."
+          "stepDescription": "Capture a final screenshot of the page to ensure all steps have been completed."
         }
       ],
-      "stepsSummary": "Navigate to shoes product, add to cart and verify error states"
+      "stepsSummary": "Navigate, add product to cart, verify checkout errors"
     },
     "useSavedLoginState": true
   }

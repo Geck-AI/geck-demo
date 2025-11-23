@@ -206,6 +206,7 @@ export default function FilterSidebar() {
                       <Checkbox
                         className="mr-2"
                         checked={!!checked}
+                        aria-label={item.title}
                         onCheckedChange={() =>
                           group.filterKey &&
                           toggleFilter({

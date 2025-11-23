@@ -4,8 +4,9 @@
       "cssFramework": "tailwind",
       "domainType": "custom",
       "uiLibrary": "none",
-      "applicationContext": "When user lands on the home page, they see a banner image.\nApplication has navigation categories like shoes, just in, offers, clothes\nAdd shipping details as follows:\n   - Name: \"Amanda Kim\"\n   - Email: \"amanda.kim@example.com\"\n   - Street Address: \"123 Main Street\"\n   - City: \"Anytown\"\n   - State: \"CA\"\n   - Zipcode: \"12345\"",
+      "applicationContext": "**APPLICATION CONTEXT:**\nWhen user lands on the home page, they see a banner image.\nApplication has navigation categories like shoes, just in, offers, clothes\n\n**Home Page Structure:**\n- Navigation bar at top (with links to categories)\n- Hero banner below navigation\n- Category callouts/cards in main content area (large clickable cards: \"Clothes Shop the latest\", \"Shoes Shop the latest\", etc.)\n- Footer at bottom (with duplicate category links)\n\nAdd shipping details as follows:\n   - Name: \"Amanda Kim\"\n   - Email: \"amanda.kim@example.com\"\n   - Street Address: \"123 Main Street\"\n   - City: \"San Francisco\"\n   - State: \"CA\"\n   - Country: \"United States\"\n   - Zipcode: \"12345\"",
       "technicalNotes": "",
+      "prd": "",
       "enableOptimizations": true
     }
   }

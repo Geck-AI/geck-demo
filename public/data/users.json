@@ -1,0 +1,20 @@
+[
+  {
+    "username": "test_user_name",
+    "password": "$2b$12$xJ087.ajbVu4varhNJqr7.9fzEfcftCDO8gvr6nMz.cK3EqxMtb4K"
+  },
+  {
+    "username": "User1763877503944@appening.xyz",
+    "password": "$2b$12$Gm6vk4VmOBgZHPGDbl5iJeIlCnMzhR/5Ls2ajaxTzxsqG0rr5CgvK",
+    "name": "User 1763877503944",
+    "email": "User1763877503944@appening.xyz",
+    "phone": "8654587923",
+    "address": {
+      "street": "123 Main Street",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipcode": "12345"
+    },
+    "createdAt": "2025-11-23T05:59:06.242Z"
+  }
+]

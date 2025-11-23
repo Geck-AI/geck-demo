@@ -9,6 +9,9 @@ export function QtSelect({ value, onChange }: Props) {
   return (
     <div className="relative w-16">
       <select
+        data-testid="quantity-select"
+        aria-label="Quantity"
+        name="quantity"
         value={value}
         onChange={(e) => onChange(parseInt(e.target.value, 10))}
         className="peer h-9 w-full cursor-pointer rounded-md border border-input bg-background px-2

@@ -1,8 +1,8 @@
 [
   {
     "url": "http://localhost:3005",
-    "description": "Navigate to the website and login using following credentials:\nusername: test_user_name\npassword: test_password\n\nOn the home page, verify the following\n1. banner image loads correctly.\n2. \"Just In\" section displays 4 products\n3. Category callouts are present: Clothes, Shoes, Accessories\n4. Verify \"Offers\" section is displayed.\n5. Verify that all navigation links in the header work correctly.",
-    "createdAt": 1759710657486,
+    "description": "Navigate to the website and login using following credentials:\nusername: test_user_name\npassword: test_password \n\nOn the home page, verify the following\n1. banner image loads correctly.\n2. \"Just In\" section displays 4 products\n3. Category callouts are present in the navigation section: Clothes, Shoes, Accessories\n4. Verify \"Offers\" section is displayed.\n5. Verify that all navigation links (just in, clothes, shoes, accessories, offers) in the header work correctly.",
+    "createdAt": 1763799614155,
     "testname": "Home Page Elements",
     "projectName": "Navigation",
     "id": "TEST-slwy7ss",
@@ -10,34 +10,34 @@
       "steps": [
         {
           "stepNumber": 1,
-          "stepDescription": "Open a web browser and navigate to the website using the provided URL"
+          "stepDescription": "Open a web browser and navigate to http://localhost:3005"
         },
         {
           "stepNumber": 2,
-          "stepDescription": "Verify that the banner image loads correctly on the home page"
+          "stepDescription": "Verify that the banner image on the home page loads correctly"
         },
         {
           "stepNumber": 3,
-          "stepDescription": "Confirm that the 'Just In' section displays exactly 4 products"
+          "stepDescription": "Check that the 'Just In' section displays exactly 4 products"
         },
         {
           "stepNumber": 4,
-          "stepDescription": "Check that the category callouts for Clothes, Shoes, and Accessories are present"
+          "stepDescription": "Ensure the navigation section contains category callouts labeled 'Clothes', 'Shoes', and 'Accessories'"
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Verify that the 'Offers' section is displayed on the page"
+          "stepDescription": "Confirm that the 'Offers' section is displayed on the home page"
         },
         {
           "stepNumber": 6,
-          "stepDescription": "Ensure that all navigation links in the header work correctly when clicked"
+          "stepDescription": "Interact with each header navigation link ('Just In', 'Clothes', 'Shoes', 'Accessories', 'Offers') to verify they navigate correctly"
         },
         {
           "stepNumber": 7,
-          "stepDescription": "Take a screenshot of the completed task to confirm the successful test flow"
+          "stepDescription": "Take a screenshot to capture the completed state of the home page"
         }
       ],
-      "stepsSummary": "Validate home page visual elements and navigation"
+      "stepsSummary": "Verify homepage banner, product count, and navigation"
     },
     "useSavedLoginState": true
   },
