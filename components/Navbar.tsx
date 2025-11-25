@@ -60,12 +60,14 @@ export default function Navbar() {
               <Link
                 href="/favorites"
                 className="relative text-stone-700 hover:text-stone-900"
+                aria-label="wishlist"
               >
                 <Heart className="w-5 h-5 text-stone-700 hover:text-red-600 transition-colors duration-200" />
               </Link>
               <Link
                 href="/cart"
                 className="relative text-stone-700 hover:text-stone-900"
+                aria-label="shopping cart"
               >
                 <ShoppingCart className="w-5 h-5 text-stone-700 hover:text-stone-900 transition-colors duration-200" />
                 {totalQty > 0 && (
