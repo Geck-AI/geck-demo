@@ -132,6 +132,10 @@ export default function FilterSidebar() {
                         <div>
                           <button
                             type="button"
+                            role="button"
+                            aria-haspopup="listbox"
+                            aria-expanded={colorPickerOpen}
+                            aria-label="Color filter dropdown"
                             onClick={() => setColorPickerOpen((o) => !o)}
                             className="w-full flex items-center justify-between border border-stone-300 rounded-md px-3 py-2 text-sm hover:border-stone-400"
                           >
@@ -139,12 +143,16 @@ export default function FilterSidebar() {
                             <span className="text-stone-400">{colorPickerOpen ? "▲" : "▼"}</span>
                           </button>
                           {colorPickerOpen && (
-                            <div className="absolute z-10 mt-2 w-full bg-white border border-stone-200 rounded-md shadow-lg max-h-64 overflow-y-auto">
-                              <ul className="p-2 space-y-1">
+                            <div 
+                              role="listbox"
+                              aria-label="Color options"
+                              className="absolute z-10 mt-2 w-full bg-white border border-stone-200 rounded-md shadow-lg max-h-64 overflow-y-auto"
+                            >
+                              <ul className="p-2 space-y-1" role="group">
                                 {group.items.map((item) => {
                                   const isSelected = selected.includes(item.filterValue);
                                   return (
-                                    <li key={`color-option-${item.title}`}>
+                                    <li key={`color-option-${item.title}`} role="option" aria-selected={isSelected}>
                                       <button
                                         type="button"
                                         onClick={() => {

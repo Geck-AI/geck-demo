@@ -26,7 +26,7 @@
         },
         {
           "stepNumber": 5,
-          "stepDescription": "Add the selected product to the shopping cart."
+          "stepDescription": "Add the selected product to the shopping cart"
         },
         {
           "stepNumber": 6,
@@ -38,7 +38,7 @@
         },
         {
           "stepNumber": 8,
-          "stepDescription": "Click the Checkout button to proceed with the order."
+          "stepDescription": "Click the Checkout button to proceed with the order"
         },
         {
           "stepNumber": 9,
