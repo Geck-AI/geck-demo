@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -133,6 +134,11 @@ function PaymentMethod({
     if (Object.keys(newErrors).length === 0) onCheckout(address);
   };
 
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    validateAndCheckout();
+  };
+
   const fields = [
     {
       label: "Name",
@@ -172,14 +178,18 @@ function PaymentMethod({
   ];
 
   return (
-    <div className="bg-stone-50 rounded-sm p-4 flex flex-col gap-4">
+    <form 
+      className="bg-stone-50 rounded-sm p-4 flex flex-col gap-4"
+      onSubmit={handleFormSubmit}
+      aria-label="Shipping and checkout form"
+    >
       <div>
-        <span className="block text-lg font-semibold text-stone-800 mb-1">
+        <h3 className="block text-lg font-semibold text-stone-800 mb-1">
           Shipping Details
-        </span>
-        <span className="block text-sm text-stone-600 mb-2">
+        </h3>
+        <p className="block text-sm text-stone-600 mb-2">
           Provide a shipping address to finalise your order.
-        </span>
+        </p>
       </div>
       <div className="grid gap-4">
         {fields.map(({ label, name, placeholder }) => {
@@ -197,10 +207,13 @@ function PaymentMethod({
                   error={!!errors[name]}
                   countryValue={address["country"]}
                   aria-invalid={!!errors[name]}
+                  aria-required="true"
+                  aria-describedby={errors[name] ? `${name}-error` : undefined}
                 />
               ) : (
                 <Input
                   id={name}
+                  type={name === "email" ? "email" : "text"}
                   placeholder={placeholder}
                   value={address[name]}
                   onChange={(e) =>
@@ -211,16 +224,23 @@ function PaymentMethod({
                     errors[name] ? "border-red-500 focus:ring-red-500" : ""
                   )}
                   aria-invalid={!!errors[name]}
+                  aria-required="true"
+                  aria-describedby={errors[name] ? `${name}-error` : undefined}
                 />
+              )}
+              {errors[name] && (
+                <span id={`${name}-error`} className="text-xs text-red-600" role="alert">
+                  This field is required
+                </span>
               )}
             </div>
           );
         })}
       </div>
-      <Button className="w-full mt-2" onClick={validateAndCheckout}>
+      <Button type="submit" className="w-full mt-2" aria-label="Complete checkout">
         Checkout
       </Button>
-    </div>
+    </form>
   );
 }
 
@@ -333,28 +353,47 @@ export default function CartView() {
 
   if (loading) return <p className="p-4">Loading cart details...</p>;
 
+  /* ─────────── Empty cart state ─────────── */
+  if (cartItems.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] p-8" role="region" aria-label="Empty shopping cart">
+        <div className="text-center" role="status" aria-live="polite">
+          <h2 className="text-2xl font-semibold text-stone-800 mb-4">Your Cart is Empty</h2>
+          <p className="text-stone-600 mb-8">Start adding items to your cart to begin shopping.</p>
+          <Link
+            href="/shop"
+            className="inline-block bg-black text-white px-6 py-3 rounded-sm hover:bg-stone-800 transition-colors"
+            aria-label="Continue shopping"
+          >
+            Continue Shopping
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   /* ─────────── default render ─────────── */
   return (
-    <div className="flex flex-col p-4">
+    <div className="flex flex-col p-4" role="region" aria-label="Shopping cart">
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Items */}
-        <div className="flex-1 lg:w-2/3 min-w-0 max-h-[80vh] overflow-y-auto">
-          <div className="flex flex-col gap-4">
-            {cartItems.length === 0 ? (
-              <p className="p-4">Your cart is empty.</p>
-            ) : (
-              cartItems.map(({ id, quantity }) => {
+        <section className="flex-1 lg:w-2/3 min-w-0 max-h-[80vh] overflow-y-auto" aria-labelledby="cart-items-heading">
+          <h2 id="cart-items-heading" className="sr-only">Cart Items</h2>
+          <div className="flex flex-col gap-4" role="list" aria-label="Cart items">
+            {cartItems.map(({ id, quantity }) => {
                 const product = productData[id];
                 if (!product) return null;
                 const unitPrice = product.priceUSD ?? 0;
                 const itemTotal = unitPrice * quantity;
                 return (
-                  <div
+                  <article
                     key={id}
                     data-testid={`cart-item-${id}`}
                     data-price={unitPrice}
                     data-quantity={quantity}
                     className="flex items-center gap-4 bg-stone-50 rounded-sm p-4 min-h-[64px]"
+                    role="listitem"
+                    aria-label={`${product.productDisplayName}, quantity ${quantity}, price $${itemTotal.toFixed(2)}`}
                   >
                     {/* Product image */}
                     <img
@@ -372,43 +411,52 @@ export default function CartView() {
                       </span>
                     </div>
                     {/* Quantity */}
-                    <div className="w-16 flex items-center gap-2">
+                    <div className="w-16 flex items-center gap-2" role="group" aria-label={`Quantity controls for ${product.productDisplayName}`}>
                       <QtSelect
                         value={quantity}
                         onChange={(n) =>
                           useCartStore.getState().setItemQuantity(id, n)
                         }
+                        aria-label={`Quantity for ${product.productDisplayName}`}
                       />
-                      <Trash
-                        className="w-6 h-6 cursor-pointer text-gray-500 hover:text-gray-700"
-                        aria-label="Remove item from cart"
+                      <button
+                        type="button"
+                        aria-label={`Remove ${product.productDisplayName} from cart`}
                         data-testid="remove-item-button"
                         onClick={() => {
                           useCartStore.getState().removeItem(id);
                         }}
-                      />
+                        className="text-gray-500 hover:text-gray-700"
+                      >
+                        <Trash
+                          className="w-6 h-6 cursor-pointer text-gray-500 hover:text-gray-700"
+                          aria-hidden="true"
+                        />
+                      </button>
                     </div>
                     {/* Total price for this item */}
                     <div 
                       className="text-base font-semibold w-20 text-right"
                       data-testid="cart-item-total"
+                      aria-label={`Item total: $${itemTotal.toFixed(2)}`}
                     >
                       ${itemTotal.toFixed(2)}
                     </div>
-                  </div>
+                  </article>
                 );
-              })
-            )}
+              })}
           </div>
-          <div className="mt-8 px-2 text-xl flex justify-between" data-testid="cart-total">
+          <div className="mt-8 px-2 text-xl flex justify-between" data-testid="cart-total" role="group" aria-label="Cart total">
             <span className="text-stone-600 font-medium">Total</span>
-            <span className="text-stone-800" data-testid="cart-total-amount">${total.toFixed(2)}</span>
+            <span className="text-stone-800" data-testid="cart-total-amount" aria-label={`Total amount: $${total.toFixed(2)}`}>
+              ${total.toFixed(2)}
+            </span>
           </div>
-        </div>
+        </section>
 
-        <div className="lg:w-1/3">
+        <aside className="lg:w-1/3" role="complementary" aria-label="Checkout form">
           <PaymentMethod onCheckout={handleCheckout} />
-        </div>
+        </aside>
       </div>
     </div>
   );

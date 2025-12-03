@@ -92,11 +92,13 @@ export default function SearchBar() {
   };
 
   return (
-    <div ref={searchRef} className="relative w-full">
-      <form onSubmit={handleSubmit} className="relative">
+    <div ref={searchRef} className="relative w-full" role="search" aria-label="Site search">
+      <form onSubmit={handleSubmit} className="relative" aria-label="Search form">
+        <label htmlFor="search-input-navbar" className="sr-only">Search for products, brands and more</label>
         <Input
+          id="search-input-navbar"
           ref={inputRef}
-          type="text"
+          type="search"
           placeholder="Search for Products, Brands and More"
           value={searchQuery}
           onChange={(e) => {
@@ -109,8 +111,16 @@ export default function SearchBar() {
             }
           }}
           className="w-full pl-10 pr-10 h-11 shadow-none"
+          aria-label="Search for products, brands and more"
+          aria-autocomplete="list"
+          aria-expanded={isOpen}
+          aria-controls="search-results"
+          aria-describedby={isOpen && results.length > 0 ? "search-results-count" : undefined}
         />
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-stone-400" />
+        <Search 
+          className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-stone-400" 
+          aria-hidden="true"
+        />
         {searchQuery && (
           <button
             type="button"
@@ -119,15 +129,21 @@ export default function SearchBar() {
               setIsOpen(false);
             }}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-stone-400 hover:text-stone-600"
+            aria-label="Clear search query"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4" aria-hidden="true" />
           </button>
         )}
       </form>
 
       {/* Dropdown Results */}
       {isOpen && results.length > 0 && (
-        <div className="absolute z-50 w-full mt-2 bg-white border border-stone-200 rounded-md shadow-lg max-h-96 overflow-y-auto">
+        <div 
+          id="search-results"
+          className="absolute z-50 w-full mt-2 bg-white border border-stone-200 rounded-md shadow-lg max-h-96 overflow-y-auto"
+          role="listbox"
+          aria-label="Search results"
+        >
           <div className="p-2">
             {results.map((item) => (
               <Link
@@ -135,12 +151,14 @@ export default function SearchBar() {
                 href={`/product/${item.id}`}
                 onClick={handleResultClick}
                 className="flex items-center gap-3 p-3 hover:bg-stone-50 rounded-md transition-colors"
+                role="option"
+                aria-label={`${item.productDisplayName || "Unnamed Product"}, ${item.articleType}, ${item.masterCategory}${item.priceUSD ? `, $${item.priceUSD.toFixed(2)}` : ""}`}
               >
-                <div className="flex-shrink-0 w-16 h-16 bg-stone-100 rounded overflow-hidden">
+                <div className="flex-shrink-0 w-16 h-16 bg-stone-100 rounded overflow-hidden" role="img" aria-hidden="true">
                   {item.imageURL ? (
                     <img
                       src={item.imageURL}
-                      alt={item.productDisplayName || "Product"}
+                      alt=""
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = "/placeholder.png";
@@ -172,17 +190,26 @@ export default function SearchBar() {
                 type="button"
                 onClick={handleViewAllResults}
                 className="w-full mt-2 p-2 text-sm text-blue-600 hover:bg-blue-50 rounded-md font-medium"
+                aria-label={`View all ${totalResults} results for ${searchQuery}`}
               >
                 View all {totalResults} results for &quot;{searchQuery}&quot;
               </button>
             )}
+            <div id="search-results-count" className="sr-only">
+              {totalResults} {totalResults === 1 ? "result" : "results"} found
+            </div>
           </div>
         </div>
       )}
 
       {/* No Results */}
       {isOpen && searchQuery.trim().length > 0 && results.length === 0 && (
-        <div className="absolute z-50 w-full mt-2 bg-white border border-stone-200 rounded-md shadow-lg p-4">
+        <div 
+          className="absolute z-50 w-full mt-2 bg-white border border-stone-200 rounded-md shadow-lg p-4"
+          role="status"
+          aria-live="polite"
+          aria-label="No search results"
+        >
           <p className="text-sm text-stone-500 text-center">
             No products found for &quot;{searchQuery}&quot;
           </p>

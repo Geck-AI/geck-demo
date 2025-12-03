@@ -21,6 +21,7 @@ function HomeCallout({
     <Link
       href={path}
       className="p-8 bg-stone-200 h-72 rounded-sm hover:bg-stone-200 hover:shadow-sm hover:translate-y-[-2px] transition-all duration-300"
+      aria-label={`Browse ${title} - ${description}`}
     >
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-stone-600">{description}</p>
@@ -77,41 +78,64 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="bg-white">
+    <main className="bg-white" role="main" aria-label="Home page">
       {/* Hero Banner */}
-      <Image
-        src="/cover.webp"
-        alt="Hero Banner"
-        className="w-full object-cover"
-        width={1500}
-        height={260}
-      />
+      <section aria-label="Hero banner">
+        <Image
+          src="/cover.webp"
+          alt="Hero Banner - Welcome to THE STORE"
+          className="w-full object-cover"
+          width={1500}
+          height={260}
+          priority
+          aria-hidden="false"
+        />
+      </section>
 
       {/* Just In Section */}
-      <section className="py-12 px-6 max-w-7xl mx-auto">
+      <section 
+        className="py-12 px-6 max-w-7xl mx-auto"
+        aria-labelledby="just-in-heading"
+      >
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-3xl font-semibold">Just In</h2>
+          <h2 id="just-in-heading" className="text-3xl font-semibold">Just In</h2>
           <Link
             href="/shop/just-in"
             className="text-stone-700 flex items-center group"
+            aria-label="View all just in products"
           >
             View all
-            <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
+            <ArrowRight 
+              className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" 
+              aria-hidden="true"
+            />
           </Link>
         </div>
         {loading ? (
-          <p>Loading...</p>
+          <div role="status" aria-live="polite" aria-label="Loading products">
+            <p>Loading...</p>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <div 
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
+            role="list"
+            aria-label="Just in products"
+          >
             {justIn.map((item) => (
-              <StyleCard key={item.id} item={item} />
+              <div key={item.id} role="listitem">
+                <StyleCard item={item} />
+              </div>
             ))}
           </div>
         )}
       </section>
 
       {/* Offers and Categories */}
-      <section className="py-12 px-6">
+      <section 
+        className="py-12 px-6"
+        aria-labelledby="categories-heading"
+      >
+        <h2 id="categories-heading" className="sr-only">Shop by Category</h2>
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {callouts.map((callout) => (
             <HomeCallout
@@ -126,12 +150,13 @@ export default function HomePage() {
             className="col-span-2 p-8 bg-stone-500 h-72 rounded-sm
             hover:bg-stone-600 hover:shadow-sm
             hover:-translate-y-1 transition-all duration-300"
+            aria-label="View special offers and deals"
           >
             <h3 className="text-xl font-semibold mb-2 text-stone-50">Offers</h3>
             <p className="text-stone-200">Discover our best deals</p>
           </Link>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

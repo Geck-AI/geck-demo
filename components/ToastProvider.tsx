@@ -11,6 +11,9 @@ export default function ToastProvider({ children }: { children: ReactNode }) {
         position="top-right"
         reverseOrder={false}
         gutter={8}
+        containerStyle={{
+          top: '100px',
+        }}
         toastOptions={{
           duration: 5000,
           style: {

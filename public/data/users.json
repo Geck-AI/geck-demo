@@ -16,5 +16,19 @@
       "zipcode": "12345"
     },
     "createdAt": "2025-11-23T05:59:06.242Z"
+  },
+  {
+    "username": "mukesh@appening.xyz",
+    "password": "$2b$12$W5xlDVPZusosFT6YPZ17vO6pePFug0JlHCPxcciOAhvjR3NY7kS.G",
+    "name": "Mukesh",
+    "email": "mukesh@appening.xyz",
+    "phone": "9234234234",
+    "address": {
+      "street": "Test",
+      "city": "test",
+      "state": "test",
+      "zipcode": "234234"
+    },
+    "createdAt": "2025-12-03T03:24:11.809Z"
   }
 ]

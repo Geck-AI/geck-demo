@@ -156,12 +156,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col h-[60vh]">
+    <main className="flex flex-col h-[60vh]" role="main" aria-label="Login page">
       <div className="flex flex-col items-center justify-center flex-grow relative">
         <h1 className="text-2xl font-bold text-center mb-8">
           Log into your account
         </h1>
-        <Card className="w-full max-w-md p-6">
+        <Card className="w-full max-w-md p-6" role="region" aria-label="Login form">
           {/* Toggle action – prefer a single button for OTP entry */}
           {mode === "password" ? (
             <div className="flex justify-end mb-2">
@@ -169,6 +169,7 @@ export default function LoginPage() {
                 className="text-sm text-blue-600 hover:underline"
                 onClick={() => setMode("otp")}
                 disabled={isLoading}
+                aria-label="Switch to OTP login method"
               >
                 Login with OTP
               </button>
@@ -179,59 +180,109 @@ export default function LoginPage() {
                 className="text-sm text-stone-700 hover:underline"
                 onClick={() => setMode("password")}
                 disabled={isLoading}
+                aria-label="Switch to password login method"
               >
                 Back to password login
               </button>
             </div>
           )}
-          {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
+          {errorMessage && (
+            <div 
+              role="alert" 
+              aria-live="assertive" 
+              className="text-red-500 mb-4"
+              aria-label="Error message"
+            >
+              <p>{errorMessage}</p>
+            </div>
+          )}
 
           {mode === "password" ? (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <Input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+            <form onSubmit={handleSubmit} className="space-y-4" aria-label="Password login form">
+              <div>
+                <label htmlFor="username" className="sr-only">Username</label>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  disabled={isLoading}
+                  aria-required="true"
+                  aria-label="Enter your username"
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="sr-only">Password</label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
+                  aria-required="true"
+                  aria-label="Enter your password"
+                />
+              </div>
+              <Button 
+                type="submit" 
+                className="w-full" 
                 disabled={isLoading}
-              />
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isLoading}
-              />
-              <Button type="submit" className="w-full" disabled={isLoading}>
+                aria-label={isLoading ? "Logging in, please wait" : "Submit login form"}
+              >
                 {isLoading ? "Logging in..." : "Login"}
               </Button>
             </form>
           ) : (
-            <div className="space-y-4">
-              <Input
-                type="text"
-                placeholder="Email or phone"
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-                disabled={isLoading || otpRequested}
-              />
+            <div className="space-y-4" role="region" aria-label="OTP login form">
+              <div>
+                <label htmlFor="identifier" className="sr-only">Email or phone</label>
+                <Input
+                  id="identifier"
+                  type="text"
+                  placeholder="Email or phone"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  disabled={isLoading || otpRequested}
+                  aria-required="true"
+                  aria-label="Enter your email or phone number"
+                />
+              </div>
               {!otpRequested ? (
-                <Button className="w-full" onClick={handleRequestOtp} disabled={isLoading || !identifier}>
+                <Button 
+                  className="w-full" 
+                  onClick={handleRequestOtp} 
+                  disabled={isLoading || !identifier}
+                  aria-label="Send OTP code to your email or phone"
+                >
                   {isLoading ? "Sending..." : "Send OTP"}
                 </Button>
               ) : (
                 <>
-                  <div className="text-xs text-stone-600 mb-2">
+                  <div className="text-xs text-stone-600 mb-2" role="status" aria-live="polite">
                     Enter the OTP code sent to your email or phone.
                   </div>
-                  <Input
-                    type="text"
-                    placeholder="Enter OTP"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    disabled={isLoading}
-                  />
-                  <Button className="w-full" onClick={handleVerifyOtp} disabled={isLoading || otp.length < 4}>
+                  <div>
+                    <label htmlFor="otp" className="sr-only">OTP code</label>
+                    <Input
+                      id="otp"
+                      type="text"
+                      placeholder="Enter OTP"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      disabled={isLoading}
+                      aria-required="true"
+                      aria-label="Enter the OTP code you received"
+                      inputMode="numeric"
+                    />
+                  </div>
+                  <Button 
+                    className="w-full" 
+                    onClick={handleVerifyOtp} 
+                    disabled={isLoading || otp.length < 4}
+                    aria-label="Verify OTP and complete login"
+                  >
                     {isLoading ? "Verifying..." : "Verify & Login"}
                   </Button>
                   <button
@@ -242,6 +293,7 @@ export default function LoginPage() {
                       setErrorMessage("");
                     }}
                     disabled={isLoading}
+                    aria-label="Request a new OTP code"
                   >
                     Request new OTP
                   </button>
@@ -251,19 +303,20 @@ export default function LoginPage() {
           )}
 
           {/* Google login divider */}
-          <div className="flex items-center my-6">
-            <span className="flex-1 h-px bg-stone-200" />
-            <span className="mx-3 text-xs text-stone-500">or</span>
-            <span className="flex-1 h-px bg-stone-200" />
+          <div className="flex items-center my-6" role="separator" aria-label="Login options divider">
+            <span className="flex-1 h-px bg-stone-200" aria-hidden="true" />
+            <span className="mx-3 text-xs text-stone-500" aria-hidden="true">or</span>
+            <span className="flex-1 h-px bg-stone-200" aria-hidden="true" />
           </div>
           <Button
             variant="outline"
             className="w-full flex items-center justify-center mb-2"
             onClick={handleGoogleLogin}
             disabled={isLoading}
+            aria-label="Login with Google account"
           >
             {/* Ideally, use a Google icon */}
-            <svg className="w-5 h-5 mr-2" viewBox="0 0 48 48">
+            <svg className="w-5 h-5 mr-2" viewBox="0 0 48 48" aria-hidden="true">
               <g>
                 <path fill="#4285F4" d="M24 9.5c3.54 0 6.02 1.52 7.42 2.8l5.48-5.43C33.17 3.54 28.83 1.5 24 1.5 14.82 1.5 6.94 6.81 2.82 14.16l6.65 5.17C11.45 14.02 17.19 9.5 24 9.5z"/>
                 <path fill="#34A853" d="M46.73 24.55c0-1.81-.16-3.54-.47-5.18H24v9.8h12.83c-.55 2.9-2.23 5.36-4.74 7.07l7.25 5.65C43.6 37.24 46.73 31.48 46.73 24.55z"/>
@@ -276,7 +329,7 @@ export default function LoginPage() {
           </Button>
         </Card>
         <div className="mt-4 text-center text-sm">
-          New here? {" "}
+          <span>New here? </span>
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -299,13 +352,20 @@ export default function LoginPage() {
               });
             }}
             className="text-blue-600 hover:underline"
+            aria-label="Open registration form to create a new account"
           >
             Create an account
           </button>
         </div>
 
         {showSignup && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="signup-modal-title"
+            aria-describedby="signup-modal-description"
+          >
             <div
               className="absolute inset-0 bg-black/40"
               onClick={() => {
@@ -314,10 +374,11 @@ export default function LoginPage() {
                 setSignupErrors({});
                 setSignupSuccess(null);
               }}
+              aria-label="Close registration modal"
             />
-            <div className="relative bg-white rounded-md shadow-xl w-full max-w-lg p-6">
+            <div className="relative bg-white rounded-md shadow-xl w-full max-w-lg p-6" role="document">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold">Create your account</h2>
+                <h2 id="signup-modal-title" className="text-lg font-semibold">Create your account</h2>
                 <button
                   className="text-stone-600 hover:text-stone-900"
                   onClick={() => {
@@ -326,26 +387,56 @@ export default function LoginPage() {
                     setSignupErrors({});
                     setSignupSuccess(null);
                   }}
+                  aria-label="Close registration modal"
                 >
-                  ✕
+                  <span aria-hidden="true">✕</span>
                 </button>
               </div>
-              <div className="mb-3 text-sm text-stone-600">Step {signupStep} of 3</div>
+              <div id="signup-modal-description" className="mb-3 text-sm text-stone-600" role="status" aria-live="polite">
+                Step {signupStep} of 3
+              </div>
               
               {/* General Error Message */}
               {signupGeneralError && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                <div 
+                  className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md"
+                  role="alert"
+                  aria-live="assertive"
+                  aria-label="Registration error"
+                >
                   <p className="text-sm text-red-800">{signupGeneralError}</p>
                 </div>
               )}
               
               {/* Success Message */}
               {signupSuccess ? (
-                <div className="text-green-600 font-semibold text-center my-8 min-h-[100px] flex items-center justify-center">
+                <div 
+                  className="text-green-600 font-semibold text-center my-8 min-h-[100px] flex items-center justify-center"
+                  role="status"
+                  aria-live="polite"
+                  aria-label="Registration success"
+                >
                   {signupSuccess}
                 </div>
               ) : signupStep === 1 ? (
-                <div className="grid gap-3">
+                <form 
+                  className="grid gap-3"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const errs: Record<string, string> = {};
+                    if (!signup.name.trim()) errs.name = "Name is required";
+                    const emailOk = /.+@.+\..+/.test(signup.email);
+                    if (!signup.email.trim()) errs.email = "Email is required";
+                    else if (!emailOk) errs.email = "Enter a valid email";
+                    const phoneOk = /^[0-9+()\-\s]{7,}$/.test(signup.phone);
+                    if (!signup.phone.trim()) errs.phone = "Phone is required";
+                    else if (!phoneOk) errs.phone = "Enter a valid phone number";
+                    setSignupErrors(errs);
+                    setSignupGeneralError(null);
+                    if (Object.keys(errs).length === 0) setSignupStep(2);
+                  }}
+                  aria-label="Registration step 1: Personal information"
+                >
                   <div>
                     <label htmlFor="signup-name" className="block text-sm mb-1">Name</label>
                     <Input
@@ -353,9 +444,12 @@ export default function LoginPage() {
                       value={signup.name}
                       onChange={(e) => setSignup((p) => ({ ...p, name: e.target.value }))}
                       className={signupErrors.name ? "border-red-500" : ""}
+                      aria-required="true"
+                      aria-invalid={!!signupErrors.name}
+                      aria-describedby={signupErrors.name ? "signup-name-error" : undefined}
                     />
                     {signupErrors.name && (
-                      <p className="text-xs text-red-600 mt-1">{signupErrors.name}</p>
+                      <p id="signup-name-error" className="text-xs text-red-600 mt-1" role="alert">{signupErrors.name}</p>
                     )}
                   </div>
                   <div>
@@ -366,45 +460,57 @@ export default function LoginPage() {
                       value={signup.email}
                       onChange={(e) => setSignup((p) => ({ ...p, email: e.target.value }))}
                       className={signupErrors.email ? "border-red-500" : ""}
+                      aria-required="true"
+                      aria-invalid={!!signupErrors.email}
+                      aria-describedby={signupErrors.email ? "signup-email-error" : undefined}
                     />
                     {signupErrors.email && (
-                      <p className="text-xs text-red-600 mt-1">{signupErrors.email}</p>
+                      <p id="signup-email-error" className="text-xs text-red-600 mt-1" role="alert">{signupErrors.email}</p>
                     )}
                   </div>
                   <div>
                     <label htmlFor="signup-phone" className="block text-sm mb-1">Phone</label>
                     <Input
                       id="signup-phone"
+                      type="tel"
                       value={signup.phone}
                       onChange={(e) => setSignup((p) => ({ ...p, phone: e.target.value }))}
                       className={signupErrors.phone ? "border-red-500" : ""}
+                      aria-required="true"
+                      aria-invalid={!!signupErrors.phone}
+                      aria-describedby={signupErrors.phone ? "signup-phone-error" : undefined}
                     />
                     {signupErrors.phone && (
-                      <p className="text-xs text-red-600 mt-1">{signupErrors.phone}</p>
+                      <p id="signup-phone-error" className="text-xs text-red-600 mt-1" role="alert">{signupErrors.phone}</p>
                     )}
                   </div>
                   <div className="flex justify-end gap-2 mt-2">
                     <Button
-                      onClick={() => {
-                        const errs: Record<string, string> = {};
-                        if (!signup.name.trim()) errs.name = "Name is required";
-                        const emailOk = /.+@.+\..+/.test(signup.email);
-                        if (!signup.email.trim()) errs.email = "Email is required";
-                        else if (!emailOk) errs.email = "Enter a valid email";
-                        const phoneOk = /^[0-9+()\-\s]{7,}$/.test(signup.phone);
-                        if (!signup.phone.trim()) errs.phone = "Phone is required";
-                        else if (!phoneOk) errs.phone = "Enter a valid phone number";
-                        setSignupErrors(errs);
-                        setSignupGeneralError(null);
-                        if (Object.keys(errs).length === 0) setSignupStep(2);
-                      }}
+                      type="submit"
+                      aria-label="Continue to address information"
                     >
                       Continue
                     </Button>
                   </div>
-                </div>
+                </form>
               ) : signupStep === 2 ? (
-                <div className="grid gap-3">
+                <form 
+                  className="grid gap-3"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const errs: Record<string, string> = {};
+                    if (!signup.street.trim()) errs.street = "Street is required";
+                    if (!signup.city.trim()) errs.city = "City is required";
+                    if (!signup.state.trim()) errs.state = "State is required";
+                    const zipOk = /^[A-Za-z0-9\-\s]{3,10}$/.test(signup.zipcode);
+                    if (!signup.zipcode.trim()) errs.zipcode = "Zipcode is required";
+                    else if (!zipOk) errs.zipcode = "Enter a valid code";
+                    setSignupErrors(errs);
+                    setSignupGeneralError(null);
+                    if (Object.keys(errs).length === 0) setSignupStep(3);
+                  }}
+                  aria-label="Registration step 2: Address information"
+                >
                   <div>
                     <label htmlFor="signup-street" className="block text-sm mb-1">Street Address</label>
                     <Input
@@ -412,9 +518,12 @@ export default function LoginPage() {
                       value={signup.street}
                       onChange={(e) => setSignup((p) => ({ ...p, street: e.target.value }))}
                       className={signupErrors.street ? "border-red-500" : ""}
+                      aria-required="true"
+                      aria-invalid={!!signupErrors.street}
+                      aria-describedby={signupErrors.street ? "signup-street-error" : undefined}
                     />
                     {signupErrors.street && (
-                      <p className="text-xs text-red-600 mt-1">{signupErrors.street}</p>
+                      <p id="signup-street-error" className="text-xs text-red-600 mt-1" role="alert">{signupErrors.street}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-2 gap-3">
@@ -425,9 +534,12 @@ export default function LoginPage() {
                         value={signup.city}
                         onChange={(e) => setSignup((p) => ({ ...p, city: e.target.value }))}
                         className={signupErrors.city ? "border-red-500" : ""}
+                        aria-required="true"
+                        aria-invalid={!!signupErrors.city}
+                        aria-describedby={signupErrors.city ? "signup-city-error" : undefined}
                       />
                       {signupErrors.city && (
-                        <p className="text-xs text-red-600 mt-1">{signupErrors.city}</p>
+                        <p id="signup-city-error" className="text-xs text-red-600 mt-1" role="alert">{signupErrors.city}</p>
                       )}
                     </div>
                     <div>
@@ -437,9 +549,12 @@ export default function LoginPage() {
                         value={signup.state}
                         onChange={(e) => setSignup((p) => ({ ...p, state: e.target.value }))}
                         className={signupErrors.state ? "border-red-500" : ""}
+                        aria-required="true"
+                        aria-invalid={!!signupErrors.state}
+                        aria-describedby={signupErrors.state ? "signup-state-error" : undefined}
                       />
                       {signupErrors.state && (
-                        <p className="text-xs text-red-600 mt-1">{signupErrors.state}</p>
+                        <p id="signup-state-error" className="text-xs text-red-600 mt-1" role="alert">{signupErrors.state}</p>
                       )}
                     </div>
                   </div>
@@ -450,38 +565,93 @@ export default function LoginPage() {
                       value={signup.zipcode}
                       onChange={(e) => setSignup((p) => ({ ...p, zipcode: e.target.value }))}
                       className={signupErrors.zipcode ? "border-red-500" : ""}
+                      aria-required="true"
+                      aria-invalid={!!signupErrors.zipcode}
+                      aria-describedby={signupErrors.zipcode ? "signup-zipcode-error" : undefined}
                     />
                     {signupErrors.zipcode && (
-                      <p className="text-xs text-red-600 mt-1">{signupErrors.zipcode}</p>
+                      <p id="signup-zipcode-error" className="text-xs text-red-600 mt-1" role="alert">{signupErrors.zipcode}</p>
                     )}
                   </div>
                   <div className="flex justify-between gap-2 mt-2">
-                    <Button variant="secondary" onClick={() => {
-                      setSignupStep(1);
-                      setSignupGeneralError(null);
-                    }}>
+                    <Button 
+                      type="button"
+                      variant="secondary" 
+                      onClick={() => {
+                        setSignupStep(1);
+                        setSignupGeneralError(null);
+                      }}
+                      aria-label="Go back to personal information step"
+                    >
                       Back
                     </Button>
                     <Button
-                      onClick={() => {
-                        const errs: Record<string, string> = {};
-                        if (!signup.street.trim()) errs.street = "Street is required";
-                        if (!signup.city.trim()) errs.city = "City is required";
-                        if (!signup.state.trim()) errs.state = "State is required";
-                        const zipOk = /^[A-Za-z0-9\-\s]{3,10}$/.test(signup.zipcode);
-                        if (!signup.zipcode.trim()) errs.zipcode = "Zipcode is required";
-                        else if (!zipOk) errs.zipcode = "Enter a valid code";
-                        setSignupErrors(errs);
-                        setSignupGeneralError(null);
-                        if (Object.keys(errs).length === 0) setSignupStep(3);
-                      }}
+                      type="submit"
+                      aria-label="Continue to password step"
                     >
                       Continue
                     </Button>
                   </div>
-                </div>
+                </form>
               ) : (
-                <div className="grid gap-3">
+                <form 
+                  className="grid gap-3"
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const errs: Record<string, string> = {};
+                    if (!signup.password.trim()) errs.password = "Password is required";
+                    else if (signup.password.length < 6) errs.password = "Password must be at least 6 characters";
+                    if (!signup.confirmedPassword.trim()) errs.confirmedPassword = "Please confirm your password";
+                    else if (signup.password !== signup.confirmedPassword) errs.confirmedPassword = "Passwords do not match";
+                    setSignupErrors(errs);
+                    setSignupGeneralError(null);
+                    if (Object.keys(errs).length === 0) {
+                      setIsLoading(true);
+                      setSignupGeneralError(null);
+                      setSignupErrors({});
+                      try {
+                        // Register the user
+                        const result = await register({
+                          name: signup.name,
+                          email: signup.email,
+                          phone: signup.phone,
+                          street: signup.street,
+                          city: signup.city,
+                          state: signup.state,
+                          zipcode: signup.zipcode,
+                          password: signup.password,
+                        });
+                        
+                        // Auto-login: Set token in auth store if received
+                        if (result.token) {
+                          setToken(result.token);
+                        }
+                        
+                        // Show success message inside popup
+                        setSignupSuccess(`Account created successfully! Welcome ${signup.name}!`);
+                        
+                        // Redirect to home page after a brief delay
+                        setTimeout(() => {
+                          router.push(`/?registered=true&name=${encodeURIComponent(signup.name)}`);
+                        }, 1500);
+                      } catch (error) {
+                        const errorMessage = error instanceof Error ? error.message : "Registration failed";
+                        if (errorMessage.includes("already exists") || errorMessage.includes("email")) {
+                          // Redirect to step 1 to fix email
+                          setSignupStep(1);
+                          setSignupErrors({ email: "This email is already registered" });
+                          setSignupGeneralError("This email is already registered. Please use a different email.");
+                        } else {
+                          setSignupGeneralError(errorMessage);
+                          setSignupErrors({ password: errorMessage });
+                        }
+                      } finally {
+                        setIsLoading(false);
+                      }
+                    }
+                  }}
+                  aria-label="Registration step 3: Password setup"
+                >
                   <div>
                     <label htmlFor="signup-password" className="block text-sm mb-1">Password</label>
                     <Input
@@ -490,9 +660,12 @@ export default function LoginPage() {
                       value={signup.password}
                       onChange={(e) => setSignup((p) => ({ ...p, password: e.target.value }))}
                       className={signupErrors.password ? "border-red-500" : ""}
+                      aria-required="true"
+                      aria-invalid={!!signupErrors.password}
+                      aria-describedby={signupErrors.password ? "signup-password-error" : undefined}
                     />
                     {signupErrors.password && (
-                      <p className="text-xs text-red-600 mt-1">{signupErrors.password}</p>
+                      <p id="signup-password-error" className="text-xs text-red-600 mt-1" role="alert">{signupErrors.password}</p>
                     )}
                   </div>
                   <div>
@@ -503,83 +676,40 @@ export default function LoginPage() {
                       value={signup.confirmedPassword}
                       onChange={(e) => setSignup((p) => ({ ...p, confirmedPassword: e.target.value }))}
                       className={signupErrors.confirmedPassword ? "border-red-500" : ""}
+                      aria-required="true"
+                      aria-invalid={!!signupErrors.confirmedPassword}
+                      aria-describedby={signupErrors.confirmedPassword ? "signup-confirm-password-error" : undefined}
                     />
                     {signupErrors.confirmedPassword && (
-                      <p className="text-xs text-red-600 mt-1">{signupErrors.confirmedPassword}</p>
+                      <p id="signup-confirm-password-error" className="text-xs text-red-600 mt-1" role="alert">{signupErrors.confirmedPassword}</p>
                     )}
                   </div>
                   <div className="flex justify-between gap-2 mt-2">
-                    <Button variant="secondary" onClick={() => {
-                      setSignupStep(2);
-                      setSignupGeneralError(null);
-                    }}>
+                    <Button 
+                      type="button"
+                      variant="secondary" 
+                      onClick={() => {
+                        setSignupStep(2);
+                        setSignupGeneralError(null);
+                      }}
+                      aria-label="Go back to address information step"
+                    >
                       Back
                     </Button>
                     <Button
-                      onClick={async () => {
-                        const errs: Record<string, string> = {};
-                        if (!signup.password.trim()) errs.password = "Password is required";
-                        else if (signup.password.length < 6) errs.password = "Password must be at least 6 characters";
-                        if (!signup.confirmedPassword.trim()) errs.confirmedPassword = "Please confirm your password";
-                        else if (signup.password !== signup.confirmedPassword) errs.confirmedPassword = "Passwords do not match";
-                        setSignupErrors(errs);
-                        setSignupGeneralError(null);
-                        if (Object.keys(errs).length === 0) {
-                          setIsLoading(true);
-                          setSignupGeneralError(null);
-                          setSignupErrors({});
-                          try {
-                            // Register the user
-                            const result = await register({
-                              name: signup.name,
-                              email: signup.email,
-                              phone: signup.phone,
-                              street: signup.street,
-                              city: signup.city,
-                              state: signup.state,
-                              zipcode: signup.zipcode,
-                              password: signup.password,
-                            });
-                            
-                            // Auto-login: Set token in auth store if received
-                            if (result.token) {
-                              setToken(result.token);
-                            }
-                            
-                            // Show success message inside popup
-                            setSignupSuccess(`Account created successfully! Welcome ${signup.name}!`);
-                            
-                            // Redirect to home page after a brief delay
-                            setTimeout(() => {
-                              router.push(`/?registered=true&name=${encodeURIComponent(signup.name)}`);
-                            }, 1500);
-                          } catch (error) {
-                            const errorMessage = error instanceof Error ? error.message : "Registration failed";
-                            if (errorMessage.includes("already exists") || errorMessage.includes("email")) {
-                              // Redirect to step 1 to fix email
-                              setSignupStep(1);
-                              setSignupErrors({ email: "This email is already registered" });
-                              setSignupGeneralError("This email is already registered. Please use a different email.");
-                            } else {
-                              setSignupGeneralError(errorMessage);
-                              setSignupErrors({ password: errorMessage });
-                            }
-                          } finally {
-                            setIsLoading(false);
-                          }
-                        }
-                      }}
+                      type="submit"
                       disabled={isLoading}
+                      aria-label={isLoading ? "Creating account, please wait" : "Create account and complete registration"}
                     >
                       {isLoading ? "Creating account..." : "Create account"}
                     </Button>
                   </div>
-                </div>
+                </form>
               )}
             </div>
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 }

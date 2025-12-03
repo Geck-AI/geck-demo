@@ -36,36 +36,77 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex flex-col h-[60vh]">
+    <main className="flex flex-col h-[60vh]" role="main" aria-label="Registration page">
       <div className="flex flex-col items-center justify-center flex-grow relative">
         <h1 className="text-2xl font-bold text-center mb-8">Register</h1>
-        <Card className="w-full max-w-md p-6">
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          {success && <p className="text-green-600 mb-4">Registration successful! Redirecting...</p>}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <Button type="submit" className="w-full">
+        <Card className="w-full max-w-md p-6" role="region" aria-label="Registration form">
+          {error && (
+            <div 
+              role="alert" 
+              aria-live="assertive" 
+              className="text-red-500 mb-4"
+              aria-label="Registration error"
+            >
+              <p>{error}</p>
+            </div>
+          )}
+          {success && (
+            <div 
+              role="status" 
+              aria-live="polite" 
+              className="text-green-600 mb-4"
+              aria-label="Registration success"
+            >
+              <p>Registration successful! Redirecting...</p>
+            </div>
+          )}
+          <form onSubmit={handleSubmit} className="space-y-4" aria-label="User registration form">
+            <div>
+              <label htmlFor="register-username" className="sr-only">Username</label>
+              <Input
+                id="register-username"
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                aria-required="true"
+                aria-label="Enter your username"
+              />
+            </div>
+            <div>
+              <label htmlFor="register-password" className="sr-only">Password</label>
+              <Input
+                id="register-password"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                aria-required="true"
+                aria-label="Enter your password"
+              />
+            </div>
+            <Button 
+              type="submit" 
+              className="w-full"
+              aria-label="Submit registration form"
+            >
               Register
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
-            Already have an account? <a href="/login" className="text-blue-600 hover:underline">Login</a>
+            <span>Already have an account? </span>
+            <a 
+              href="/login" 
+              className="text-blue-600 hover:underline"
+              aria-label="Go to login page"
+            >
+              Login
+            </a>
           </div>
         </Card>
       </div>
-    </div>
+    </main>
   );
 } 

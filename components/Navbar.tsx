@@ -31,18 +31,20 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="w-full">
+    <nav className="w-full" role="navigation" aria-label="Main navigation">
       {/* Top Row: Logo, Search, Actions */}
       <div className="w-full border-b border-stone-200">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center gap-6 md:gap-8">
             {/* Logo */}
             <div className="text-2xl font-bold flex-shrink-0">
-              <Link href="/">THE STORE</Link>
+              <Link href="/" aria-label="THE STORE - Home page">
+                THE STORE
+              </Link>
             </div>
             
             {/* Full Width Search Bar */}
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0" role="search" aria-label="Site search">
               <div className="hidden md:block">
                 <SearchBar />
               </div>
@@ -50,28 +52,41 @@ export default function Navbar() {
               <Link
                 href="/search"
                 className="md:hidden relative text-stone-700 hover:text-stone-900"
+                aria-label="Open search page"
               >
-                <Search className="w-5 h-5 text-stone-700 hover:text-stone-900 transition-colors duration-200" />
+                <Search 
+                  className="w-5 h-5 text-stone-700 hover:text-stone-900 transition-colors duration-200" 
+                  aria-hidden="true"
+                />
               </Link>
             </div>
             
             {/* User Actions */}
-            <div className="flex items-center justify-end gap-4 flex-shrink-0">
+            <div className="flex items-center justify-end gap-4 flex-shrink-0" role="group" aria-label="User actions">
               <Link
                 href="/favorites"
                 className="relative text-stone-700 hover:text-stone-900"
-                aria-label="wishlist"
+                aria-label="View wishlist"
               >
-                <Heart className="w-5 h-5 text-stone-700 hover:text-red-600 transition-colors duration-200" />
+                <Heart 
+                  className="w-5 h-5 text-stone-700 hover:text-red-600 transition-colors duration-200" 
+                  aria-hidden="true"
+                />
               </Link>
               <Link
                 href="/cart"
                 className="relative text-stone-700 hover:text-stone-900"
-                aria-label="shopping cart"
+                aria-label={`Shopping cart${totalQty > 0 ? ` with ${totalQty} item${totalQty === 1 ? '' : 's'}` : ''}`}
               >
-                <ShoppingCart className="w-5 h-5 text-stone-700 hover:text-stone-900 transition-colors duration-200" />
+                <ShoppingCart 
+                  className="w-5 h-5 text-stone-700 hover:text-stone-900 transition-colors duration-200" 
+                  aria-hidden="true"
+                />
                 {totalQty > 0 && (
-                  <span className="absolute -top-1 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-xs text-white">
+                  <span 
+                    className="absolute -top-1 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-xs text-white"
+                    aria-label={`${totalQty} item${totalQty === 1 ? '' : 's'} in cart`}
+                  >
                     {totalQty}
                   </span>
                 )}
@@ -82,8 +97,9 @@ export default function Navbar() {
                   size="sm"
                   onClick={handleLogout}
                   className="flex items-center space-x-2"
+                  aria-label="Logout from your account"
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="w-4 h-4" aria-hidden="true" />
                   <span className="hidden sm:inline">Logout</span>
                 </Button>
               )}

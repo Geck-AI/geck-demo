@@ -9,14 +9,22 @@ export default function OrderSuccessPage() {
   const arrivalDate = searchParams.get("arrivalDate") ?? "";
 
   if (!orderId) {
-    return <p className="p-4">No order information available.</p>;
+    return (
+      <main className="flex flex-col min-h-screen" role="main" aria-label="Order success page">
+        <div className="flex-1 p-4">
+          <div role="alert" aria-live="assertive">
+            <p className="p-4">No order information available.</p>
+          </div>
+        </div>
+      </main>
+    );
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <main className="flex-1 p-4">
+    <main className="flex flex-col min-h-screen" role="main" aria-label="Order success page">
+      <div className="flex-1 p-4">
         <OrderSuccess orderId={orderId} arrivalDate={arrivalDate} />
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

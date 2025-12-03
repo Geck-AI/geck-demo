@@ -27,16 +27,16 @@ export default function ShopPageContent({ category }: ShopPageContentProps) {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 
   return (
-    <div className="min-h-screen p-8 bg-white">
+    <main className="min-h-screen p-8 bg-white" role="main" aria-label={`Shop ${title} page`}>
       <h1 className="text-3xl font-bold mb-6">{title}</h1>
       <div className="flex gap-8">
-        <div className="w-1/4">
+        <aside className="w-1/4" role="complementary" aria-label="Product filters">
           <FilterSidebar />
-        </div>
-        <div className="flex-1">
+        </aside>
+        <div className="flex-1" role="region" aria-label="Product listings">
           <StyleCardContainer />
         </div>
       </div>
-    </div>
+    </main>
   );
 }
