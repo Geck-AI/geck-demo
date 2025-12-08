@@ -1,0 +1,43 @@
+{
+  "name": "THE STORE - Fashion & Apparel",
+  "short_name": "THE STORE",
+  "description": "Shop the latest fashion trends, clothing, shoes, and accessories",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/cover.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/cover.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["shopping", "fashion", "lifestyle"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Shop All",
+      "short_name": "Shop",
+      "description": "Browse all products",
+      "url": "/shop",
+      "icons": [{ "src": "/cover.webp", "sizes": "96x96" }]
+    },
+    {
+      "name": "Search",
+      "short_name": "Search",
+      "description": "Search for products",
+      "url": "/search",
+      "icons": [{ "src": "/cover.webp", "sizes": "96x96" }]
+    }
+  ]
+}
+

@@ -62,6 +62,7 @@ function PaymentMethod({
     error,
     countryValue,
     "aria-invalid": ariaInvalid,
+    required,
   }: {
     id: string;
     name: string;
@@ -71,6 +72,7 @@ function PaymentMethod({
     error: boolean;
     countryValue: string;
     "aria-invalid"?: boolean;
+    required?: boolean;
   }) {
     const isCountry = name === "country";
     const options = isCountry
@@ -87,9 +89,13 @@ function PaymentMethod({
           aria-invalid={ariaInvalid}
           className={clsx(
             "peer h-9 w-full cursor-pointer rounded-md border border-input bg-white px-3 pr-8 text-sm outline-none",
-            "hover:bg-accent/30 focus-visible:ring-1 focus-visible:ring-ring/50",
+            "hover:bg-accent/30 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
             error ? "border-red-500 focus:ring-red-500" : ""
           )}
+          required={required}
+          aria-required="true"
+          aria-describedby={error ? `${id}-error` : undefined}
+          data-testid={`checkout-${name}-select`}
         >
           <option value="" disabled>
             {placeholder}
@@ -182,9 +188,12 @@ function PaymentMethod({
       className="bg-stone-50 rounded-sm p-4 flex flex-col gap-4"
       onSubmit={handleFormSubmit}
       aria-label="Shipping and checkout form"
+      data-agent-role="checkout-form"
+      data-agent-hint="Complete all required fields (name, email, address, city, state, zipcode, country) to proceed with checkout. Form validates on submit."
+      data-agent-expected="Order placed successfully, redirect to order confirmation page"
     >
       <div>
-        <h3 className="block text-lg font-semibold text-stone-800 mb-1">
+        <h3 id="cart-item-title" className="block text-lg font-semibold text-stone-800 mb-1">
           Shipping Details
         </h3>
         <p className="block text-sm text-stone-600 mb-2">
@@ -206,6 +215,7 @@ function PaymentMethod({
                   onChange={(v) => setAddress((p) => ({ ...p, [name]: v }))}
                   error={!!errors[name]}
                   countryValue={address["country"]}
+                  required
                   aria-invalid={!!errors[name]}
                   aria-required="true"
                   aria-describedby={errors[name] ? `${name}-error` : undefined}
@@ -220,12 +230,14 @@ function PaymentMethod({
                     setAddress((p) => ({ ...p, [name]: e.target.value }))
                   }
                   className={clsx(
-                    "bg-white",
+                    "bg-white focus:ring-2 focus:ring-blue-500",
                     errors[name] ? "border-red-500 focus:ring-red-500" : ""
                   )}
+                  required
                   aria-invalid={!!errors[name]}
                   aria-required="true"
                   aria-describedby={errors[name] ? `${name}-error` : undefined}
+                  data-testid={`checkout-${name}-input`}
                 />
               )}
               {errors[name] && (
@@ -237,7 +249,12 @@ function PaymentMethod({
           );
         })}
       </div>
-      <Button type="submit" className="w-full mt-2" aria-label="Complete checkout">
+      <Button 
+        type="submit" 
+        className="w-full mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" 
+        aria-label="Complete checkout"
+        data-testid="checkout-submit-button"
+      >
         Checkout
       </Button>
     </form>
@@ -331,6 +348,26 @@ export default function CartView() {
           zipcode: addr.zipcode,
         });
 
+        // Track conversion by agent source
+        if (typeof window !== 'undefined') {
+          fetch('/api/analytics/conversion', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              conversionType: 'purchase',
+              value: total,
+              orderId: res.orderId,
+              url: window.location.href,
+              userAgent: navigator.userAgent,
+            }),
+          }).catch(err => {
+            // Silently fail - don't block checkout
+            console.error('Failed to track conversion:', err);
+          });
+        }
+
         // Clear the cart
         clearCart();
 
@@ -351,14 +388,29 @@ export default function CartView() {
     }
   };
 
-  if (loading) return <p className="p-4">Loading cart details...</p>;
+  if (loading) {
+    return (
+      <div className="p-4" role="status" aria-live="polite" aria-label="Loading cart details" aria-busy="true">
+        <noscript>
+          <p>Please enable JavaScript to view your cart.</p>
+        </noscript>
+        <div className="flex items-center gap-2 js-only">
+          <div 
+            className="animate-spin rounded-full h-5 w-5 border-b-2 border-stone-800"
+            aria-hidden="true"
+          ></div>
+          <p>Loading cart details...</p>
+        </div>
+      </div>
+    );
+  }
 
   /* ─────────── Empty cart state ─────────── */
   if (cartItems.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] p-8" role="region" aria-label="Empty shopping cart">
         <div className="text-center" role="status" aria-live="polite">
-          <h2 className="text-2xl font-semibold text-stone-800 mb-4">Your Cart is Empty</h2>
+          <h2 id="empty-cart" className="text-2xl font-semibold text-stone-800 mb-4">Your Cart is Empty</h2>
           <p className="text-stone-600 mb-8">Start adding items to your cart to begin shopping.</p>
           <Link
             href="/shop"
@@ -396,11 +448,16 @@ export default function CartView() {
                     aria-label={`${product.productDisplayName}, quantity ${quantity}, price $${itemTotal.toFixed(2)}`}
                   >
                     {/* Product image */}
-                    <img
-                      src={product.imageURL}
-                      alt={product.productDisplayName}
-                      className="h-24 w-24 object-contain rounded"
-                    />
+                    <figure className="flex-shrink-0">
+                      <img
+                        src={product.imageURL}
+                        alt={`${product.productDisplayName} - Cart item - $${product.priceUSD ?? 'N/A'}`}
+                        className="h-24 w-24 object-contain rounded"
+                      />
+                      <figcaption className="sr-only">
+                        {product.productDisplayName} in shopping cart
+                      </figcaption>
+                    </figure>
                     {/* Product name */}
                     <div className="flex-1 min-w-0">
                       <span 
@@ -426,7 +483,7 @@ export default function CartView() {
                         onClick={() => {
                           useCartStore.getState().removeItem(id);
                         }}
-                        className="text-gray-500 hover:text-gray-700"
+                        className="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
                       >
                         <Trash
                           className="w-6 h-6 cursor-pointer text-gray-500 hover:text-gray-700"
@@ -448,7 +505,13 @@ export default function CartView() {
           </div>
           <div className="mt-8 px-2 text-xl flex justify-between" data-testid="cart-total" role="group" aria-label="Cart total">
             <span className="text-stone-600 font-medium">Total</span>
-            <span className="text-stone-800" data-testid="cart-total-amount" aria-label={`Total amount: $${total.toFixed(2)}`}>
+            <span 
+              className="text-stone-800 font-semibold" 
+              data-testid="cart-total-amount" 
+              aria-label={`Total amount: $${total.toFixed(2)}`}
+              aria-live="polite"
+              aria-atomic="true"
+            >
               ${total.toFixed(2)}
             </span>
           </div>

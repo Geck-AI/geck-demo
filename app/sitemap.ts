@@ -1,0 +1,142 @@
+import { MetadataRoute } from 'next';
+import { getStylesCache } from '@/lib/styleCache';
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.marcusmillichap.com';
+  
+  // Use current date for freshness
+  const now = new Date();
+  
+  // Get all products from cache
+  let productIds: number[] = [];
+  try {
+    const styles = getStylesCache();
+    if (styles && styles.length > 0) {
+      productIds = styles.map((style) => style.id).filter((id) => !isNaN(id) && id > 0);
+    }
+  } catch (error) {
+    console.error('Error loading styles for sitemap:', error);
+    // Fallback: return at least static pages even if products fail to load
+  }
+
+  // Static pages with recent lastModified dates
+  const staticPages: MetadataRoute.Sitemap = [
+    {
+      url: baseUrl,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 1.0,
+    },
+    {
+      url: `${baseUrl}/shop`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/shop/just-in`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/shop/clothes`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/shop/shoes`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/shop/accessories`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/shop/offers`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/search`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/faq`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/content-policy`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/corrections-policy`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/feedback`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/api/docs`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/staging-guide`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+  ];
+
+  // Dynamic product pages with recent dates
+  const productPages: MetadataRoute.Sitemap = productIds.slice(0, 50000).map((id) => ({
+    url: `${baseUrl}/product/${id}`,
+    lastModified: now,
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  }));
+
+  // Combine and ensure we have at least the static pages
+  const allPages = [...staticPages, ...productPages];
+  
+  // Ensure we return a valid sitemap (at minimum static pages)
+  if (allPages.length === 0) {
+    // Fallback: return at least homepage
+    return [
+      {
+        url: baseUrl,
+        lastModified: now,
+        changeFrequency: 'daily',
+        priority: 1.0,
+      },
+    ];
+  }
+
+  return allPages;
+}
+

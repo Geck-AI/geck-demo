@@ -147,12 +147,43 @@ export default function LoginPage() {
 
   // Show loading while initializing
   if (!isInitialized) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    return (
+      <div 
+        className="flex justify-center items-center h-screen" 
+        role="status" 
+        aria-live="polite" 
+        aria-label="Initializing"
+        aria-busy="true"
+      >
+        <div className="flex items-center gap-2">
+          <div 
+            className="animate-spin rounded-full h-5 w-5 border-b-2 border-stone-800"
+            aria-hidden="true"
+          ></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   // Don't show login form if already logged in
   if (token) {
-    return <div className="flex justify-center items-center h-screen">Redirecting...</div>;
+    return (
+      <div 
+        className="flex justify-center items-center h-screen" 
+        role="status" 
+        aria-live="polite" 
+        aria-label="Redirecting"
+      >
+        <div className="flex items-center gap-2">
+          <div 
+            className="animate-spin rounded-full h-5 w-5 border-b-2 border-stone-800"
+            aria-hidden="true"
+          ></div>
+          <p>Redirecting...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -166,7 +197,7 @@ export default function LoginPage() {
           {mode === "password" ? (
             <div className="flex justify-end mb-2">
               <button
-                className="text-sm text-blue-600 hover:underline"
+                className="text-sm text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
                 onClick={() => setMode("otp")}
                 disabled={isLoading}
                 aria-label="Switch to OTP login method"
@@ -177,7 +208,7 @@ export default function LoginPage() {
           ) : (
             <div className="flex justify-end mb-2">
               <button
-                className="text-sm text-stone-700 hover:underline"
+                className="text-sm text-stone-700 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
                 onClick={() => setMode("password")}
                 disabled={isLoading}
                 aria-label="Switch to password login method"
@@ -188,12 +219,13 @@ export default function LoginPage() {
           )}
           {errorMessage && (
             <div 
+              id="login-error"
               role="alert" 
               aria-live="assertive" 
-              className="text-red-500 mb-4"
+              className="text-red-500 mb-4 p-3 bg-red-50 border border-red-200 rounded-md"
               aria-label="Error message"
             >
-              <p>{errorMessage}</p>
+              <p className="font-medium" id="login-error-message">{errorMessage}</p>
             </div>
           )}
 
@@ -208,8 +240,13 @@ export default function LoginPage() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   disabled={isLoading}
+                  required
                   aria-required="true"
                   aria-label="Enter your username"
+                  aria-invalid={!!errorMessage}
+                  aria-describedby={errorMessage ? "login-error-message" : undefined}
+                  className="focus:ring-2 focus:ring-blue-500"
+                  data-testid="login-username-input"
                 />
               </div>
               <div>
@@ -221,8 +258,13 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
+                  required
                   aria-required="true"
                   aria-label="Enter your password"
+                  aria-invalid={!!errorMessage}
+                  aria-describedby={errorMessage ? "login-error-message" : undefined}
+                  className="focus:ring-2 focus:ring-blue-500"
+                  data-testid="login-password-input"
                 />
               </div>
               <Button 
@@ -230,6 +272,7 @@ export default function LoginPage() {
                 className="w-full" 
                 disabled={isLoading}
                 aria-label={isLoading ? "Logging in, please wait" : "Submit login form"}
+                data-testid="login-submit-button"
               >
                 {isLoading ? "Logging in..." : "Login"}
               </Button>
@@ -245,8 +288,12 @@ export default function LoginPage() {
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
                   disabled={isLoading || otpRequested}
+                  required
                   aria-required="true"
                   aria-label="Enter your email or phone number"
+                  aria-invalid={!!errorMessage}
+                  aria-describedby={errorMessage ? "login-error-message" : undefined}
+                  className="focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               {!otpRequested ? (
@@ -267,14 +314,19 @@ export default function LoginPage() {
                     <label htmlFor="otp" className="sr-only">OTP code</label>
                     <Input
                       id="otp"
-                      type="text"
+                      type="tel"
                       placeholder="Enter OTP"
                       value={otp}
                       onChange={(e) => setOtp(e.target.value)}
                       disabled={isLoading}
+                      required
                       aria-required="true"
                       aria-label="Enter the OTP code you received"
                       inputMode="numeric"
+                      pattern="[0-9]*"
+                      aria-invalid={!!errorMessage}
+                      aria-describedby={errorMessage ? "login-error-message" : undefined}
+                      className="focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                   <Button 
@@ -286,7 +338,7 @@ export default function LoginPage() {
                     {isLoading ? "Verifying..." : "Verify & Login"}
                   </Button>
                   <button
-                    className="text-sm text-blue-600 hover:underline mt-2"
+                    className="text-sm text-blue-600 hover:underline mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
                     onClick={() => {
                       setOtpRequested(false);
                       setOtp("");
@@ -302,6 +354,24 @@ export default function LoginPage() {
             </div>
           )}
 
+          {/* Password recovery link */}
+          {mode === "password" && (
+            <div className="text-center mt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  // Switch to OTP mode for password recovery
+                  setMode("otp");
+                  setErrorMessage("");
+                }}
+                className="text-sm text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded"
+                aria-label="Forgot password? Use magic link instead"
+              >
+                Forgot Password?
+              </button>
+            </div>
+          )}
+
           {/* Google login divider */}
           <div className="flex items-center my-6" role="separator" aria-label="Login options divider">
             <span className="flex-1 h-px bg-stone-200" aria-hidden="true" />
@@ -310,7 +380,7 @@ export default function LoginPage() {
           </div>
           <Button
             variant="outline"
-            className="w-full flex items-center justify-center mb-2"
+            className="w-full flex items-center justify-center mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             onClick={handleGoogleLogin}
             disabled={isLoading}
             aria-label="Login with Google account"
@@ -351,7 +421,7 @@ export default function LoginPage() {
                 confirmedPassword: "",
               });
             }}
-            className="text-blue-600 hover:underline"
+            className="text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
             aria-label="Open registration form to create a new account"
           >
             Create an account
@@ -365,6 +435,8 @@ export default function LoginPage() {
             aria-modal="true"
             aria-labelledby="signup-modal-title"
             aria-describedby="signup-modal-description"
+            data-agent-role="signup-modal"
+            data-agent-hint="Multi-step registration form. Complete all required fields in each step. Click outside modal or close button to cancel."
           >
             <div
               className="absolute inset-0 bg-black/40"
@@ -441,9 +513,11 @@ export default function LoginPage() {
                     <label htmlFor="signup-name" className="block text-sm mb-1">Name</label>
                     <Input
                       id="signup-name"
+                      type="text"
                       value={signup.name}
                       onChange={(e) => setSignup((p) => ({ ...p, name: e.target.value }))}
                       className={signupErrors.name ? "border-red-500" : ""}
+                      required
                       aria-required="true"
                       aria-invalid={!!signupErrors.name}
                       aria-describedby={signupErrors.name ? "signup-name-error" : undefined}
@@ -460,6 +534,7 @@ export default function LoginPage() {
                       value={signup.email}
                       onChange={(e) => setSignup((p) => ({ ...p, email: e.target.value }))}
                       className={signupErrors.email ? "border-red-500" : ""}
+                      required
                       aria-required="true"
                       aria-invalid={!!signupErrors.email}
                       aria-describedby={signupErrors.email ? "signup-email-error" : undefined}
@@ -476,6 +551,7 @@ export default function LoginPage() {
                       value={signup.phone}
                       onChange={(e) => setSignup((p) => ({ ...p, phone: e.target.value }))}
                       className={signupErrors.phone ? "border-red-500" : ""}
+                      required
                       aria-required="true"
                       aria-invalid={!!signupErrors.phone}
                       aria-describedby={signupErrors.phone ? "signup-phone-error" : undefined}
@@ -515,9 +591,11 @@ export default function LoginPage() {
                     <label htmlFor="signup-street" className="block text-sm mb-1">Street Address</label>
                     <Input
                       id="signup-street"
+                      type="text"
                       value={signup.street}
                       onChange={(e) => setSignup((p) => ({ ...p, street: e.target.value }))}
                       className={signupErrors.street ? "border-red-500" : ""}
+                      required
                       aria-required="true"
                       aria-invalid={!!signupErrors.street}
                       aria-describedby={signupErrors.street ? "signup-street-error" : undefined}
@@ -531,9 +609,11 @@ export default function LoginPage() {
                       <label htmlFor="signup-city" className="block text-sm mb-1">City</label>
                       <Input
                         id="signup-city"
+                        type="text"
                         value={signup.city}
                         onChange={(e) => setSignup((p) => ({ ...p, city: e.target.value }))}
                         className={signupErrors.city ? "border-red-500" : ""}
+                        required
                         aria-required="true"
                         aria-invalid={!!signupErrors.city}
                         aria-describedby={signupErrors.city ? "signup-city-error" : undefined}
@@ -546,9 +626,11 @@ export default function LoginPage() {
                       <label htmlFor="signup-state" className="block text-sm mb-1">State</label>
                       <Input
                         id="signup-state"
+                        type="text"
                         value={signup.state}
                         onChange={(e) => setSignup((p) => ({ ...p, state: e.target.value }))}
                         className={signupErrors.state ? "border-red-500" : ""}
+                        required
                         aria-required="true"
                         aria-invalid={!!signupErrors.state}
                         aria-describedby={signupErrors.state ? "signup-state-error" : undefined}
@@ -562,9 +644,11 @@ export default function LoginPage() {
                     <label htmlFor="signup-zipcode" className="block text-sm mb-1">Zipcode</label>
                     <Input
                       id="signup-zipcode"
+                      type="text"
                       value={signup.zipcode}
                       onChange={(e) => setSignup((p) => ({ ...p, zipcode: e.target.value }))}
                       className={signupErrors.zipcode ? "border-red-500" : ""}
+                      required
                       aria-required="true"
                       aria-invalid={!!signupErrors.zipcode}
                       aria-describedby={signupErrors.zipcode ? "signup-zipcode-error" : undefined}
@@ -660,6 +744,7 @@ export default function LoginPage() {
                       value={signup.password}
                       onChange={(e) => setSignup((p) => ({ ...p, password: e.target.value }))}
                       className={signupErrors.password ? "border-red-500" : ""}
+                      required
                       aria-required="true"
                       aria-invalid={!!signupErrors.password}
                       aria-describedby={signupErrors.password ? "signup-password-error" : undefined}
@@ -676,6 +761,7 @@ export default function LoginPage() {
                       value={signup.confirmedPassword}
                       onChange={(e) => setSignup((p) => ({ ...p, confirmedPassword: e.target.value }))}
                       className={signupErrors.confirmedPassword ? "border-red-500" : ""}
+                      required
                       aria-required="true"
                       aria-invalid={!!signupErrors.confirmedPassword}
                       aria-describedby={signupErrors.confirmedPassword ? "signup-confirm-password-error" : undefined}

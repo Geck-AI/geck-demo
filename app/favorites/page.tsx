@@ -39,6 +39,7 @@ export default function FavoritesPage() {
             role="status"
             aria-live="polite"
             aria-label="Loading favorites"
+            aria-busy="true"
           >
             <div
               className="animate-spin rounded-full h-12 w-12 border-b-2 border-stone-800 mx-auto"
@@ -89,7 +90,7 @@ export default function FavoritesPage() {
             <div
               className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
               role="list"
-              aria-label="Favorite products"
+              aria-label={`Favorite products, ${favoriteItems.length} items`}
             >
               {favoriteItems.map((item) => (
                 <div key={item.id} role="listitem">
@@ -108,7 +109,7 @@ export default function FavoritesPage() {
               className="w-16 h-16 text-stone-300 mx-auto mb-4"
               aria-hidden="true"
             />
-            <h2 className="text-2xl font-semibold text-stone-800 mb-2">
+            <h2 id="empty-favorites" className="text-2xl font-semibold text-stone-800 mb-2">
               No favorites yet
             </h2>
             <p className="text-stone-600 mb-6">
@@ -117,7 +118,7 @@ export default function FavoritesPage() {
             </p>
             <Link
               href="/shop"
-              className="inline-block bg-black text-white px-6 py-3 rounded-sm hover:bg-stone-800 transition-colors"
+              className="inline-block bg-black text-white px-6 py-3 rounded-sm hover:bg-stone-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               aria-label="Browse shop to add favorites"
             >
               Browse Shop

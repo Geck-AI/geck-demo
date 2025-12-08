@@ -1,0 +1,48 @@
+# robots.txt for THE STORE
+# Allow all search engines and AI bots to crawl the site
+
+User-agent: *
+Allow: /
+
+# Explicit directives for AI bots
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Anthropic-WebFetcher
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Disallow private/admin areas
+User-agent: *
+Disallow: /api/
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/performance/budgets
+Disallow: /_next/
+Disallow: /cart
+Disallow: /favorites
+Disallow: /order-success
+Disallow: /login
+Disallow: /register
+
+# Allow staging guide for partner agents
+Allow: /staging-guide
+
+# Sitemap location
+# Note: Update this URL in production to match your actual domain
+# The sitemap is automatically generated at /sitemap.xml
+Sitemap: https://www.marcusmillichap.com/sitemap.xml
+# Alternative: If using a different domain, update the URL above
+

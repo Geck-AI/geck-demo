@@ -12,8 +12,9 @@ export default function OrderSuccessPage() {
     return (
       <main className="flex flex-col min-h-screen" role="main" aria-label="Order success page">
         <div className="flex-1 p-4">
-          <div role="alert" aria-live="assertive">
-            <p className="p-4">No order information available.</p>
+          <div role="alert" aria-live="assertive" className="p-4 bg-red-50 border border-red-200 rounded-md">
+            <h1 className="text-xl font-semibold text-red-800 mb-2">Order Information Not Available</h1>
+            <p className="text-red-700">No order information available. Please check your order history or contact support.</p>
           </div>
         </div>
       </main>

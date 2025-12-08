@@ -92,7 +92,7 @@ export default function SearchBar() {
   };
 
   return (
-    <div ref={searchRef} className="relative w-full" role="search" aria-label="Site search">
+    <div ref={searchRef} className="relative w-full" role="search" aria-label="Site search" data-agent-role="search-autocomplete" data-agent-hint="Type to search products. Results appear in dropdown below. Click result or press Enter to navigate.">
       <form onSubmit={handleSubmit} className="relative" aria-label="Search form">
         <label htmlFor="search-input-navbar" className="sr-only">Search for products, brands and more</label>
         <Input
@@ -116,6 +116,10 @@ export default function SearchBar() {
           aria-expanded={isOpen}
           aria-controls="search-results"
           aria-describedby={isOpen && results.length > 0 ? "search-results-count" : undefined}
+          data-testid="search-input"
+          data-agent-role="search-input"
+          data-agent-action="search-products"
+          data-agent-hint="Type product name, category, or color. Autocomplete shows matching products as you type."
         />
         <Search 
           className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-stone-400" 
@@ -130,6 +134,7 @@ export default function SearchBar() {
             }}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-stone-400 hover:text-stone-600"
             aria-label="Clear search query"
+            data-testid="search-clear-button"
           >
             <X className="w-4 h-4" aria-hidden="true" />
           </button>
@@ -143,7 +148,16 @@ export default function SearchBar() {
           className="absolute z-50 w-full mt-2 bg-white border border-stone-200 rounded-md shadow-lg max-h-96 overflow-y-auto"
           role="listbox"
           aria-label="Search results"
+          aria-live="polite"
+          aria-atomic="false"
+          data-agent-role="search-results-dropdown"
+          data-agent-hint="Click any product to view details. Shows up to 8 results. Use 'View all' button for complete results."
         >
+          <div className="p-2" role="status" aria-live="polite" aria-atomic="true">
+            <span id="search-results-count" className="sr-only">
+              {totalResults} result{totalResults !== 1 ? 's' : ''} found
+            </span>
+          </div>
           <div className="p-2">
             {results.map((item) => (
               <Link
@@ -153,23 +167,32 @@ export default function SearchBar() {
                 className="flex items-center gap-3 p-3 hover:bg-stone-50 rounded-md transition-colors"
                 role="option"
                 aria-label={`${item.productDisplayName || "Unnamed Product"}, ${item.articleType}, ${item.masterCategory}${item.priceUSD ? `, $${item.priceUSD.toFixed(2)}` : ""}`}
+                data-testid={`search-result-${item.id}`}
+                data-agent-role="search-result-item"
+                data-agent-action="navigate-to-product"
+                data-agent-expected="Navigates to product detail page"
               >
-                <div className="flex-shrink-0 w-16 h-16 bg-stone-100 rounded overflow-hidden" role="img" aria-hidden="true">
+                <figure className="flex-shrink-0 w-16 h-16 bg-stone-100 rounded overflow-hidden">
                   {item.imageURL ? (
-                    <img
-                      src={item.imageURL}
-                      alt=""
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = "/placeholder.png";
-                      }}
-                    />
+                    <>
+                      <img
+                        src={item.imageURL}
+                        alt={`${item.productDisplayName || 'Product'}${item.articleType ? ` - ${item.articleType}` : ''}${item.baseColour ? ` in ${item.baseColour}` : ''} - Search result`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = "/placeholder.png";
+                        }}
+                      />
+                      <figcaption className="sr-only">
+                        {item.productDisplayName || 'Product'} search result thumbnail
+                      </figcaption>
+                    </>
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-stone-400 text-xs">
+                    <div className="w-full h-full flex items-center justify-center text-stone-400 text-xs" aria-label="No product image available">
                       No Image
                     </div>
                   )}
-                </div>
+                </figure>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-stone-900 truncate">
                     {item.productDisplayName || "Unnamed Product"}
@@ -191,6 +214,7 @@ export default function SearchBar() {
                 onClick={handleViewAllResults}
                 className="w-full mt-2 p-2 text-sm text-blue-600 hover:bg-blue-50 rounded-md font-medium"
                 aria-label={`View all ${totalResults} results for ${searchQuery}`}
+                data-testid="search-view-all-button"
               >
                 View all {totalResults} results for &quot;{searchQuery}&quot;
               </button>

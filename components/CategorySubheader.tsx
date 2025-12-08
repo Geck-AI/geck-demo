@@ -56,6 +56,7 @@ export default function CategorySubheader() {
                 className="flex flex-col items-center gap-1 min-w-[80px] hover:opacity-80 transition-opacity group"
                 role="listitem"
                 aria-label={`Browse ${category.label} category`}
+                data-testid={`category-link-${category.label.toLowerCase().replace(/\s+/g, '-')}`}
               >
                 <div className={`p-2 rounded-full bg-stone-100 group-hover:bg-stone-200 transition-colors ${category.color}`} aria-hidden="true">
                   <Icon className="w-5 h-5" />

@@ -1,12 +1,25 @@
-"use client";
+'use client';
 
-import { Toaster } from "react-hot-toast";
-import { ReactNode } from "react";
+import { Toaster } from 'react-hot-toast';
+import { ReactNode } from 'react';
 
-export default function ToastProvider({ children }: { children: ReactNode }) {
+export default function ToastProvider({ children }: { children?: ReactNode }) {
   return (
     <>
       {children}
+      <div 
+        id="toast-container"
+        role="region"
+        aria-live="polite"
+        aria-atomic="false"
+        aria-label="Notifications"
+        className="sr-only"
+      >
+        {/* Screen reader announcements */}
+      </div>
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {/* Toast notifications will be announced here */}
+      </div>
       <Toaster
         position="top-right"
         reverseOrder={false}
@@ -32,4 +45,3 @@ export default function ToastProvider({ children }: { children: ReactNode }) {
     </>
   );
 }
-

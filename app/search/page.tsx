@@ -66,7 +66,7 @@ export default function SearchResultsPage() {
     return (
       <main className="min-h-screen bg-white p-8" role="main" aria-label="Search products page">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center py-12" role="status" aria-live="polite" aria-label="Loading products">
+          <div className="text-center py-12" role="status" aria-live="polite" aria-label="Loading products" aria-busy="true">
             <div 
               className="animate-spin rounded-full h-12 w-12 border-b-2 border-stone-800 mx-auto"
               aria-hidden="true"
@@ -110,12 +110,16 @@ export default function SearchResultsPage() {
                   placeholder="Search products, categories, colors..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 focus:ring-2 focus:ring-blue-500"
                   aria-label="Search products, categories, and colors"
                   aria-describedby="search-results-count"
                 />
               </div>
-              <Button type="submit" aria-label="Submit search query">
+              <Button 
+                type="submit" 
+                className="focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                aria-label="Submit search query"
+              >
                 Search
               </Button>
             </div>
@@ -143,7 +147,7 @@ export default function SearchResultsPage() {
             <div 
               className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
               role="list"
-              aria-label="Search results"
+              aria-label={`Search results for "${query}", ${results.length} items`}
             >
               {results.map((item) => (
                 <div key={item.id} role="listitem">
