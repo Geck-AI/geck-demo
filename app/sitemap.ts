@@ -3,6 +3,8 @@ import { getStylesCache } from '@/lib/styleCache';
 import { getAllBlogPosts } from '@/lib/blogData';
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  // Note: The sitemap is always available at /sitemap.xml regardless of domain
+  // baseUrl is used for absolute URLs in the sitemap entries (required by sitemap spec)
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005';
   
   // Use current date for freshness

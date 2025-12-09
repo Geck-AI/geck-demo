@@ -91,7 +91,6 @@ export default function RegisterPage() {
               role="alert" 
               aria-live="assertive" 
               className="text-red-500 mb-4 p-3 bg-red-50 border border-red-200 rounded-md"
-              aria-label="Registration error"
             >
               <p className="font-medium" id="register-error-message">{error}</p>
             </div>

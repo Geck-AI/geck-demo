@@ -274,7 +274,6 @@ export default function LoginPage() {
               role="alert" 
               aria-live="assertive" 
               className="text-red-500 mb-4 p-3 bg-red-50 border border-red-200 rounded-md"
-              aria-label="Error message"
             >
               <p className="font-medium" id="login-error-message">{errorMessage}</p>
             </div>
@@ -560,7 +559,6 @@ export default function LoginPage() {
                   className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md"
                   role="alert"
                   aria-live="assertive"
-                  aria-label="Registration error"
                 >
                   <p className="text-sm text-red-800">{signupGeneralError}</p>
                 </div>

@@ -48,7 +48,7 @@ const ProductDetailPage = () => {
             <ArrowLeft className="w-4 h-4" aria-hidden="true" />
             <span className="text-sm font-medium">Back to Search</span>
           </Button>
-          <div className="bg-white rounded-2xl shadow-xl p-12 text-center" role="status" aria-live="polite" aria-label="Loading product" aria-busy="true">
+          <div className="bg-white rounded-2xl shadow-xl p-12 text-center" role="status" aria-live="polite" aria-busy="true">
             <div 
               className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-yellow-400 mx-auto"
               aria-hidden="true"

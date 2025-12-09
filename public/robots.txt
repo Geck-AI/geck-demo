@@ -122,8 +122,7 @@ Allow: /api/performance/budgets
 Allow: /staging-guide
 
 # Sitemap location
-# Note: Update this URL in production to match your actual domain
 # The sitemap is automatically generated at /sitemap.xml
-Sitemap: http://localhost:3005/sitemap.xml
-# Alternative: If using a different domain, update the URL above
+# Using relative path so it works on any domain
+Sitemap: /sitemap.xml
 

@@ -18,8 +18,8 @@ interface AuthGuardProps {
 const DEFAULT_PROTECTED_PATHS = [
   '/account',
   '/api-keys',
+  '/checkout', // Checkout requires authentication
   // Note: Cart and favorites are public - users can view without login
-  // Checkout will prompt for login when needed
 ];
 
 export default function AuthGuard({ children, protectedPaths = DEFAULT_PROTECTED_PATHS }: AuthGuardProps) {

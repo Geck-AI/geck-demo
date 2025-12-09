@@ -60,7 +60,7 @@ export default function ShopHomePage() {
           <aside className="w-1/4" role="complementary" aria-label="Product filters sidebar">
             <FilterSidebar />
           </aside>
-          <div className="flex-1" role="region" aria-label="Product listings" aria-live="polite" aria-atomic="false">
+          <div className="flex-1" role="region" aria-label="Product listings">
             <StyleCardContainer />
           </div>
         </div>

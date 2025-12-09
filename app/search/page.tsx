@@ -66,7 +66,7 @@ export default function SearchResultsPage() {
     return (
       <main className="min-h-screen bg-white p-8" role="main" aria-label="Search products page">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center py-12" role="status" aria-live="polite" aria-label="Loading products" aria-busy="true">
+          <div className="text-center py-12" role="status" aria-live="polite" aria-busy="true">
             <div 
               className="animate-spin rounded-full h-12 w-12 border-b-2 border-stone-800 mx-auto"
               aria-hidden="true"

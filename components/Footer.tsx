@@ -73,7 +73,7 @@ export default function Footer() {
               <h3 id={`footer-${section.title.toLowerCase().replace(/\s+/g, '-')}`} className="text-sm font-semibold uppercase tracking-wider mb-4">
                 {section.title}
               </h3>
-              <ul className="space-y-3" role="list">
+              <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.title}>
                     <Link
