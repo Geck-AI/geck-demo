@@ -222,5 +222,21 @@
     "userAgent": "PerplexityBot",
     "url": "/",
     "ip": "::1"
+  },
+  {
+    "timestamp": "2025-12-09T08:57:51.096Z",
+    "agentName": "GPTBot",
+    "agentType": "ai_bot",
+    "userAgent": "GPTBot",
+    "url": "/",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2025-12-09T08:57:51.365Z",
+    "agentName": "PerplexityBot",
+    "agentType": "ai_bot",
+    "userAgent": "PerplexityBot",
+    "url": "/",
+    "ip": "unknown"
   }
 ]
