@@ -95,8 +95,8 @@ export default function FeedbackPage() {
 
   return (
     <main className="min-h-screen p-8 bg-white" role="main" aria-label="Feedback and corrections submission page">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold mb-2">Submit Feedback or Correction</h1>
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-3xl font-bold mb-2">Submit Feedback or Correction</h1>
         <p className="text-stone-600 mb-8">
           Help us maintain accurate information by reporting errors or suggesting improvements.
         </p>

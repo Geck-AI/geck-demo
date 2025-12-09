@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { detectAgent } from '@/lib/agentDetection';
+import { getRateLimitHeadersForEndpoint } from '@/lib/rateLimit';
 import fs from 'fs';
 import path from 'path';
 
@@ -50,15 +51,20 @@ function writeConversions(conversions: Conversion[]) {
 }
 
 export async function POST(request: NextRequest) {
+  // Add rate limit headers
+  const rateLimitHeaders = getRateLimitHeadersForEndpoint('/api/analytics/conversion');
+  
   try {
     const body = await request.json();
     const { conversionType, value, orderId, productId, url, userAgent, ip } = body;
 
     if (!conversionType || !url) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { error: 'Missing required fields: conversionType and url are required' },
         { status: 400 }
       );
+      rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+      return response;
     }
 
     const agent = detectAgent(userAgent || request.headers.get('user-agent') || '');
@@ -85,7 +91,7 @@ export async function POST(request: NextRequest) {
     // Write back to file
     writeConversions(conversions);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       message: 'Conversion tracked',
       conversion: {
@@ -94,17 +100,27 @@ export async function POST(request: NextRequest) {
         agentType: agent.type,
       },
     }, { status: 201 });
+    
+    // Add rate limit headers
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    
+    return response;
 
   } catch (error) {
     console.error('Error processing conversion:', error);
-    return NextResponse.json(
+    const response = NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    return response;
   }
 }
 
 export async function GET(request: NextRequest) {
+  // Add rate limit headers
+  const rateLimitHeaders = getRateLimitHeadersForEndpoint('/api/analytics/conversion');
+  
   try {
     const conversions = readConversions();
     const searchParams = request.nextUrl.searchParams;
@@ -156,13 +172,17 @@ export async function GET(request: NextRequest) {
       stats.byConversionType[conv.conversionType] = (stats.byConversionType[conv.conversionType] || 0) + 1;
     });
 
-    return NextResponse.json(stats);
+    const response = NextResponse.json(stats);
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    return response;
   } catch (error) {
     console.error('Error reading conversions:', error);
-    return NextResponse.json(
+    const response = NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    return response;
   }
 }
 

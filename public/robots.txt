@@ -3,46 +3,127 @@
 
 User-agent: *
 Allow: /
-
-# Explicit directives for AI bots
-User-agent: GPTBot
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: Anthropic-WebFetcher
-Allow: /
-
-User-agent: Applebot-Extended
-Allow: /
-
-User-agent: Claude-Web
-Allow: /
-
-# Disallow private/admin areas
-User-agent: *
+Crawl-delay: 1
 Disallow: /api/
-Allow: /api/docs
-Allow: /api/docs/
-Allow: /api/staging/info
-Allow: /api/performance/budgets
 Disallow: /_next/
 Disallow: /cart
 Disallow: /favorites
 Disallow: /order-success
 Disallow: /login
 Disallow: /register
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/sandbox
+Allow: /api/performance/budgets
+Allow: /staging-guide
 
-# Allow staging guide for partner agents
+# Explicit directives for AI bots
+User-agent: GPTBot
+Allow: /
+Crawl-delay: 2
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cart
+Disallow: /favorites
+Disallow: /order-success
+Disallow: /login
+Disallow: /register
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/sandbox
+Allow: /api/performance/budgets
+Allow: /staging-guide
+
+User-agent: PerplexityBot
+Allow: /
+Crawl-delay: 2
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cart
+Disallow: /favorites
+Disallow: /order-success
+Disallow: /login
+Disallow: /register
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/sandbox
+Allow: /api/performance/budgets
+Allow: /staging-guide
+
+User-agent: Google-Extended
+Allow: /
+Crawl-delay: 1
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cart
+Disallow: /favorites
+Disallow: /order-success
+Disallow: /login
+Disallow: /register
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/sandbox
+Allow: /api/performance/budgets
+Allow: /staging-guide
+
+User-agent: Anthropic-WebFetcher
+Allow: /
+Crawl-delay: 2
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cart
+Disallow: /favorites
+Disallow: /order-success
+Disallow: /login
+Disallow: /register
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/sandbox
+Allow: /api/performance/budgets
+Allow: /staging-guide
+
+User-agent: Applebot-Extended
+Allow: /
+Crawl-delay: 1
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cart
+Disallow: /favorites
+Disallow: /order-success
+Disallow: /login
+Disallow: /register
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/sandbox
+Allow: /api/performance/budgets
+Allow: /staging-guide
+
+User-agent: Claude-Web
+Allow: /
+Crawl-delay: 2
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cart
+Disallow: /favorites
+Disallow: /order-success
+Disallow: /login
+Disallow: /register
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/sandbox
+Allow: /api/performance/budgets
 Allow: /staging-guide
 
 # Sitemap location
 # Note: Update this URL in production to match your actual domain
 # The sitemap is automatically generated at /sitemap.xml
-Sitemap: https://www.marcusmillichap.com/sitemap.xml
+Sitemap: http://localhost:3005/sitemap.xml
 # Alternative: If using a different domain, update the URL above
 

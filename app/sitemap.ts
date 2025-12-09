@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next';
 import { getStylesCache } from '@/lib/styleCache';
+import { getAllBlogPosts } from '@/lib/blogData';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.marcusmillichap.com';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005';
   
   // Use current date for freshness
   const now = new Date();
@@ -111,6 +112,42 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.6,
     },
+    {
+      url: `${baseUrl}/login`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/register`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/cart`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/favorites`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/order-success`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/api-keys`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
   ];
 
   // Dynamic product pages with recent dates
@@ -121,8 +158,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  // Dynamic blog post pages
+  const blogPosts = getAllBlogPosts();
+  const blogPostPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+    url: `${baseUrl}/blog/${post.id}`,
+    lastModified: new Date(post.dateModified),
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  }));
+
   // Combine and ensure we have at least the static pages
-  const allPages = [...staticPages, ...productPages];
+  const allPages = [...staticPages, ...productPages, ...blogPostPages];
   
   // Ensure we return a valid sitemap (at minimum static pages)
   if (allPages.length === 0) {

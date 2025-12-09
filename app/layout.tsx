@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import AuthGuard from "@/components/AuthGuard";
 import ToastProvider from "@/components/ToastProvider";
 import { generateMetadata as generateSEOMetadata, generateStructuredData } from "@/lib/seo";
-// Removed Script import - using native script tags for better performance
 import AnalyticsScript from "@/components/AnalyticsScript";
+import DataLayer from "@/components/DataLayer";
 import StagingBanner from "@/components/StagingBanner";
+import { isStaging, getEnvironment } from "@/lib/environment";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +42,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const environment = getEnvironment();
+  const isStagingEnv = isStaging();
+  
   const organizationSchema = generateStructuredData('Organization');
   const websiteSchema = generateStructuredData('WebSite', {
     potentialAction: {
@@ -76,6 +81,17 @@ export default function RootLayout({
         <meta name="license" content="CC-BY-4.0" />
         <meta name="copyright" content={`© ${new Date().getFullYear()} ${siteName}. All rights reserved.`} />
         <link rel="license" href="https://creativecommons.org/licenses/by/4.0/" />
+        {/* Staging/Test Environment Meta Tags */}
+        <meta name="environment" content={environment} />
+        <meta name="test-mode" content={isStagingEnv || environment === 'development' ? 'enabled' : 'disabled'} />
+        <meta name="sandbox-mode" content={isStagingEnv ? 'enabled' : 'disabled'} />
+        {isStagingEnv && (
+          <>
+            <meta name="robots" content="noindex, nofollow" />
+            <meta name="staging-environment" content="true" />
+            <meta name="safe-for-automation" content="true" />
+          </>
+        )}
         {/* Inline critical structured data to avoid blocking */}
         <script
           id="organization-schema"
@@ -98,6 +114,47 @@ export default function RootLayout({
             __html: JSON.stringify(creativeWorkSchema),
           }}
         />
+        {/* Initialize DataLayer for Google Tag Manager and analytics */}
+        <Script
+          id="dataLayer-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'}', {
+                page_path: window.location.pathname,
+                send_page_view: true
+              });
+            `,
+          }}
+        />
+        {/* Google Analytics (gtag.js) */}
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+          </>
+        )}
+        {/* Google Tag Manager */}
+        {process.env.NEXT_PUBLIC_GTM_ID && (
+          <Script
+            id="gtm-init"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_ID}');
+              `,
+            }}
+          />
+        )}
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased p-4`}
@@ -129,7 +186,19 @@ export default function RootLayout({
             The site is still fully functional for browsing and shopping.</p>
           </div>
         </noscript>
+        {/* Google Tag Manager (noscript) */}
+        {process.env.NEXT_PUBLIC_GTM_ID && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
+              height="0"
+              width="0"
+              style={{ display: 'none', visibility: 'hidden' }}
+            />
+          </noscript>
+        )}
         <ToastProvider>
+          <DataLayer />
           <AnalyticsScript />
           <Navbar />
           <AuthGuard>

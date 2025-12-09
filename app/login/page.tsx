@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { useAuthStore } from "@/stores/authStore";
 import { login, requestOtp, verifyOtp, register } from "@/lib/authService";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ export default function LoginPage() {
   const [otp, setOtp] = useState("");
   const [otpRequested, setOtpRequested] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{ username?: string; password?: string; identifier?: string; otp?: string }>({});
   const [isLoading, setIsLoading] = useState(false);
   const token = useAuthStore((s) => s.token);
   const isInitialized = useAuthStore((s) => s.isInitialized);
@@ -62,6 +64,22 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage("");
+    setFieldErrors({});
+    
+    // Client-side validation
+    const errors: { username?: string; password?: string } = {};
+    if (!username.trim()) {
+      errors.username = "Username is required";
+    }
+    if (!password.trim()) {
+      errors.password = "Password is required";
+    }
+    
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setIsLoading(false);
+      return;
+    }
     
     try {
       const token = await login(username, password);
@@ -70,7 +88,14 @@ export default function LoginPage() {
     } catch (error) {
       // Try to extract error message from API response
       if (error instanceof Error) {
-        setErrorMessage(error.message);
+        const errorMsg = error.message;
+        setErrorMessage(errorMsg);
+        // Try to map server errors to fields
+        if (errorMsg.toLowerCase().includes('username') || errorMsg.toLowerCase().includes('user')) {
+          setFieldErrors({ username: errorMsg });
+        } else if (errorMsg.toLowerCase().includes('password')) {
+          setFieldErrors({ password: errorMsg });
+        }
       } else {
         setErrorMessage("Login failed. Please check your credentials and try again.");
       }
@@ -82,15 +107,28 @@ export default function LoginPage() {
   const handleRequestOtp = async () => {
     setIsLoading(true);
     setErrorMessage("");
+    setFieldErrors({});
+    
+    // Client-side validation
+    if (!identifier.trim()) {
+      setFieldErrors({ identifier: "Email or phone is required" });
+      setIsLoading(false);
+      return;
+    }
+    
     try {
       await requestOtp(identifier);
       setOtpRequested(true);
       toast({ title: "OTP sent", description: "Please check your email or phone for the OTP code." });
     } catch (error) {
       if (error instanceof Error) {
-        setErrorMessage(error.message);
+        const errorMsg = error.message;
+        setErrorMessage(errorMsg);
+        setFieldErrors({ identifier: errorMsg });
       } else {
-        setErrorMessage("Failed to send OTP. Please try again.");
+        const errorMsg = "Failed to send OTP. Please try again.";
+        setErrorMessage(errorMsg);
+        setFieldErrors({ identifier: errorMsg });
       }
     } finally {
       setIsLoading(false);
@@ -98,17 +136,30 @@ export default function LoginPage() {
   };
 
   const handleVerifyOtp = async () => {
+    setFieldErrors({});
     setIsLoading(true);
     setErrorMessage("");
+    
+    // Client-side validation
+    if (!otp.trim()) {
+      setFieldErrors({ otp: "OTP code is required" });
+      setIsLoading(false);
+      return;
+    }
+    
     try {
       const token = await verifyOtp(identifier, otp);
       setToken(token);
       router.push(nextPath);
     } catch (error) {
       if (error instanceof Error) {
-        setErrorMessage(error.message);
+        const errorMsg = error.message;
+        setErrorMessage(errorMsg);
+        setFieldErrors({ otp: errorMsg });
       } else {
-        setErrorMessage("Invalid or expired OTP. Please try again.");
+        const errorMsg = "Invalid or expired OTP. Please try again.";
+        setErrorMessage(errorMsg);
+        setFieldErrors({ otp: errorMsg });
       }
     } finally {
       setIsLoading(false);
@@ -238,16 +289,27 @@ export default function LoginPage() {
                   type="text"
                   placeholder="Username"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                    if (fieldErrors.username) setFieldErrors({ ...fieldErrors, username: undefined });
+                  }}
                   disabled={isLoading}
                   required
                   aria-required="true"
                   aria-label="Enter your username"
-                  aria-invalid={!!errorMessage}
-                  aria-describedby={errorMessage ? "login-error-message" : undefined}
-                  className="focus:ring-2 focus:ring-blue-500"
+                  aria-invalid={!!fieldErrors.username}
+                  aria-describedby={fieldErrors.username ? "login-username-error" : undefined}
+                  className={fieldErrors.username ? "border-red-500 focus:ring-red-500" : "focus:ring-2 focus:ring-blue-500"}
                   data-testid="login-username-input"
+                  data-agent-role="form-input"
+                  data-agent-action="enter-username"
+                  data-agent-hint="Enter your username or email address for login"
                 />
+                {fieldErrors.username && (
+                  <p id="login-username-error" className="text-xs text-red-600 mt-1" role="alert">
+                    {fieldErrors.username}
+                  </p>
+                )}
               </div>
               <div>
                 <label htmlFor="password" className="sr-only">Password</label>
@@ -256,16 +318,27 @@ export default function LoginPage() {
                   type="password"
                   placeholder="Password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (fieldErrors.password) setFieldErrors({ ...fieldErrors, password: undefined });
+                  }}
                   disabled={isLoading}
                   required
                   aria-required="true"
                   aria-label="Enter your password"
-                  aria-invalid={!!errorMessage}
-                  aria-describedby={errorMessage ? "login-error-message" : undefined}
-                  className="focus:ring-2 focus:ring-blue-500"
+                  aria-invalid={!!fieldErrors.password}
+                  aria-describedby={fieldErrors.password ? "login-password-error" : undefined}
+                  className={fieldErrors.password ? "border-red-500 focus:ring-red-500" : "focus:ring-2 focus:ring-blue-500"}
                   data-testid="login-password-input"
+                  data-agent-role="form-input"
+                  data-agent-action="enter-password"
+                  data-agent-hint="Enter your password for authentication"
                 />
+                {fieldErrors.password && (
+                  <p id="login-password-error" className="text-xs text-red-600 mt-1" role="alert">
+                    {fieldErrors.password}
+                  </p>
+                )}
               </div>
               <Button 
                 type="submit" 
@@ -273,6 +346,9 @@ export default function LoginPage() {
                 disabled={isLoading}
                 aria-label={isLoading ? "Logging in, please wait" : "Submit login form"}
                 data-testid="login-submit-button"
+                data-agent-action="submit-login"
+                data-agent-target="user-authentication"
+                data-agent-hint="Click to submit login form with username and password"
               >
                 {isLoading ? "Logging in..." : "Login"}
               </Button>
@@ -286,15 +362,23 @@ export default function LoginPage() {
                   type="text"
                   placeholder="Email or phone"
                   value={identifier}
-                  onChange={(e) => setIdentifier(e.target.value)}
+                  onChange={(e) => {
+                    setIdentifier(e.target.value);
+                    if (fieldErrors.identifier) setFieldErrors({ ...fieldErrors, identifier: undefined });
+                  }}
                   disabled={isLoading || otpRequested}
                   required
                   aria-required="true"
                   aria-label="Enter your email or phone number"
-                  aria-invalid={!!errorMessage}
-                  aria-describedby={errorMessage ? "login-error-message" : undefined}
-                  className="focus:ring-2 focus:ring-blue-500"
+                  aria-invalid={!!fieldErrors.identifier}
+                  aria-describedby={fieldErrors.identifier ? "login-identifier-error" : undefined}
+                  className={fieldErrors.identifier ? "border-red-500 focus:ring-red-500" : "focus:ring-2 focus:ring-blue-500"}
                 />
+                {fieldErrors.identifier && (
+                  <p id="login-identifier-error" className="text-xs text-red-600 mt-1" role="alert">
+                    {fieldErrors.identifier}
+                  </p>
+                )}
               </div>
               {!otpRequested ? (
                 <Button 
@@ -317,17 +401,25 @@ export default function LoginPage() {
                       type="tel"
                       placeholder="Enter OTP"
                       value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
+                      onChange={(e) => {
+                        setOtp(e.target.value);
+                        if (fieldErrors.otp) setFieldErrors({ ...fieldErrors, otp: undefined });
+                      }}
                       disabled={isLoading}
                       required
                       aria-required="true"
                       aria-label="Enter the OTP code you received"
                       inputMode="numeric"
                       pattern="[0-9]*"
-                      aria-invalid={!!errorMessage}
-                      aria-describedby={errorMessage ? "login-error-message" : undefined}
-                      className="focus:ring-2 focus:ring-blue-500"
+                      aria-invalid={!!fieldErrors.otp}
+                      aria-describedby={fieldErrors.otp ? "login-otp-error" : undefined}
+                      className={fieldErrors.otp ? "border-red-500 focus:ring-red-500" : "focus:ring-2 focus:ring-blue-500"}
                     />
+                    {fieldErrors.otp && (
+                      <p id="login-otp-error" className="text-xs text-red-600 mt-1" role="alert">
+                        {fieldErrors.otp}
+                      </p>
+                    )}
                   </div>
                   <Button 
                     className="w-full" 
@@ -357,18 +449,14 @@ export default function LoginPage() {
           {/* Password recovery link */}
           {mode === "password" && (
             <div className="text-center mt-2">
-              <button
-                type="button"
-                onClick={() => {
-                  // Switch to OTP mode for password recovery
-                  setMode("otp");
-                  setErrorMessage("");
-                }}
+              <Link
+                href="/login?mode=otp"
                 className="text-sm text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded"
                 aria-label="Forgot password? Use magic link instead"
+                data-testid="password-recovery-link"
               >
                 Forgot Password?
-              </button>
+              </Link>
             </div>
           )}
 
@@ -383,7 +471,10 @@ export default function LoginPage() {
             className="w-full flex items-center justify-center mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             onClick={handleGoogleLogin}
             disabled={isLoading}
-            aria-label="Login with Google account"
+            aria-label="Login with Google OAuth provider"
+            data-testid="google-oauth-button"
+            data-oauth-provider="google"
+            type="button"
           >
             {/* Ideally, use a Google icon */}
             <svg className="w-5 h-5 mr-2" viewBox="0 0 48 48" aria-hidden="true">
@@ -398,34 +489,29 @@ export default function LoginPage() {
             Login with Google
           </Button>
         </Card>
-        <div className="mt-4 text-center text-sm">
-          <span>New here? </span>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setShowSignup(true);
-              setSignupStep(1);
-              setSignupErrors({});
-              setSignupSuccess(null);
-              setSignupGeneralError(null);
-              // Reset form data
-              setSignup({
-                name: "",
-                email: "",
-                phone: "",
-                street: "",
-                city: "",
-                state: "",
-                zipcode: "",
-                password: "",
-                confirmedPassword: "",
-              });
-            }}
-            className="text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
-            aria-label="Open registration form to create a new account"
-          >
-            Create an account
-          </button>
+        <div className="mt-4 text-center text-sm space-y-2">
+          <div>
+            <span>New here? </span>
+            <Link
+              href="/register"
+              className="text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+              aria-label="Sign up for a new account"
+              data-testid="login-signup-link"
+            >
+              Create an account
+            </Link>
+          </div>
+          <div>
+            <span>Forgot password? </span>
+            <Link
+              href="/login?mode=otp"
+              className="text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+              aria-label="Recover password using magic link"
+              data-testid="password-recovery-link"
+            >
+              Use magic link
+            </Link>
+          </div>
         </div>
 
         {showSignup && (

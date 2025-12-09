@@ -67,8 +67,31 @@ export default async function ProductLayout({ params, children }: ProductLayoutP
     },
   });
   
-  // BuyAction and AddToCartAction are now included in the Product schema's potentialAction
-  // No need for separate schemas - they're part of the productSchema
+  // Generate standalone BuyAction schema (checkout endpoint)
+  const buyActionSchema = generateStructuredData('BuyAction', {
+    targetUrl: `${baseUrl}/api/services/orders`,
+    product: {
+      '@type': 'Product',
+      name: product.productDisplayName,
+      url: `${baseUrl}/product/${productId}`,
+    },
+    productName: product.productDisplayName,
+    productUrl: `${baseUrl}/product/${productId}`,
+  });
+
+  // Generate standalone AddToCartAction schema
+  const addToCartActionSchema = generateStructuredData('AddToCartAction', {
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${baseUrl}/cart`,
+    },
+    'httpMethod': 'GET',
+    object: {
+      '@type': 'Product',
+      name: product.productDisplayName,
+      url: `${baseUrl}/product/${productId}`,
+    },
+  });
 
   // Breadcrumb
   const breadcrumbSchema = generateStructuredData('BreadcrumbList', {
@@ -112,6 +135,19 @@ export default async function ProductLayout({ params, children }: ProductLayoutP
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(productSchema),
+        }}
+      />
+      <script
+        id="buy-action-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buyActionSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(addToCartActionSchema),
         }}
       />
       <script

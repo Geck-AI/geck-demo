@@ -13,10 +13,13 @@ interface ItemCardProps {
     baseColour: string;
     priceUSD?: number;
     imageURL: string;
+    articleType?: string;
+    masterCategory?: string;
   };
+  headingLevel?: 2 | 3;
 }
 
-const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
+const ItemCard: React.FC<ItemCardProps> = ({ item, headingLevel = 3 }) => {
   const router = useRouter();
   const addItem = useCartStore((s) => s.addItem);
   const increment = useCartStore((s) => s.incrementItem);
@@ -57,6 +60,10 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
       role="article"
       aria-label={`Product: ${item.productDisplayName}, Price: $${item.priceUSD ?? "N/A"}`}
       tabIndex={0}
+      data-agent-role="product-card"
+      data-agent-action="view-product-details"
+      data-agent-target={`product-${item.id}`}
+      data-agent-hint={`Click anywhere on this card to view details for ${item.productDisplayName} ($${item.priceUSD ?? "N/A"})`}
     >
       {/* Favorite button */}
       <button
@@ -84,7 +91,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
       <figure className="flex-shrink-0">
         <img
           src={item.imageURL}
-          alt={`${item.productDisplayName}${item.baseColour ? ` in ${item.baseColour}` : ''}${item.priceUSD ? ` - $${item.priceUSD}` : ''} - Available at THE STORE`}
+          alt={`${item.productDisplayName}${item.articleType ? ` - ${item.articleType}` : ''}${item.baseColour ? ` in ${item.baseColour}` : ''}${item.masterCategory ? ` from ${item.masterCategory} collection` : ''}${item.priceUSD ? ` - $${item.priceUSD}` : ''} - Available at THE STORE`}
           className="w-full object-cover"
         />
         <figcaption className="sr-only">
@@ -98,9 +105,15 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
       <div className="flex flex-col flex-grow justify-between mt-4">
         {/* Product title and price */}
         <div className="flex-shrink-0">
-          <h3 className="font-medium text-sm text-stone-800 line-clamp-2 text-left">
-            {item.productDisplayName}
-          </h3>
+          {headingLevel === 2 ? (
+            <h2 className="font-medium text-sm text-stone-800 line-clamp-2 text-left">
+              {item.productDisplayName}
+            </h2>
+          ) : (
+            <h3 className="font-medium text-sm text-stone-800 line-clamp-2 text-left">
+              {item.productDisplayName}
+            </h3>
+          )}
           <span className="block text-base font-semibold text-stone-900 mt-1 text-left" aria-label={`Price: $${item.priceUSD ?? "N/A"}`}>
             {`$${item.priceUSD ?? "N/A"}`}
           </span>

@@ -12,6 +12,18 @@ const nextConfig = {
     dangerouslyAllowSVG: false,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'assets.myntassets.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'assets.myntassets.com',
+        pathname: '/**',
+      },
+    ],
   },
   
   // Ensure proper HTML output

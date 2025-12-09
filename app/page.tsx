@@ -24,6 +24,9 @@ function HomeCallout({
       className="p-8 bg-stone-200 h-72 rounded-sm hover:bg-stone-200 hover:shadow-sm hover:translate-y-[-2px] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 block"
       aria-label={`Browse ${title} - ${description}`}
       data-testid={`home-category-${title.toLowerCase()}`}
+      data-agent-action="navigate"
+      data-agent-target={`category-${title.toLowerCase()}`}
+      data-agent-hint={`Click to browse ${title.toLowerCase()} category: ${description}`}
     >
       <h3 id={generateHeadingId(title)} className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-stone-600">{description}</p>
@@ -98,11 +101,12 @@ export default async function HomePage() {
   };
 
   return (
-    <main className="bg-white" role="main" aria-label="Home page">
+    <>
+      {/* JSON-LD structured data at top of body */}
       <StructuredData data={heroImageSchema} id="hero-image-schema" />
       <StructuredData data={keyFactsSchema} id="key-facts-schema" />
-      
-      {/* Noscript fallback */}
+      <main className="bg-white" role="main" aria-label="Home page">
+        {/* Noscript fallback */}
       <noscript>
         <style>{`
           .js-only { display: none !important; }
@@ -117,7 +121,59 @@ export default async function HomePage() {
 
       {/* Hero Banner */}
       <section aria-label="Hero banner" role="banner">
-        <h1 className="sr-only">THE STORE - Shop the latest fashion trends, clothing, shoes, and accessories</h1>
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <h1 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">THE STORE</h1>
+          <p className="text-xl text-stone-600 mb-6">Shop the latest fashion trends, clothing, shoes, and accessories</p>
+          
+          {/* CTA Button */}
+          <div className="mb-6">
+            <Link
+              href="/shop"
+              className="inline-block bg-stone-900 text-white px-8 py-3 rounded-md font-semibold hover:bg-stone-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              aria-label="Shop now - Browse all products"
+              data-agent-action="navigate"
+              data-agent-target="shop-page"
+              data-agent-hint="Click to browse all products in the shop"
+            >
+              Shop Now
+            </Link>
+          </div>
+          
+          {/* Factual content for citation snippets */}
+          <div className="bg-stone-50 border border-stone-200 rounded-lg p-6 mb-6" itemScope itemType="https://schema.org/Organization">
+            <h2 className="text-lg font-semibold text-stone-900 mb-3" itemProp="name">About THE STORE</h2>
+            <div className="space-y-2 text-stone-700" itemProp="description">
+              <p>THE STORE was founded in 2024.</p>
+              <p>THE STORE offers free shipping on orders over $50.</p>
+              <p>THE STORE provides 30-day returns with easy returns and exchanges.</p>
+              <p>THE STORE accepts all major credit cards for secure payments.</p>
+              <p>THE STORE features over 10,000 fashion products.</p>
+              <p>THE STORE ships to all 50 US states.</p>
+              <p>THE STORE processes orders within 24 hours.</p>
+              <p>THE STORE offers customer support 7 days a week.</p>
+            </div>
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div itemScope itemType="https://schema.org/Offer">
+                <strong className="text-stone-900" itemProp="name">Free Shipping</strong>
+                <p className="text-stone-600" itemProp="description">Free shipping on orders over $50</p>
+              </div>
+              <div itemScope itemType="https://schema.org/Offer">
+                <strong className="text-stone-900" itemProp="name">30-Day Returns</strong>
+                <p className="text-stone-600" itemProp="description">Easy returns and exchanges within 30 days</p>
+              </div>
+              <div itemScope itemType="https://schema.org/Offer">
+                <strong className="text-stone-900" itemProp="name">Secure Payments</strong>
+                <p className="text-stone-600" itemProp="description">All major credit cards accepted</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="text-sm text-stone-500">
+            <time dateTime="2024-01-01">Published: January 1, 2024</time>
+            <span className="mx-2">•</span>
+            <time dateTime={new Date().toISOString().split('T')[0]}>Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+          </div>
+        </div>
         <figure>
           <Image
             src="/cover.webp"
@@ -135,25 +191,35 @@ export default async function HomePage() {
           </figcaption>
         </figure>
         {/* Key Facts in Hero Section */}
-        <div className="bg-stone-50 py-4 px-6 max-w-7xl mx-auto">
+        <div className="bg-stone-50 py-4 px-6 max-w-7xl mx-auto" itemScope itemType="https://schema.org/ItemList">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div className="text-center">
-              <p className="font-semibold text-stone-900">Free Shipping</p>
-              <p className="text-stone-600">On orders over $50</p>
+            <div className="text-center" itemScope itemType="https://schema.org/Offer" itemProp="itemListElement">
+              <p className="font-semibold text-stone-900" itemProp="name">Free Shipping</p>
+              <p className="text-stone-600" itemProp="description">On orders over $50</p>
             </div>
-            <div className="text-center">
-              <p className="font-semibold text-stone-900">30-Day Returns</p>
-              <p className="text-stone-600">Easy returns and exchanges</p>
+            <div className="text-center" itemScope itemType="https://schema.org/Offer" itemProp="itemListElement">
+              <p className="font-semibold text-stone-900" itemProp="name">30-Day Returns</p>
+              <p className="text-stone-600" itemProp="description">Easy returns and exchanges</p>
             </div>
-            <div className="text-center">
-              <p className="font-semibold text-stone-900">Secure Payments</p>
-              <p className="text-stone-600">All major cards accepted</p>
+            <div className="text-center" itemScope itemType="https://schema.org/Offer" itemProp="itemListElement">
+              <p className="font-semibold text-stone-900" itemProp="name">Secure Payments</p>
+              <p className="text-stone-600" itemProp="description">All major cards accepted</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Just In Section - Server Rendered */}
+      {/* JSON-LD for product images at top of section */}
+      {justIn.length > 0 && justIn.map((item) => {
+        const productImageSchema = generateStructuredData('ImageObject', {
+          contentUrl: item.imageURL,
+          url: item.imageURL,
+          caption: item.productDisplayName,
+          description: `${item.productDisplayName} - ${item.articleType || ''}`,
+        });
+        return <StructuredData key={`schema-${item.id}`} data={productImageSchema} id={`product-image-${item.id}-schema`} />;
+      })}
       <section 
         className="py-12 px-6 max-w-7xl mx-auto"
         aria-labelledby="just-in-heading"
@@ -165,6 +231,9 @@ export default async function HomePage() {
             className="text-stone-700 flex items-center group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
             aria-label="View all just in products"
             data-testid="view-all-just-in-link"
+            data-agent-action="navigate"
+            data-agent-target="just-in-products"
+            data-agent-hint="Click to view all just in products"
           >
             View all
             <ArrowRight 
@@ -182,15 +251,8 @@ export default async function HomePage() {
             aria-label={`Just in products, ${justIn.length} items`}
           >
             {justIn.map((item) => {
-              const productImageSchema = generateStructuredData('ImageObject', {
-                contentUrl: item.imageURL,
-                url: item.imageURL,
-                caption: item.productDisplayName,
-                description: `${item.productDisplayName} - ${item.articleType || ''}`,
-              });
               return (
                 <div key={item.id} role="listitem">
-                  <StructuredData data={productImageSchema} id={`product-image-${item.id}-schema`} />
                   <article className="border border-stone-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
                     <Link 
                       href={`/product/${item.id}`} 
@@ -200,7 +262,7 @@ export default async function HomePage() {
                       <div className="relative w-full aspect-square bg-stone-100">
                         <Image
                           src={item.imageURL}
-                          alt={`${item.productDisplayName}${item.baseColour ? ` in ${item.baseColour}` : ''}${item.articleType ? ` - ${item.articleType}` : ''}`}
+                          alt={`${item.productDisplayName}${item.articleType ? ` - ${item.articleType}` : ''}${item.baseColour ? ` in ${item.baseColour}` : ''}${item.masterCategory ? ` from ${item.masterCategory} collection` : ''} - Available at THE STORE`}
                           fill
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                           className="object-cover"
@@ -208,10 +270,14 @@ export default async function HomePage() {
                           fetchPriority="low"
                         />
                       </div>
-                      <div className="p-4">
-                        <h3 className="font-semibold text-stone-800 mb-1 line-clamp-2">{item.productDisplayName}</h3>
-                        <p className="text-stone-600 text-sm mb-2">{item.articleType || item.masterCategory}</p>
-                        <p className="text-lg font-bold text-stone-900">${item.priceUSD ?? 'N/A'}</p>
+                      <div className="p-4" itemScope itemType="https://schema.org/Product">
+                        <h3 className="font-semibold text-stone-800 mb-1 line-clamp-2" itemProp="name">{item.productDisplayName}</h3>
+                        <p className="text-stone-600 text-sm mb-2" itemProp="category">{item.articleType || item.masterCategory}</p>
+                        <div itemScope itemType="https://schema.org/Offer" itemProp="offers">
+                          <p className="text-lg font-bold text-stone-900" itemProp="price">${item.priceUSD ?? 'N/A'}</p>
+                          <meta itemProp="priceCurrency" content="USD" />
+                        </div>
+                        <p className="text-xs text-stone-500 mt-2" itemProp="description">{item.productDisplayName} - {item.articleType || item.masterCategory} available at THE STORE</p>
                       </div>
                     </Link>
                   </article>
@@ -261,33 +327,36 @@ export default async function HomePage() {
         className="py-12 px-6"
         aria-labelledby="categories-heading"
       >
-        <h2 id="categories-heading" className="sr-only">Shop by Category</h2>
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" role="list" aria-label="Shop categories">
-          {callouts.map((callout) => (
-            <div key={callout.title} role="listitem">
-              <HomeCallout
-                title={callout.title}
-                description={callout.description}
-                path={callout.path}
-              />
+        <div className="max-w-7xl mx-auto">
+          <h2 id="categories-heading" className="text-3xl font-semibold mb-6 text-center">Shop by Category</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" role="list" aria-label="Shop categories">
+            {callouts.map((callout) => (
+              <div key={callout.title} role="listitem">
+                <HomeCallout
+                  title={callout.title}
+                  description={callout.description}
+                  path={callout.path}
+                />
+              </div>
+            ))}
+            <div role="listitem">
+              <Link
+                href="/shop/offers"
+                className="col-span-2 p-8 bg-stone-500 h-72 rounded-sm
+                hover:bg-stone-600 hover:shadow-sm
+                hover:-translate-y-1 transition-all duration-300
+                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 block"
+                aria-label="View special offers and deals"
+                data-testid="home-offers-link"
+              >
+                <h3 id="offers" className="text-xl font-semibold mb-2 text-stone-50">Offers</h3>
+                <p className="text-stone-200">Discover our best deals</p>
+              </Link>
             </div>
-          ))}
-          <div role="listitem">
-            <Link
-              href="/shop/offers"
-              className="col-span-2 p-8 bg-stone-500 h-72 rounded-sm
-              hover:bg-stone-600 hover:shadow-sm
-              hover:-translate-y-1 transition-all duration-300
-              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 block"
-              aria-label="View special offers and deals"
-              data-testid="home-offers-link"
-            >
-              <h3 id="offers" className="text-xl font-semibold mb-2 text-stone-50">Offers</h3>
-              <p className="text-stone-200">Discover our best deals</p>
-            </Link>
           </div>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }

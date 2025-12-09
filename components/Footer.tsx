@@ -25,6 +25,16 @@ const footerSections = [
       { title: "Submit Feedback", path: "/feedback" },
       { title: "Corrections Policy", path: "/corrections-policy" },
       { title: "API Documentation", path: "/api/docs" },
+      { title: "API Keys", path: "/api-keys" },
+    ],
+  },
+  {
+    title: "Account",
+    links: [
+      { title: "Login", path: "/login" },
+      { title: "Sign Up", path: "/register" },
+      { title: "Forgot Password", path: "/login?mode=otp" },
+      { title: "API Keys", path: "/api-keys" },
     ],
   },
   {
@@ -71,6 +81,9 @@ export default function Footer() {
                       className="text-sm text-stone-600 hover:text-black transition-colors"
                       aria-label={`${link.title} - ${section.title} section`}
                       data-testid={`footer-link-${section.title.toLowerCase().replace(/\s+/g, '-')}-${link.title.toLowerCase().replace(/\s+/g, '-')}`}
+                      data-agent-action="navigate"
+                      data-agent-target={link.path}
+                      data-agent-hint={`Navigate to ${link.title} page`}
                     >
                       {link.title}
                     </Link>

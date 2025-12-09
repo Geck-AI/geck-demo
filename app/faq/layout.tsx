@@ -1,15 +1,4 @@
-import { Metadata } from 'next';
-import { generateMetadata as generateSEOMetadata, generateFAQSchema, generateAuthorSchema } from '@/lib/seo';
-import StructuredData from '@/components/StructuredData';
-import { generateHeadingId } from '@/lib/utils';
-import TableOfContents from '@/components/TableOfContents';
-
-export const metadata: Metadata = generateSEOMetadata({
-  title: 'Frequently Asked Questions',
-  description: 'Find answers to common questions about THE STORE. Learn about shipping, returns, payments, sizing, and more.',
-  keywords: 'FAQ, frequently asked questions, help, support, shipping, returns, payments, sizing',
-  url: '/faq',
-});
+import { generateFAQSchema, generateStructuredData } from '@/lib/seo';
 
 const faqData = [
   {
@@ -182,7 +171,11 @@ const faqData = [
   },
 ];
 
-export default function FAQPage() {
+export default function FAQLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const publishedDate = '2024-01-15';
   const modifiedDate = new Date().toISOString().split('T')[0];
   
@@ -195,106 +188,34 @@ export default function FAQPage() {
     email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'support@thestore.com',
   };
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005';
   const faqSchema = generateFAQSchema(faqData, publishedDate, modifiedDate, author);
-  const authorSchema = generateAuthorSchema(author);
 
-  // Generate table of contents from FAQ questions
-  const tocHeadings = faqData.map((faq) => ({
-    text: faq.question,
-    level: 2,
-  }));
+  // Generate ImageObject schema for FAQ page
+  const faqImageSchema = generateStructuredData('ImageObject', {
+    contentUrl: `${baseUrl}/cover.webp`,
+    url: `${baseUrl}/cover.webp`,
+    caption: 'Frequently Asked Questions - THE STORE',
+    description: 'Find answers to common questions about THE STORE. Learn about shipping, returns, payments, sizing, and more. Get help with your shopping experience.',
+    width: 1200,
+    height: 630,
+  });
 
   return (
     <>
-      {/* JSON-LD structured data at top of body - FAQPage schema must be first */}
-      <StructuredData data={faqSchema} id="faq-page-schema" />
-      <StructuredData data={authorSchema} id="author-schema" />
-      <main className="min-h-screen p-8 bg-white" role="main" aria-label="Frequently Asked Questions page">
-        <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Table of Contents */}
-          <aside className="lg:col-span-1">
-            <TableOfContents headings={tocHeadings} />
-          </aside>
-
-          {/* Main Content */}
-          <div className="lg:col-span-3">
-            <h1 className="text-3xl font-bold mb-2">Frequently Asked Questions</h1>
-        <div className="flex items-center gap-4 text-sm text-stone-600 mb-4">
-          <p>
-            <span className="font-medium">Published:</span>{' '}
-            <time dateTime={publishedDate}>
-              {new Date(publishedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </time>
-          </p>
-          <span aria-hidden="true">•</span>
-          <p>
-            <span className="font-medium">Last Updated:</span>{' '}
-            <time dateTime={modifiedDate}>
-              {new Date(modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </time>
-          </p>
-        </div>
-        <div className="mb-6 text-sm text-stone-600">
-          <p>
-            <span className="font-medium">Author:</span> {author.name}, {author.credentials} - {author.title} at {author.organization}
-          </p>
-          <p className="mt-1">
-            <span className="font-medium">Last Updated:</span>{' '}
-            <time dateTime={modifiedDate}>
-              {new Date(modifiedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </time>
-          </p>
-        </div>
-        <p className="text-stone-600 mb-8">
-          Find answers to common questions about shopping at THE STORE.
-        </p>
-
-        <div className="space-y-6">
-          {faqData.map((faq, index) => {
-            const headingId = generateHeadingId(faq.question);
-            // Ensure question ends with question mark for proper detection
-            const questionText = faq.question.trim().endsWith('?') ? faq.question : `${faq.question}?`;
-            return (
-              <article
-                key={index}
-                className={`border-b border-stone-200 pb-6 last:border-b-0 ${faq.isBestAnswer ? 'bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400' : ''}`}
-                itemScope
-                itemType="https://schema.org/Question"
-              >
-                <div className="flex items-start gap-2 mb-2">
-                  <h2 id={headingId} className="text-xl font-semibold flex-1" itemProp="name">
-                    {questionText}
-                  </h2>
-                  {faq.isBestAnswer && (
-                    <span className="px-2 py-1 bg-blue-600 text-white text-xs font-semibold rounded whitespace-nowrap" title="Best answer snippet candidate">
-                      Best Answer
-                    </span>
-                  )}
-                </div>
-                <div
-                  className="text-stone-700"
-                  itemScope
-                  itemType="https://schema.org/Answer"
-                  itemProp="acceptedAnswer"
-                >
-                  <p className="mb-3" itemProp="text">{faq.answer}</p>
-                  {faq.keyFacts && faq.keyFacts.length > 0 && (
-                    <ul className="list-disc list-inside space-y-1 text-sm text-stone-600 mt-3" itemProp="suggestedAnswer">
-                      {faq.keyFacts.map((fact, factIdx) => (
-                        <li key={factIdx} itemProp="text">{fact}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </article>
-            );
-          })}
-        </div>
-          </div>
-        </div>
-      </div>
-      </main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqImageSchema),
+        }}
+      />
+      {children}
     </>
   );
 }

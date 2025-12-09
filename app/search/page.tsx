@@ -83,11 +83,16 @@ export default function SearchResultsPage() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <header className="mb-8" aria-labelledby="search-heading">
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-2">
             <Search className="w-6 h-6 text-stone-600" aria-hidden="true" />
             <h1 id="search-heading" className="text-3xl font-bold text-stone-900">
               Search Products
             </h1>
+          </div>
+          <div className="text-sm text-stone-500 mb-4">
+            <time dateTime="2024-01-01">Published: January 1, 2024</time>
+            <span className="mx-2">•</span>
+            <time dateTime={new Date().toISOString().split('T')[0]}>Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
           </div>
           
           {/* Search Input */}

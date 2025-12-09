@@ -55,9 +55,18 @@ export default function ShopPageContent({ category }: ShopPageContentProps) {
   });
 
   return (
-    <main className="min-h-screen p-8 bg-white" role="main" aria-label={`Shop ${title} page`}>
+    <>
+      {/* JSON-LD structured data at top of body */}
       <StructuredData data={breadcrumbSchema} id="breadcrumb-schema" />
-      <h1 className="text-3xl font-bold mb-6">{title}</h1>
+      <main className="min-h-screen p-8 bg-white" role="main" aria-label={`Shop ${title} page`}>
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold mb-2">{title}</h1>
+          <div className="text-sm text-stone-500">
+            <time dateTime="2024-01-01">Published: January 1, 2024</time>
+            <span className="mx-2">•</span>
+            <time dateTime={new Date().toISOString().split('T')[0]}>Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+          </div>
+        </div>
       <div className="flex gap-8">
         <aside className="w-1/4" role="complementary" aria-label="Product filters sidebar">
           <FilterSidebar />
@@ -66,6 +75,7 @@ export default function ShopPageContent({ category }: ShopPageContentProps) {
           <StyleCardContainer />
         </div>
       </div>
-    </main>
+      </main>
+    </>
   );
 }

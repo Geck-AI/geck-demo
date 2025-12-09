@@ -135,6 +135,9 @@ export default function SearchBar() {
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-stone-400 hover:text-stone-600"
             aria-label="Clear search query"
             data-testid="search-clear-button"
+            data-agent-action="clear-search"
+            data-agent-target="search-input"
+            data-agent-hint="Click to clear the search query"
           >
             <X className="w-4 h-4" aria-hidden="true" />
           </button>
@@ -215,6 +218,9 @@ export default function SearchBar() {
                 className="w-full mt-2 p-2 text-sm text-blue-600 hover:bg-blue-50 rounded-md font-medium"
                 aria-label={`View all ${totalResults} results for ${searchQuery}`}
                 data-testid="search-view-all-button"
+                data-agent-action="view-all-results"
+                data-agent-target="search-results-page"
+                data-agent-hint={`Click to view all ${totalResults} search results for "${searchQuery}"`}
               >
                 View all {totalResults} results for &quot;{searchQuery}&quot;
               </button>

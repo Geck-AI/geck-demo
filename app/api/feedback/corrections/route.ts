@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { getRateLimitHeadersForEndpoint } from '@/lib/rateLimit';
 
 interface CorrectionSubmission {
   type: string;
@@ -45,26 +46,33 @@ function writeCorrections(corrections: CorrectionSubmission[]) {
 }
 
 export async function POST(request: NextRequest) {
+  // Add rate limit headers
+  const rateLimitHeaders = getRateLimitHeadersForEndpoint('/api/feedback/corrections');
+  
   try {
     const body = await request.json();
     const { type, url, description, correctInformation, name, email } = body;
 
     // Validate required fields
     if (!type || !url || !description) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { error: 'Missing required fields: type, url, and description are required' },
         { status: 400 }
       );
+      rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+      return response;
     }
 
     // Validate URL format
     try {
       new URL(url);
     } catch {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { error: 'Invalid URL format' },
         { status: 400 }
       );
+      rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+      return response;
     }
 
     // Create correction submission
@@ -88,38 +96,55 @@ export async function POST(request: NextRequest) {
     // Write back to file
     writeCorrections(corrections);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       message: 'Correction submitted successfully',
       id: corrections.length - 1,
     }, { status: 201 });
+    
+    // Add rate limit headers
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    
+    return response;
 
   } catch (error) {
     console.error('Error processing correction:', error);
-    return NextResponse.json(
+    const response = NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    return response;
   }
 }
 
 export async function GET() {
+  // Add rate limit headers
+  const rateLimitHeaders = getRateLimitHeadersForEndpoint('/api/feedback/corrections');
+  
   try {
     const corrections = readCorrections();
     
     // Return only pending and reviewed corrections (not resolved ones for privacy)
     const activeCorrections = corrections.filter(c => c.status !== 'resolved');
     
-    return NextResponse.json({
+    const response = NextResponse.json({
       corrections: activeCorrections,
       total: activeCorrections.length,
     });
+    
+    // Add rate limit headers
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    
+    return response;
   } catch (error) {
     console.error('Error reading corrections:', error);
-    return NextResponse.json(
+    const response = NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    return response;
   }
 }
 

@@ -144,6 +144,13 @@ export default function ApiKeysPage() {
         <p className="text-stone-600 mb-8">
           Generate API keys for programmatic access to THE STORE API. Use these keys to authenticate requests from partner agents, bots, or integrations.
         </p>
+        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
+          <p className="text-sm text-blue-800">
+            <strong>API Key Authentication:</strong> Use API keys to authenticate programmatic requests. 
+            Include the key in the <code className="bg-blue-100 px-1 rounded">Authorization</code> header as <code className="bg-blue-100 px-1 rounded">Bearer YOUR_API_KEY</code>.
+            <a href="/api/docs" className="text-blue-600 hover:underline ml-1" data-testid="api-docs-link">View API documentation</a> for more details.
+          </p>
+        </div>
 
         {/* Generate New Key */}
         <Card className="p-6 mb-8">

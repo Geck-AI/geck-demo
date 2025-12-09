@@ -43,7 +43,14 @@ export default function Navbar() {
           <div className="flex items-center gap-6 md:gap-8">
             {/* Logo */}
             <div className="text-2xl font-bold flex-shrink-0">
-              <Link href="/" aria-label="THE STORE - Home page" data-testid="navbar-logo">
+              <Link 
+                href="/" 
+                aria-label="THE STORE - Home page" 
+                data-testid="navbar-logo"
+                data-agent-action="navigate"
+                data-agent-target="homepage"
+                data-agent-hint="Click to return to the homepage"
+              >
                 THE STORE
               </Link>
             </div>
@@ -59,6 +66,9 @@ export default function Navbar() {
                 className="md:hidden relative text-stone-700 hover:text-stone-900"
                 aria-label="Open search page"
                 data-testid="mobile-search-link"
+                data-agent-action="navigate"
+                data-agent-target="search-page"
+                data-agent-hint="Click to open the search page on mobile devices"
               >
                 <Search 
                   className="w-5 h-5 text-stone-700 hover:text-stone-900 transition-colors duration-200" 
@@ -74,6 +84,9 @@ export default function Navbar() {
                 className="relative text-stone-700 hover:text-stone-900"
                 aria-label="View wishlist"
                 data-testid="navbar-favorites-link"
+                data-agent-action="navigate"
+                data-agent-target="favorites-page"
+                data-agent-hint="Click to view your saved favorite products"
               >
                 <Heart 
                   className="w-5 h-5 text-stone-700 hover:text-red-600 transition-colors duration-200" 
@@ -85,6 +98,9 @@ export default function Navbar() {
                 className="relative text-stone-700 hover:text-stone-900"
                 aria-label={`Shopping cart${totalQty > 0 ? ` with ${totalQty} item${totalQty === 1 ? '' : 's'}` : ''}`}
                 data-testid="navbar-cart-link"
+                data-agent-action="navigate"
+                data-agent-target="shopping-cart"
+                data-agent-hint={`Click to view shopping cart${totalQty > 0 ? ` (${totalQty} item${totalQty === 1 ? '' : 's'} in cart)` : ' (empty)'}`}
               >
                 <ShoppingCart 
                   className="w-5 h-5 text-stone-700 hover:text-stone-900 transition-colors duration-200" 
@@ -100,6 +116,32 @@ export default function Navbar() {
                   </span>
                 )}
               </Link>
+              {!token && (
+                <>
+                  <Link
+                    href="/login"
+                    className="text-stone-700 hover:text-stone-900 text-sm font-medium"
+                    aria-label="Login to your account"
+                    data-testid="navbar-login-link"
+                    data-agent-action="navigate"
+                    data-agent-target="login-page"
+                    data-agent-hint="Click to navigate to the login page"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="bg-stone-900 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-stone-800 transition-colors"
+                    aria-label="Sign up for a new account"
+                    data-testid="navbar-signup-link"
+                    data-agent-action="navigate"
+                    data-agent-target="register-page"
+                    data-agent-hint="Click to navigate to the registration page to create a new account"
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
               {token && (
                 <Button
                   variant="outline"
@@ -108,6 +150,9 @@ export default function Navbar() {
                   className="flex items-center space-x-2"
                   aria-label="Logout from your account"
                   data-testid="navbar-logout-button"
+                  data-agent-action="logout"
+                  data-agent-target="user-session"
+                  data-agent-hint="Click to log out from your account"
                 >
                   <LogOut className="w-4 h-4" aria-hidden="true" />
                   <span className="hidden sm:inline">Logout</span>

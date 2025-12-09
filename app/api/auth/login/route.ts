@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { verifyPassword } from "@/lib/authUtils";
+import { getRateLimitHeadersForEndpoint } from "@/lib/rateLimit";
 
 interface User {
   username: string;
@@ -9,13 +10,18 @@ interface User {
 }
 
 export async function POST(request: Request) {
+  // Add rate limit headers
+  const rateLimitHeaders = getRateLimitHeadersForEndpoint('/api/auth/login');
+  
   const { username, password } = (await request.json()) as {
     username?: string;
     password?: string;
   };
 
   if (!username || !password) {
-    return Response.json({ error: "Username and password are required" }, { status: 400 });
+    const response = Response.json({ error: "Username and password are required" }, { status: 400 });
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    return response;
   }
 
   const expectedUser = process.env.ADMIN_USERNAME ?? "";
@@ -36,13 +42,18 @@ export async function POST(request: Request) {
       }`
     );
     
+    // Add rate limit headers
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    
     return response;
   }
 
   // Check users.json with password verification
   const USERS_PATH = path.join(process.cwd(), "public", "data", "users.json");
   if (!fs.existsSync(USERS_PATH)) {
-    return Response.json({ error: "User not found. Please register first." }, { status: 404 });
+    const response = Response.json({ error: "User not found. Please register first." }, { status: 404 });
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    return response;
   }
 
   try {
@@ -50,7 +61,9 @@ export async function POST(request: Request) {
     const user = (users as User[]).find((u) => u.username === username || u.email === username);
     
     if (!user) {
-      return Response.json({ error: "User not found. Please check your username or register." }, { status: 404 });
+      const response = Response.json({ error: "User not found. Please check your username or register." }, { status: 404 });
+      rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+      return response;
     }
     
     if (password && await verifyPassword(password, user.password)) {
@@ -67,12 +80,19 @@ export async function POST(request: Request) {
         }`
       );
       
+      // Add rate limit headers
+      rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+      
       return response;
     } else {
-      return Response.json({ error: "Incorrect password. Please try again." }, { status: 401 });
+      const response = Response.json({ error: "Incorrect password. Please try again." }, { status: 401 });
+      rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+      return response;
     }
   } catch (error) {
     console.error("Login failed:", error);
-    return Response.json({ error: "Login failed. Please try again." }, { status: 500 });
+    const response = Response.json({ error: "Login failed. Please try again." }, { status: 500 });
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    return response;
   }
 }

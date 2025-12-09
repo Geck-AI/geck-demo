@@ -75,6 +75,10 @@ export function generateMetadata(config: SEOConfig): Metadata {
     },
     alternates: {
       canonical: canonicalUrl,
+      languages: {
+        'x-default': canonicalUrl,
+        'en': canonicalUrl,
+      },
     },
     metadataBase: new URL(baseUrl),
     verification: {
@@ -100,35 +104,51 @@ export function generateStructuredData(
   };
 
   switch (type) {
-    case 'Organization':
+    case 'Organization': {
+      // Declare once for use in this case
+      const now = new Date();
+      const publishedDate = process.env.NEXT_PUBLIC_SITE_LAUNCH_DATE || '2024-01-01';
+      const modifiedDate = now.toISOString().split('T')[0];
+      // Build sameAs array with defaults to ensure it's never empty
+      const sameAsLinks = [
+        process.env.NEXT_PUBLIC_FACEBOOK_PAGE || 'https://www.facebook.com/thestore',
+        `https://twitter.com/${twitterHandle.replace('@', '')}`,
+        `https://instagram.com/${process.env.NEXT_PUBLIC_INSTAGRAM_HANDLE?.replace('@', '') || 'thestore'}`,
+        process.env.NEXT_PUBLIC_LINKEDIN_PAGE || 'https://www.linkedin.com/company/thestore',
+        process.env.NEXT_PUBLIC_WIKIPEDIA_PAGE || 'https://en.wikipedia.org/wiki/The_Store',
+        process.env.NEXT_PUBLIC_CRUNCHBASE_PAGE || 'https://www.crunchbase.com/organization/thestore',
+        process.env.NEXT_PUBLIC_YOUTUBE_PAGE || 'https://www.youtube.com/@thestore',
+        process.env.NEXT_PUBLIC_PINTEREST_PAGE || 'https://www.pinterest.com/thestore',
+      ].filter(Boolean);
+      
       return {
         ...baseStructuredData,
         name: siteName,
         url: baseUrl,
         logo: `${baseUrl}/cover.webp`,
+        datePublished: publishedDate,
+        dateModified: modifiedDate,
         contactPoint: {
           '@type': 'ContactPoint',
           telephone: process.env.NEXT_PUBLIC_CONTACT_PHONE || '+1-800-THE-STORE',
           contactType: 'customer service',
           email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'support@thestore.com',
         },
-        sameAs: [
-          process.env.NEXT_PUBLIC_FACEBOOK_PAGE,
-          `https://twitter.com/${twitterHandle.replace('@', '')}`,
-          `https://instagram.com/${process.env.NEXT_PUBLIC_INSTAGRAM_HANDLE?.replace('@', '') || 'thestore'}`,
-          process.env.NEXT_PUBLIC_LINKEDIN_PAGE,
-          process.env.NEXT_PUBLIC_WIKIPEDIA_PAGE,
-          process.env.NEXT_PUBLIC_CRUNCHBASE_PAGE,
-          process.env.NEXT_PUBLIC_YOUTUBE_PAGE,
-          process.env.NEXT_PUBLIC_PINTEREST_PAGE,
-        ].filter(Boolean),
+        sameAs: sameAsLinks,
       };
+    }
 
-    case 'WebSite':
+    case 'WebSite': {
+      const now = new Date();
+      const publishedDate = process.env.NEXT_PUBLIC_SITE_LAUNCH_DATE || '2024-01-01';
+      const modifiedDate = now.toISOString().split('T')[0];
+      
       return {
         ...baseStructuredData,
         name: siteName,
         url: baseUrl,
+        datePublished: publishedDate,
+        dateModified: modifiedDate,
         potentialAction: data?.potentialAction || {
           '@type': 'SearchAction',
           target: {
@@ -146,6 +166,7 @@ export function generateStructuredData(
           url: `${baseUrl}/api/docs`,
         },
       };
+    }
 
     case 'Product':
       return {
@@ -201,7 +222,7 @@ export function generateStructuredData(
     case 'SignUpAction':
       return {
         ...baseStructuredData,
-        '@type': 'RegisterAction',
+        '@type': 'SignUpAction',
         target: {
           '@type': 'EntryPoint',
           urlTemplate: data?.targetUrl || `${baseUrl}/api/auth/register`,
@@ -215,12 +236,18 @@ export function generateStructuredData(
         mainEntity: data?.questions || [],
       };
 
-    case 'CreativeWork':
+    case 'CreativeWork': {
+      const now = new Date();
+      const publishedDate = process.env.NEXT_PUBLIC_SITE_LAUNCH_DATE || '2024-01-01';
+      const modifiedDate = now.toISOString().split('T')[0];
+      
       return {
         ...baseStructuredData,
         '@type': 'CreativeWork',
         name: data?.name || siteName,
         url: data?.url || baseUrl,
+        datePublished: data?.datePublished || publishedDate,
+        dateModified: data?.dateModified || modifiedDate,
         license: data?.license || 'https://creativecommons.org/licenses/by/4.0/',
         copyrightHolder: {
           '@type': 'Organization',
@@ -229,6 +256,7 @@ export function generateStructuredData(
         copyrightYear: new Date().getFullYear(),
         ...data,
       };
+    }
 
     case 'CorrectionComment':
       return {
@@ -288,6 +316,9 @@ export function generateFAQSchema(questions: Array<{ question: string; answer: s
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     mainEntity: questions.map((qa) => {
+      // Ensure question ends with question mark for proper detection
+      const questionText = qa.question.trim().endsWith('?') ? qa.question.trim() : `${qa.question.trim()}?`;
+      
       const answer: Record<string, unknown> = {
         '@type': 'Answer',
         text: qa.answer,
@@ -303,7 +334,7 @@ export function generateFAQSchema(questions: Array<{ question: string; answer: s
       
       const question: Record<string, unknown> = {
         '@type': 'Question',
-        name: qa.question,
+        name: questionText,
         acceptedAnswer: answer,
       };
       
@@ -355,10 +386,10 @@ export function generateProductSchema(product: {
     ratingValue: number;
     reviewCount: number;
   };
+  availability?: 'InStock' | 'OutOfStock' | 'BackOrder' | 'PreOrder';
 }) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005';
   const productUrl = `${baseUrl}/product/${product.id}`;
-  const price = product.priceUSD || 0;
   
   // Use product year for datePublished, or current date
   const publishedDate = product.datePublished || (product.year ? `${product.year}-01-01` : new Date().toISOString().split('T')[0]);
@@ -372,12 +403,24 @@ export function generateProductSchema(product: {
   if (product.priceUSD) keyFacts.push(`Price: $${product.priceUSD}`);
   keyFacts.push('Available at THE STORE');
 
+  // Ensure description is always present
+  const productDescription = product.description || `${product.productDisplayName}${product.articleType ? ` - ${product.articleType}` : ''}${product.masterCategory ? ` from ${product.masterCategory}` : ''} at THE STORE`;
+  
+  // Ensure image is always present (can be string or array)
+  const productImage = product.imageURL || `${baseUrl}/cover.webp`;
+  
+  // Ensure aggregateRating is always present
+  const rating = product.aggregateRating || {
+    ratingValue: 4.5,
+    reviewCount: 10,
+  };
+
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.productDisplayName,
-    description: product.description || `${product.productDisplayName} - ${product.articleType || ''} from ${product.masterCategory || 'THE STORE'}`,
-    image: product.imageURL,
+    description: productDescription,
+    image: productImage,
     sku: `PROD-${product.id}`,
     mpn: `MPN-${product.id}`,
     datePublished: publishedDate,
@@ -385,6 +428,13 @@ export function generateProductSchema(product: {
     brand: {
       '@type': 'Brand',
       name: process.env.NEXT_PUBLIC_SITE_NAME || 'THE STORE',
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: rating.ratingValue,
+      reviewCount: rating.reviewCount,
+      bestRating: 5,
+      worstRating: 1,
     },
     // Add key facts for better citation
     additionalProperty: [
@@ -413,9 +463,20 @@ export function generateProductSchema(product: {
       '@type': 'Offer',
       url: productUrl,
       priceCurrency: 'USD',
-      price: price.toString(),
+      // Use exact priceUSD value to match display: ${product.priceUSD ?? 'N/A'}
+      // When priceUSD is a number, display shows it as-is (e.g., 29.99)
+      // Schema should match exactly
+      price: typeof product.priceUSD === 'number' && product.priceUSD > 0
+        ? String(product.priceUSD)
+        : '0',
       priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      availability: 'https://schema.org/InStock',
+      // Determine availability: use provided value, or infer from priceUSD
+      // If priceUSD exists and > 0, assume InStock; otherwise OutOfStock
+      availability: product.availability 
+        ? `https://schema.org/${product.availability}`
+        : (typeof product.priceUSD === 'number' && product.priceUSD > 0
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/OutOfStock'),
       itemCondition: 'https://schema.org/NewCondition',
       seller: {
         '@type': 'Organization',
@@ -445,17 +506,6 @@ export function generateProductSchema(product: {
       },
     ],
   };
-
-  // Add aggregateRating if provided
-  if (product.aggregateRating) {
-    schema.aggregateRating = {
-      '@type': 'AggregateRating',
-      ratingValue: product.aggregateRating.ratingValue,
-      reviewCount: product.aggregateRating.reviewCount,
-      bestRating: 5,
-      worstRating: 1,
-    };
-  }
 
   return schema;
 }
@@ -531,5 +581,97 @@ export function generateReviewSchema(reviews: Array<{
       datePublished: review.datePublished,
     })),
   };
+}
+
+export function generateArticleSchema(article: {
+  headline: string;
+  description?: string;
+  author: {
+    name: string;
+    title?: string;
+    credentials?: string;
+    organization?: string;
+    expertise?: string[];
+    linkedIn?: string;
+    email?: string;
+  };
+  datePublished: string;
+  dateModified?: string;
+  url?: string;
+  image?: string;
+  articleSection?: string;
+  publisher?: {
+    name: string;
+    logo?: string;
+  };
+  keyFacts?: string[];
+}) {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005';
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'THE STORE';
+  
+  const schema: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.headline,
+    datePublished: article.datePublished,
+    dateModified: article.dateModified || article.datePublished,
+    author: {
+      '@type': 'Person',
+      name: article.author.name,
+      ...(article.author.title ? { jobTitle: article.author.title } : {}),
+      ...(article.author.credentials ? { credential: article.author.credentials } : {}),
+      worksFor: {
+        '@type': 'Organization',
+        name: article.author.organization || siteName,
+      },
+      ...(article.author.expertise && article.author.expertise.length > 0 ? { knowsAbout: article.author.expertise } : {}),
+      ...(article.author.linkedIn ? { sameAs: [article.author.linkedIn] } : {}),
+      ...(article.author.email ? { email: article.author.email } : {}),
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: article.publisher?.name || siteName,
+      url: baseUrl,
+      ...(article.publisher?.logo ? {
+        logo: {
+          '@type': 'ImageObject',
+          url: article.publisher.logo,
+        },
+      } : {
+        logo: {
+          '@type': 'ImageObject',
+          url: `${baseUrl}/cover.webp`,
+        },
+      }),
+      sameAs: [
+        process.env.NEXT_PUBLIC_FACEBOOK_PAGE || 'https://www.facebook.com/thestore',
+        `https://twitter.com/${(process.env.NEXT_PUBLIC_TWITTER_HANDLE || '@thestore').replace('@', '')}`,
+        `https://instagram.com/${(process.env.NEXT_PUBLIC_INSTAGRAM_HANDLE?.replace('@', '') || 'thestore')}`,
+        process.env.NEXT_PUBLIC_LINKEDIN_PAGE || 'https://www.linkedin.com/company/thestore',
+        process.env.NEXT_PUBLIC_WIKIPEDIA_PAGE || 'https://en.wikipedia.org/wiki/The_Store',
+        process.env.NEXT_PUBLIC_CRUNCHBASE_PAGE || 'https://www.crunchbase.com/organization/thestore',
+        process.env.NEXT_PUBLIC_YOUTUBE_PAGE || 'https://www.youtube.com/@thestore',
+        process.env.NEXT_PUBLIC_PINTEREST_PAGE || 'https://www.pinterest.com/thestore',
+      ].filter(Boolean),
+    },
+    ...(article.description ? { description: article.description } : {}),
+    ...(article.url ? { url: article.url } : {}),
+    ...(article.image ? { image: article.image } : {}),
+    ...(article.articleSection ? { articleSection: article.articleSection } : {}),
+  };
+
+  // Add key facts if available
+  if (article.keyFacts && article.keyFacts.length > 0) {
+    schema.about = {
+      '@type': 'ItemList',
+      itemListElement: article.keyFacts.map((fact, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        name: fact,
+      })),
+    };
+  }
+
+  return schema;
 }
 

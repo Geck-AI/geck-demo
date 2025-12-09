@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { detectAgent } from '@/lib/agentDetection';
-import { isStaging } from '@/lib/environment';
+import { isStaging, getEnvironment } from '@/lib/environment';
 
 export const config = {
   matcher: [
@@ -69,20 +69,13 @@ export async function middleware(request: NextRequest) {
   const agent = detectAgent(userAgent);
   const pathname = request.nextUrl.pathname;
 
+  // Get environment info once at the top
+  const environment = getEnvironment();
+  const isStagingEnv = isStaging();
+
   // Rate limiting for API routes only (not read-only pages)
   // Read-only pages (homepage, product pages, FAQ, guides) should never be rate limited
   const isApiRoute = pathname.startsWith('/api/');
-  const isReadOnlyPage = !isApiRoute && (
-    pathname === '/' ||
-    pathname.startsWith('/product/') ||
-    pathname.startsWith('/shop/') ||
-    pathname === '/faq' ||
-    pathname.startsWith('/blog') ||
-    pathname === '/content-policy' ||
-    pathname === '/corrections-policy' ||
-    pathname === '/search' ||
-    pathname.startsWith('/api/docs')
-  );
 
   // Apply rate limiting only to API routes (excluding analytics and auth routes)
   if (isApiRoute && 
@@ -93,7 +86,6 @@ export async function middleware(request: NextRequest) {
     
     // More lenient limits for known AI bots and staging environment
     const isAIBot = agent.isAgent && (agent.type === 'ai_bot' || agent.type === 'search_engine');
-    const isStagingEnv = isStaging();
     // Staging: 200 req/min, Production bots: 100 req/min, Production users: 60 req/min
     const limit = isStagingEnv ? 200 : (isAIBot ? 100 : 60);
     const windowMs = 60 * 1000; // 1 minute window
@@ -133,6 +125,16 @@ export async function middleware(request: NextRequest) {
     response.headers.set('X-Agent-Name', agent.name);
     response.headers.set('X-Agent-Type', agent.type);
     response.headers.set('X-Is-Agent', agent.isAgent.toString());
+    
+    // Add staging/environment detection headers
+    response.headers.set('X-Environment', environment);
+    response.headers.set('X-Is-Staging', isStagingEnv.toString());
+    response.headers.set('X-Test-Mode', (isStagingEnv || environment === 'development').toString());
+    response.headers.set('X-Sandbox-Mode', isStagingEnv.toString());
+    response.headers.set('X-Sandbox-Available', isStagingEnv.toString());
+    if (isStagingEnv) {
+      response.headers.set('X-Sandbox-Endpoint', '/api/sandbox');
+    }
 
     // Log agent visits (fire and forget - don't block request)
     if (agent.isAgent && !pathname.startsWith('/api/analytics')) {
@@ -181,6 +183,16 @@ export async function middleware(request: NextRequest) {
   response.headers.set('X-Agent-Name', agent.name);
   response.headers.set('X-Agent-Type', agent.type);
   response.headers.set('X-Is-Agent', agent.isAgent.toString());
+  
+  // Add staging/environment detection headers
+  response.headers.set('X-Environment', environment);
+  response.headers.set('X-Is-Staging', isStagingEnv.toString());
+  response.headers.set('X-Test-Mode', (isStagingEnv || environment === 'development').toString());
+  response.headers.set('X-Sandbox-Mode', isStagingEnv.toString());
+  response.headers.set('X-Sandbox-Available', isStagingEnv.toString());
+  if (isStagingEnv) {
+    response.headers.set('X-Sandbox-Endpoint', '/api/sandbox');
+  }
 
   return response;
 }

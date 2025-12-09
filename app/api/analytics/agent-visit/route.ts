@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { detectAgent } from '@/lib/agentDetection';
+import { getRateLimitHeadersForEndpoint } from '@/lib/rateLimit';
 import fs from 'fs';
 import path from 'path';
 
@@ -48,15 +49,20 @@ function writeAgentVisits(visits: AgentVisit[]) {
 }
 
 export async function POST(request: NextRequest) {
+  // Add rate limit headers
+  const rateLimitHeaders = getRateLimitHeadersForEndpoint('/api/analytics/agent-visit');
+  
   try {
     const body = await request.json();
     const { url, userAgent, referer, ip, country } = body;
 
     if (!userAgent || !url) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { error: 'Missing required fields: userAgent and url are required' },
         { status: 400 }
       );
+      rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+      return response;
     }
 
     const agent = detectAgent(userAgent);
@@ -90,7 +96,7 @@ export async function POST(request: NextRequest) {
     // Write back to file
     writeAgentVisits(visits);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       message: 'Agent visit logged',
       agent: {
@@ -98,17 +104,27 @@ export async function POST(request: NextRequest) {
         type: agent.type,
       },
     }, { status: 201 });
+    
+    // Add rate limit headers
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    
+    return response;
 
   } catch (error) {
     console.error('Error processing agent visit:', error);
-    return NextResponse.json(
+    const response = NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    return response;
   }
 }
 
 export async function GET(request: NextRequest) {
+  // Add rate limit headers
+  const rateLimitHeaders = getRateLimitHeadersForEndpoint('/api/analytics/agent-visit');
+  
   try {
     const visits = readAgentVisits();
     const searchParams = request.nextUrl.searchParams;
@@ -147,13 +163,17 @@ export async function GET(request: NextRequest) {
       stats.byType[visit.agentType] = (stats.byType[visit.agentType] || 0) + 1;
     });
 
-    return NextResponse.json(stats);
+    const response = NextResponse.json(stats);
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    return response;
   } catch (error) {
     console.error('Error reading agent visits:', error);
-    return NextResponse.json(
+    const response = NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
+    rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
+    return response;
   }
 }
 

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState, useMemo } from "react";
 import { useStylesStore } from "@/stores/stylesStore";
 import { useStyleFiltersStore } from "@/stores/styleFiltersStore";
@@ -121,7 +123,7 @@ const StyleCardContainer: React.FC = () => {
       >
         {paginated.map((s) => (
           <div key={s.id} role="listitem">
-            <StyleCard item={s} />
+            <StyleCard item={s} headingLevel={2} />
           </div>
         ))}
       </section>
