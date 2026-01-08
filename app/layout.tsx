@@ -44,7 +44,7 @@ export default function RootLayout({
 }>) {
   const environment = getEnvironment();
   const isStagingEnv = isStaging();
-  
+
   const organizationSchema = generateStructuredData('Organization');
   const websiteSchema = generateStructuredData('WebSite', {
     potentialAction: {
@@ -69,10 +69,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href={baseUrl} />
-        
+
         {/* Preload critical resources */}
         <link rel="preload" href="/cover.webp" as="image" type="image/webp" />
-        
+
         <link rel="canonical" href={baseUrl} />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
@@ -155,14 +155,20 @@ export default function RootLayout({
             }}
           />
         )}
+        {/* AXO Agent Tracker */}
+        <script
+          src="/tracker.js"
+          data-site-id="fbf0659e-a8e4-4918-ae46-423e7bc17de8"
+          async
+        ></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased p-4`}
       >
         <StagingBanner />
-        <a 
+        <a
           href="#main-content"
-          data-testid="skip-to-main-content-link" 
+          data-testid="skip-to-main-content-link"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-md"
           aria-label="Skip to main content"
         >
@@ -182,8 +188,8 @@ export default function RootLayout({
             }
           `}</style>
           <div className="no-js-message">
-            <p><strong>JavaScript is disabled.</strong> Some interactive features may not work. 
-            The site is still fully functional for browsing and shopping.</p>
+            <p><strong>JavaScript is disabled.</strong> Some interactive features may not work.
+              The site is still fully functional for browsing and shopping.</p>
           </div>
         </noscript>
         {/* Google Tag Manager (noscript) */}

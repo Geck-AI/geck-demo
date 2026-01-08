@@ -75,5 +75,159 @@
     "orderId": "GVOS-251209",
     "url": "http://localhost:3005/checkout",
     "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-06T04:39:44.863Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3006/product/15970",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-06T04:47:27.445Z",
+    "agentName": "Generic Bot",
+    "agentType": "crawler",
+    "userAgent": "Mozilla/5.0 (compatible; AxoTestBot/1.0; +http://axo.ai)",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3006/product/15970",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-06T04:48:20.518Z",
+    "agentName": "Generic Bot",
+    "agentType": "crawler",
+    "userAgent": "Mozilla/5.0 (compatible; AxoTestBot/1.0; +http://axo.ai)",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3006/product/15970",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-06T05:01:34.746Z",
+    "agentName": "Generic Bot",
+    "agentType": "crawler",
+    "userAgent": "Mozilla/5.0 (compatible; AxoTestBot/1.0; +http://axo.ai)",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3006/product/15970",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-06T05:05:58.408Z",
+    "agentName": "Generic Bot",
+    "agentType": "crawler",
+    "userAgent": "Mozilla/5.0 (compatible; AxoTestBot/1.0; +http://axo.ai)",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3006/product/15970",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-06T05:07:11.892Z",
+    "agentName": "Generic Bot",
+    "agentType": "crawler",
+    "userAgent": "Mozilla/5.0 (compatible; AxoTestBot/1.0; +http://axo.ai)",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3006/product/15970",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-06T05:29:52.055Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3006/product/15970",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-06T05:44:08.216Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3006/product/15970",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-06T05:44:11.972Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 44.97,
+    "productId": 39386,
+    "url": "http://localhost:3006/product/39386",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-06T05:48:36.644Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3006/product/15970",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-06T05:49:27.873Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3006/product/15970",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-06T05:49:31.370Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 44.97,
+    "productId": 39386,
+    "url": "http://localhost:3006/product/39386",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-06T05:51:55.908Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3006/product/15970",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-06T05:51:59.302Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 44.97,
+    "productId": 39386,
+    "url": "http://localhost:3006/product/39386",
+    "ip": "::1"
   }
 ]
