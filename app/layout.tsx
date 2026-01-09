@@ -157,8 +157,8 @@ export default function RootLayout({
         )}
         {/* AXO Agent Tracker */}
         <script
-          src="/tracker.js"
-          data-site-id="fbf0659e-a8e4-4918-ae46-423e7bc17de8"
+          src="http://localhost:3005/tracker.js"
+          data-site-id="b22507be-01bc-46e8-8633-0813a7b4048f"
           async
         ></script>
       </head>

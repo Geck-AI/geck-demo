@@ -5,11 +5,11 @@ import { getAllBlogPosts } from '@/lib/blogData';
 export default function sitemap(): MetadataRoute.Sitemap {
   // Note: The sitemap is always available at /sitemap.xml regardless of domain
   // baseUrl is used for absolute URLs in the sitemap entries (required by sitemap spec)
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005';
-  
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://dev.geck.ai';
+
   // Use current date for freshness
   const now = new Date();
-  
+
   // Get all products from cache
   let productIds: number[] = [];
   try {
@@ -171,7 +171,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Combine and ensure we have at least the static pages
   const allPages = [...staticPages, ...productPages, ...blogPostPages];
-  
+
   // Ensure we return a valid sitemap (at minimum static pages)
   if (allPages.length === 0) {
     // Fallback: return at least homepage

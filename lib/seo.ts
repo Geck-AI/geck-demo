@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005';
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://dev.geck.ai';
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'THE STORE';
 const siteDescription = process.env.NEXT_PUBLIC_SITE_DESCRIPTION || 'Shop the latest fashion trends, clothing, shoes, and accessories at THE STORE.';
 const twitterHandle = process.env.NEXT_PUBLIC_TWITTER_HANDLE || '@thestore';
@@ -94,7 +94,7 @@ export function generateStructuredData(
   type: 'Organization' | 'WebSite' | 'Product' | 'BreadcrumbList' | 'ImageObject' | 'BuyAction' | 'AddToCartAction' | 'SignUpAction' | 'FAQPage' | 'CreativeWork' | 'CorrectionComment',
   data?: Record<string, unknown>
 ) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://dev.geck.ai';
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'THE STORE';
   const twitterHandle = process.env.NEXT_PUBLIC_TWITTER_HANDLE || '@thestore';
 
@@ -120,7 +120,7 @@ export function generateStructuredData(
         process.env.NEXT_PUBLIC_YOUTUBE_PAGE || 'https://www.youtube.com/@thestore',
         process.env.NEXT_PUBLIC_PINTEREST_PAGE || 'https://www.pinterest.com/thestore',
       ].filter(Boolean);
-      
+
       return {
         ...baseStructuredData,
         name: siteName,
@@ -142,7 +142,7 @@ export function generateStructuredData(
       const now = new Date();
       const publishedDate = process.env.NEXT_PUBLIC_SITE_LAUNCH_DATE || '2024-01-01';
       const modifiedDate = now.toISOString().split('T')[0];
-      
+
       return {
         ...baseStructuredData,
         name: siteName,
@@ -240,7 +240,7 @@ export function generateStructuredData(
       const now = new Date();
       const publishedDate = process.env.NEXT_PUBLIC_SITE_LAUNCH_DATE || '2024-01-01';
       const modifiedDate = now.toISOString().split('T')[0];
-      
+
       return {
         ...baseStructuredData,
         '@type': 'CreativeWork',
@@ -288,7 +288,7 @@ export function generateCorrectionCommentSchema(correction: {
   authorType?: 'Person' | 'Organization';
 }) {
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'THE STORE';
-  
+
   return generateStructuredData('CorrectionComment', {
     text: correction.text,
     datePublished: correction.datePublished || new Date().toISOString(),
@@ -308,22 +308,22 @@ export function generateCorrectionCommentSchema(correction: {
 }
 
 export function generateFAQSchema(questions: Array<{ question: string; answer: string; keyFacts?: string[]; isBestAnswer?: boolean }>, datePublished?: string, dateModified?: string, author?: { name: string; title?: string; credentials?: string; organization?: string; expertise?: string[]; linkedIn?: string; email?: string }) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://dev.geck.ai';
   const publishedDate = datePublished || new Date().toISOString().split('T')[0];
   const modifiedDate = dateModified || new Date().toISOString().split('T')[0];
-  
+
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     mainEntity: questions.map((qa) => {
       // Ensure question ends with question mark for proper detection
       const questionText = qa.question.trim().endsWith('?') ? qa.question.trim() : `${qa.question.trim()}?`;
-      
+
       const answer: Record<string, unknown> = {
         '@type': 'Answer',
         text: qa.answer,
       };
-      
+
       // Add key facts as suggested answers for better snippet extraction
       if (qa.keyFacts && qa.keyFacts.length > 0) {
         answer.suggestedAnswer = qa.keyFacts.map(fact => ({
@@ -331,18 +331,18 @@ export function generateFAQSchema(questions: Array<{ question: string; answer: s
           text: fact,
         }));
       }
-      
+
       const question: Record<string, unknown> = {
         '@type': 'Question',
         name: questionText,
         acceptedAnswer: answer,
       };
-      
+
       // Mark best answer candidates
       if (qa.isBestAnswer) {
         question.isBestAnswer = true;
       }
-      
+
       return question;
     }),
     datePublished: publishedDate,
@@ -388,9 +388,9 @@ export function generateProductSchema(product: {
   };
   availability?: 'InStock' | 'OutOfStock' | 'BackOrder' | 'PreOrder';
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://dev.geck.ai';
   const productUrl = `${baseUrl}/product/${product.id}`;
-  
+
   // Use product year for datePublished, or current date
   const publishedDate = product.datePublished || (product.year ? `${product.year}-01-01` : new Date().toISOString().split('T')[0]);
   const modifiedDate = product.dateModified || new Date().toISOString().split('T')[0];
@@ -405,10 +405,10 @@ export function generateProductSchema(product: {
 
   // Ensure description is always present
   const productDescription = product.description || `${product.productDisplayName}${product.articleType ? ` - ${product.articleType}` : ''}${product.masterCategory ? ` from ${product.masterCategory}` : ''} at THE STORE`;
-  
+
   // Ensure image is always present (can be string or array)
   const productImage = product.imageURL || `${baseUrl}/cover.webp`;
-  
+
   // Ensure aggregateRating is always present
   const rating = product.aggregateRating || {
     ratingValue: 4.5,
@@ -472,7 +472,7 @@ export function generateProductSchema(product: {
       priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       // Determine availability: use provided value, or infer from priceUSD
       // If priceUSD exists and > 0, assume InStock; otherwise OutOfStock
-      availability: product.availability 
+      availability: product.availability
         ? `https://schema.org/${product.availability}`
         : (typeof product.priceUSD === 'number' && product.priceUSD > 0
           ? 'https://schema.org/InStock'
@@ -606,9 +606,9 @@ export function generateArticleSchema(article: {
   };
   keyFacts?: string[];
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://dev.geck.ai';
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'THE STORE';
-  
+
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Article',

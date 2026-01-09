@@ -4,8 +4,8 @@
  */
 
 export function getOpenApiSpec() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005';
-  
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://dev.geck.ai';
+
   return {
     openapi: '3.0.0',
     info: {

@@ -54,15 +54,15 @@ export function isDevelopment(): boolean {
  * Get staging base URL
  */
 export function getStagingUrl(): string {
-  return process.env.NEXT_PUBLIC_STAGING_URL || 
-         process.env.NEXT_PUBLIC_BASE_URL?.replace('www.', 'staging.') || 
-         'http://localhost:3005';
+  return process.env.NEXT_PUBLIC_STAGING_URL ||
+    process.env.NEXT_PUBLIC_BASE_URL?.replace('www.', 'staging.') ||
+    'https://dev.geck.ai';
 }
 
 /**
  * Get production base URL
  */
 export function getProductionUrl(): string {
-  return process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005';
+  return process.env.NEXT_PUBLIC_BASE_URL || 'https://dev.geck.ai';
 }
 
