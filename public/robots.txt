@@ -1,0 +1,128 @@
+# robots.txt for THE STORE
+# Allow all search engines and AI bots to crawl the site
+
+User-agent: *
+Allow: /
+Crawl-delay: 1
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cart
+Disallow: /favorites
+Disallow: /order-success
+Disallow: /login
+Disallow: /register
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/sandbox
+Allow: /api/performance/budgets
+Allow: /staging-guide
+
+# Explicit directives for AI bots
+User-agent: GPTBot
+Allow: /
+Crawl-delay: 2
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cart
+Disallow: /favorites
+Disallow: /order-success
+Disallow: /login
+Disallow: /register
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/sandbox
+Allow: /api/performance/budgets
+Allow: /staging-guide
+
+User-agent: PerplexityBot
+Allow: /
+Crawl-delay: 2
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cart
+Disallow: /favorites
+Disallow: /order-success
+Disallow: /login
+Disallow: /register
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/sandbox
+Allow: /api/performance/budgets
+Allow: /staging-guide
+
+User-agent: Google-Extended
+Allow: /
+Crawl-delay: 1
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cart
+Disallow: /favorites
+Disallow: /order-success
+Disallow: /login
+Disallow: /register
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/sandbox
+Allow: /api/performance/budgets
+Allow: /staging-guide
+
+User-agent: Anthropic-WebFetcher
+Allow: /
+Crawl-delay: 2
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cart
+Disallow: /favorites
+Disallow: /order-success
+Disallow: /login
+Disallow: /register
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/sandbox
+Allow: /api/performance/budgets
+Allow: /staging-guide
+
+User-agent: Applebot-Extended
+Allow: /
+Crawl-delay: 1
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cart
+Disallow: /favorites
+Disallow: /order-success
+Disallow: /login
+Disallow: /register
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/sandbox
+Allow: /api/performance/budgets
+Allow: /staging-guide
+
+User-agent: Claude-Web
+Allow: /
+Crawl-delay: 2
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cart
+Disallow: /favorites
+Disallow: /order-success
+Disallow: /login
+Disallow: /register
+Allow: /api/docs
+Allow: /api/docs/
+Allow: /api/staging/info
+Allow: /api/sandbox
+Allow: /api/performance/budgets
+Allow: /staging-guide
+
+# Sitemap location
+# The sitemap is automatically generated at /sitemap.xml
+# Using relative path so it works on any domain
+Sitemap: /sitemap.xml
+

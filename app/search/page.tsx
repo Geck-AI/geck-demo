@@ -55,74 +55,114 @@ export default function SearchResultsPage() {
     setResults(filtered);
   }, [query, data]);
 
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchInput.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchInput.trim())}`);
+    }
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-white p-8">
+      <main className="min-h-screen bg-white p-8" role="main" aria-label="Search products page">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-stone-800 mx-auto"></div>
+          <div className="text-center py-12" role="status" aria-live="polite" aria-busy="true">
+            <div 
+              className="animate-spin rounded-full h-12 w-12 border-b-2 border-stone-800 mx-auto"
+              aria-hidden="true"
+            ></div>
             <p className="text-stone-600 mt-4">Loading products...</p>
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white p-8">
+    <main className="min-h-screen bg-white p-8" role="main" aria-label="Search products page">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <Search className="w-6 h-6 text-stone-600" />
-            <h1 className="text-3xl font-bold text-stone-900">
+        <header className="mb-8" aria-labelledby="search-heading">
+          <div className="flex items-center gap-3 mb-2">
+            <Search className="w-6 h-6 text-stone-600" aria-hidden="true" />
+            <h1 id="search-heading" className="text-3xl font-bold text-stone-900">
               Search Products
             </h1>
+          </div>
+          <div className="text-sm text-stone-500 mb-4">
+            <time dateTime="2024-01-01">Published: January 1, 2024</time>
+            <span className="mx-2">•</span>
+            <time dateTime={new Date().toISOString().split('T')[0]}>Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
           </div>
           
           {/* Search Input */}
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (searchInput.trim()) {
-                router.push(`/search?q=${encodeURIComponent(searchInput.trim())}`);
-              }
-            }}
+            onSubmit={handleSearchSubmit}
             className="mb-4"
+            role="search"
+            aria-label="Product search"
           >
             <div className="flex gap-2">
               <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-400" />
+                <label htmlFor="search-input" className="sr-only">Search products</label>
+                <Search 
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-400" 
+                  aria-hidden="true"
+                />
                 <Input
-                  type="text"
+                  id="search-input"
+                  type="search"
                   placeholder="Search products, categories, colors..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 focus:ring-2 focus:ring-blue-500"
+                  aria-label="Search products, categories, and colors"
+                  aria-describedby="search-results-count"
                 />
               </div>
-              <Button type="submit">Search</Button>
+              <Button 
+                type="submit" 
+                className="focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                aria-label="Submit search query"
+              >
+                Search
+              </Button>
             </div>
           </form>
 
           {query && (
-            <p className="text-stone-600">
+            <p 
+              id="search-results-count"
+              className="text-stone-600"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
               {results.length === 0
                 ? `No products found for "${query}"`
                 : `Found ${results.length} ${results.length === 1 ? "product" : "products"} for "${query}"`}
             </p>
           )}
-        </div>
+        </header>
 
         {/* Results Grid */}
         {results.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {results.map((item) => (
-              <StyleCard key={item.id} item={item} />
-            ))}
-          </div>
+          <section aria-labelledby="search-results-heading">
+            <h2 id="search-results-heading" className="sr-only">Search Results</h2>
+            <div 
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+              role="list"
+              aria-label={`Search results for "${query}", ${results.length} items`}
+            >
+              {results.map((item) => (
+                <div key={item.id} role="listitem">
+                  <StyleCard item={item} />
+                </div>
+              ))}
+            </div>
+          </section>
         ) : query ? (
-          <div className="text-center py-12">
+          <div className="text-center py-12" role="status" aria-live="polite">
             <p className="text-stone-500 text-lg mb-4">
               No products match your search &quot;{query}&quot;
             </p>
@@ -131,14 +171,14 @@ export default function SearchResultsPage() {
             </p>
           </div>
         ) : (
-          <div className="text-center py-12">
+          <div className="text-center py-12" role="status">
             <p className="text-stone-500 text-lg">
               Enter a search query to find products
             </p>
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 }
 

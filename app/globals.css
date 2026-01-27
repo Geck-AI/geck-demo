@@ -120,3 +120,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* React Hot Toast container positioning - 100px from top */
+.react-hot-toast-container {
+  top: 100px !important;
+}
+
+/* Target the toast container wrapper */
+body > div[style*="position: fixed"]:has(div[class*="react-hot-toast"]) {
+  top: 100px !important;
+}

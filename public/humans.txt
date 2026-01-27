@@ -1,0 +1,13 @@
+/* THE STORE */
+/* Team */
+    Developer: THE STORE Development Team
+    Contact: support [at] thestore.com
+    Twitter: @thestore
+    Location: New York, NY, USA
+
+/* Site */
+    Standards: HTML5, CSS3, JavaScript (ES6+)
+    Components: React, Next.js, TypeScript
+    Software: Node.js, Tailwind CSS
+    Last update: 2024/12/19
+

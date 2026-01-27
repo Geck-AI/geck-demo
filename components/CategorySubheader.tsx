@@ -44,9 +44,9 @@ const categories = [
 
 export default function CategorySubheader() {
   return (
-    <div className="w-full bg-white py-3">
+    <nav className="w-full bg-white py-3" role="navigation" aria-label="Category navigation">
       <div className="max-w-7xl mx-auto px-4 py-3">
-        <div className="flex items-center justify-center gap-6 md:gap-8 overflow-x-auto">
+        <div className="flex items-center justify-center gap-6 md:gap-8 overflow-x-auto" role="list">
           {categories.map((category) => {
             const Icon = category.icon;
             return (
@@ -54,8 +54,11 @@ export default function CategorySubheader() {
                 key={category.href}
                 href={category.href}
                 className="flex flex-col items-center gap-1 min-w-[80px] hover:opacity-80 transition-opacity group"
+                role="listitem"
+                aria-label={`Browse ${category.label} category`}
+                data-testid={`category-link-${category.label.toLowerCase().replace(/\s+/g, '-')}`}
               >
-                <div className={`p-2 rounded-full bg-stone-100 group-hover:bg-stone-200 transition-colors ${category.color}`}>
+                <div className={`p-2 rounded-full bg-stone-100 group-hover:bg-stone-200 transition-colors ${category.color}`} aria-hidden="true">
                   <Icon className="w-5 h-5" />
                 </div>
                 <span className="text-xs text-stone-700 font-medium whitespace-nowrap">
@@ -66,7 +69,7 @@ export default function CategorySubheader() {
           })}
         </div>
       </div>
-    </div>
+    </nav>
   );
 }
 

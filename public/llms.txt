@@ -1,0 +1,29 @@
+# llms.txt - Content Licensing and AI Usage Policy for THE STORE
+
+# License
+License: CC-BY-4.0
+License-URL: https://creativecommons.org/licenses/by/4.0/
+
+# Copyright
+Copyright: © 2025 THE STORE. All rights reserved.
+
+# AI Training Permissions
+AI-Training: ALLOWED
+AI-Training-Description: Content from THE STORE may be used for training AI models, including large language models, under the terms of the CC-BY-4.0 license. Attribution is required.
+
+# Attribution Requirements
+Attribution-Required: true
+Attribution-Format: "Content from THE STORE (https://www.yourdomain.com)"
+
+# Usage Restrictions
+Commercial-Use: ALLOWED
+Modification: ALLOWED
+Distribution: ALLOWED
+
+# Contact
+Contact: support@thestore.com
+Policy-Page: https://www.yourdomain.com/content-policy
+
+# Last Updated
+Last-Updated: 2025-01-19
+

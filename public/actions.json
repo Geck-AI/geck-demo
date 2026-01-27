@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "THE STORE Actions Manifest",
+  "description": "Machine-readable documentation of available actions and endpoints on THE STORE platform",
+  "version": "1.0.0",
+  "actions": {
+    "search": {
+      "name": "Search Products",
+      "description": "Search for products by name, category, color, or other attributes",
+      "endpoint": "/search",
+      "method": "GET",
+      "parameters": {
+        "q": {
+          "type": "string",
+          "description": "Search query string",
+          "required": true,
+          "example": "blue t-shirt"
+        }
+      },
+      "response": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "integer" },
+            "productDisplayName": { "type": "string" },
+            "priceUSD": { "type": "number" },
+            "imageURL": { "type": "string" }
+          }
+        }
+      }
+    },
+    "getProduct": {
+      "name": "Get Product Details",
+      "description": "Retrieve detailed information about a specific product",
+      "endpoint": "/api/store/styles/{id}",
+      "method": "GET",
+      "parameters": {
+        "id": {
+          "type": "integer",
+          "description": "Product ID",
+          "required": true,
+          "example": 12345
+        }
+      },
+      "response": {
+        "type": "object",
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Product details"
+          }
+        }
+      }
+    },
+    "getAllProducts": {
+      "name": "Get All Products",
+      "description": "Retrieve the complete product catalog",
+      "endpoint": "/api/store/styles",
+      "method": "GET",
+      "response": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "description": "Product object"
+        }
+      }
+    },
+    "register": {
+      "name": "Register User",
+      "description": "Create a new user account",
+      "endpoint": "/api/auth/register",
+      "method": "POST",
+      "parameters": {
+        "name": { "type": "string", "required": true },
+        "email": { "type": "string", "format": "email", "required": true },
+        "phone": { "type": "string", "required": true },
+        "street": { "type": "string", "required": true },
+        "city": { "type": "string", "required": true },
+        "state": { "type": "string", "required": true },
+        "zipcode": { "type": "string", "required": true },
+        "password": { "type": "string", "minLength": 6, "required": true }
+      },
+      "response": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "token": { "type": "string" },
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "email": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "login": {
+      "name": "User Login",
+      "description": "Authenticate user with email/username and password",
+      "endpoint": "/api/auth/login",
+      "method": "POST",
+      "parameters": {
+        "username": { "type": "string", "required": true },
+        "password": { "type": "string", "required": true }
+      },
+      "response": {
+        "type": "object",
+        "properties": {
+          "token": { "type": "string" }
+        }
+      }
+    },
+    "addToCart": {
+      "name": "Add to Cart",
+      "description": "Add a product to the shopping cart",
+      "endpoint": "/api/cart/add",
+      "method": "POST",
+      "parameters": {
+        "productId": {
+          "type": "integer",
+          "description": "Product ID to add to cart",
+          "required": true
+        },
+        "quantity": {
+          "type": "integer",
+          "description": "Quantity to add",
+          "default": 1,
+          "minimum": 1
+        }
+      }
+    },
+    "buy": {
+      "name": "Buy Product",
+      "description": "Purchase a product directly (redirects to cart)",
+      "endpoint": "/cart",
+      "method": "GET",
+      "parameters": {
+        "productId": {
+          "type": "integer",
+          "description": "Product ID to purchase"
+        }
+      }
+    },
+    "createOrder": {
+      "name": "Create Order",
+      "description": "Place an order with shipping details",
+      "endpoint": "/api/services/orders",
+      "method": "POST",
+      "parameters": {
+        "name": { "type": "string", "required": true },
+        "streetAddress": { "type": "string", "required": true },
+        "city": { "type": "string", "required": true },
+        "state": { "type": "string", "required": true },
+        "zipcode": { "type": "string", "required": true },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "quantity": { "type": "integer" },
+              "priceUSD": { "type": "number" }
+            }
+          },
+          "required": true
+        },
+        "totalAmount": { "type": "number", "required": true }
+      },
+      "response": {
+        "type": "object",
+        "properties": {
+          "orderId": { "type": "string" },
+          "status": { "type": "string" },
+          "arrivalDate": { "type": "string", "format": "date" }
+        }
+      }
+    }
+  },
+  "documentation": {
+    "openapi": "/api/docs",
+    "description": "Full OpenAPI 3.0 specification available at /api/docs"
+  },
+  "license": {
+    "name": "CC-BY-4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/"
+  }
+}
+
