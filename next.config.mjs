@@ -45,6 +45,21 @@ const nextConfig = {
     maxInactiveAge: 60 * 1000,
     pagesBufferLength: 5,
   },
+  
+  // Rewrites to proxy external resources (e.g., tracker scripts)
+  // Note: API routes handle /api/tracking/collect proxying
+  async rewrites() {
+    return [
+      {
+        source: '/tracker.js',
+        destination: 'http://localhost:3005/tracker.js',
+      },
+      {
+        source: '/rrweb-record.min.js',
+        destination: 'http://localhost:3001/rrweb-record.min.js',
+      },
+    ];
+  },
 };
 
 export default nextConfig;

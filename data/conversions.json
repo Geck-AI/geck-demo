@@ -328,5 +328,60 @@
     "productId": 43500,
     "url": "http://localhost:3001/product/43500",
     "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-15T11:56:44.869Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3001/product/15970",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-15T12:03:41.180Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3001/product/15970",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-15T12:04:44.809Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3001/product/15970",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-15T12:25:23.979Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 5.7,
+    "productId": 6842,
+    "url": "http://localhost:3001/product/6842",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-01-15T18:49:14.699Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 35.85,
+    "productId": 15970,
+    "url": "http://localhost:3001/product/15970",
+    "ip": "::1"
   }
 ]
