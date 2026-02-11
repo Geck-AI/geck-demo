@@ -67,7 +67,7 @@ function isUserRegistered(identifier: string): boolean {
 export async function POST(request: Request) {
   try {
     const { identifier } = (await request.json()) as { identifier?: string };
-    
+
     if (!identifier || identifier.trim().length < 3) {
       return NextResponse.json({ error: "Email or phone number is required" }, { status: 400 });
     }
@@ -87,6 +87,7 @@ export async function POST(request: Request) {
       success: true,
       message: "OTP sent successfully",
       expiresInSec: ttlMs / 1000,
+      code, // Include the code for demo purposes
     });
   } catch (error) {
     console.error("OTP request error:", error);

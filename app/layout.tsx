@@ -114,31 +114,24 @@ export default function RootLayout({
             __html: JSON.stringify(creativeWorkSchema),
           }}
         />
-        {/* Initialize DataLayer for Google Tag Manager and analytics */}
+        {/* Google Analytics (gtag.js) */}
         <Script
-          id="dataLayer-init"
-          strategy="beforeInteractive"
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-TR8PVN0CEK"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'}', {
-                page_path: window.location.pathname,
-                send_page_view: true
-              });
+              gtag('config', 'G-TR8PVN0CEK');
             `,
           }}
         />
-        {/* Google Analytics (gtag.js) */}
-        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
-              strategy="afterInteractive"
-            />
-          </>
-        )}
         {/* Google Tag Manager */}
         {process.env.NEXT_PUBLIC_GTM_ID && (
           <Script

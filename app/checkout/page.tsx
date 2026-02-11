@@ -57,10 +57,10 @@ export default function CheckoutPage() {
 
   // Redirect if cart is empty
   useEffect(() => {
-    if (cartItems.length === 0 && !loading) {
+    if (cartItems.length === 0 && !loading && !processing) {
       router.push("/cart");
     }
-  }, [cartItems.length, loading, router]);
+  }, [cartItems.length, loading, processing, router]);
 
   // Fetch product data
   useEffect(() => {
@@ -161,25 +161,31 @@ export default function CheckoutPage() {
           });
         }
 
-        // Clear the cart
-        clearCart();
-
         // Navigate to success page
         router.push(
-          `/order-success?orderId=${
-            res.orderId
+          `/order-success?orderId=${res.orderId
           }&arrivalDate=${encodeURIComponent(res.arrivalDate ?? "")}`
         );
+
+        // Clear the cart
+        clearCart();
+        // We do NOT setProcessing(false) here to prevent the useEffect from redirecting to /cart
+      } else {
+        setProcessing(false);
+        toast({
+          title: "Checkout failed",
+          description: res.message || "Failed to place order",
+          variant: "destructive",
+        });
       }
     } catch (e) {
       console.error("Checkout failed", e);
+      setProcessing(false);
       toast({
         title: "Checkout failed",
         description: "Something went wrong while processing your order.",
         variant: "destructive",
       });
-    } finally {
-      setProcessing(false);
     }
   };
 
@@ -243,7 +249,7 @@ export default function CheckoutPage() {
         <div className="max-w-4xl mx-auto">
           <div className="p-4" role="status" aria-live="polite" aria-busy="true">
             <div className="flex items-center gap-2">
-              <div 
+              <div
                 className="animate-spin rounded-full h-5 w-5 border-b-2 border-stone-800"
                 aria-hidden="true"
               ></div>
@@ -277,7 +283,7 @@ export default function CheckoutPage() {
     <main className="min-h-screen p-8 bg-white" role="main" aria-label="Checkout page">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-6">Checkout</h1>
-        
+
         <Link
           href="/cart"
           className="inline-flex items-center gap-2 text-stone-600 hover:text-stone-800 mb-6"
@@ -327,7 +333,7 @@ export default function CheckoutPage() {
 
           {/* Checkout Form */}
           <aside className="lg:w-1/3" role="complementary" aria-label="Shipping information">
-            <form 
+            <form
               className="bg-stone-50 rounded-sm p-4 flex flex-col gap-4"
               onSubmit={(e) => {
                 e.preventDefault();
@@ -353,8 +359,8 @@ export default function CheckoutPage() {
                     ? name === "country"
                       ? countryOptions
                       : address.country && citiesByCountry[address.country]
-                      ? citiesByCountry[address.country]
-                      : []
+                        ? citiesByCountry[address.country]
+                        : []
                     : [];
 
                   return (
@@ -414,9 +420,9 @@ export default function CheckoutPage() {
                   );
                 })}
               </div>
-              <Button 
-                type="submit" 
-                className="w-full mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" 
+              <Button
+                type="submit"
+                className="w-full mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 aria-label="Complete checkout"
                 data-testid="checkout-submit-button"
                 disabled={processing}

@@ -383,5 +383,58 @@
     "productId": 15970,
     "url": "http://localhost:3001/product/15970",
     "ip": "::1"
+  },
+  {
+    "timestamp": "2026-02-11T09:20:55.445Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+    "conversionType": "signup",
+    "url": "http://localhost:3001/register",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-02-11T09:29:13.697Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+    "conversionType": "purchase",
+    "value": 51.87,
+    "orderId": "YZWC-260211",
+    "url": "http://localhost:3001/checkout",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-02-11T09:31:44.989Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+    "conversionType": "purchase",
+    "value": 44.97,
+    "orderId": "UKTI-260211",
+    "url": "http://localhost:3001/checkout",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-02-11T09:32:06.756Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+    "conversionType": "purchase",
+    "value": 44.97,
+    "orderId": "XWPQ-260211",
+    "url": "http://localhost:3001/checkout",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-02-11T09:34:10.461Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+    "conversionType": "purchase",
+    "value": 44.97,
+    "orderId": "WTVV-260211",
+    "url": "http://localhost:3001/checkout",
+    "ip": "::1"
   }
 ]

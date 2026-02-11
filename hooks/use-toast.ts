@@ -1,26 +1,27 @@
 import { useCallback } from "react";
+import toast from "react-hot-toast";
 
-// Basic toast hook implementation. Currently logs to console and shows an alert on the client side.
-// Can be replaced with a more sophisticated UI toast library later.
 export interface ToastOptions {
   title: string;
   description?: string;
   variant?: "default" | "destructive";
 }
 
+/**
+ * Enhanced toast hook that uses react-hot-toast for a professional UI experience.
+ * Replaces the basic alert-based implementation.
+ */
 export function useToast() {
-  const toast = useCallback((opts: ToastOptions) => {
-    // Fallback implementation: console + alert.
-    const { title, description } = opts;
+  const showToast = useCallback((opts: ToastOptions) => {
+    const { title, description, variant } = opts;
     const message = description ? `${title}: ${description}` : title;
 
-    if (typeof window !== "undefined") {
-      // Non‑blocking so it doesn't interrupt frame rendering.
-      setTimeout(() => alert(message), 0);
+    if (variant === "destructive") {
+      toast.error(message);
     } else {
-      console.log(`[toast] ${message}`);
+      toast.success(message);
     }
   }, []);
 
-  return { toast } as const;
+  return { toast: showToast } as const;
 }

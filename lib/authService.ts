@@ -14,7 +14,7 @@ export async function login(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
   });
-  
+
   if (!res.ok) {
     try {
       const errorData = await res.json();
@@ -32,7 +32,7 @@ export async function login(
   return data.token;
 }
 
-export async function requestOtp(identifier: string): Promise<{ success: boolean; message?: string }>{
+export async function requestOtp(identifier: string): Promise<{ success: boolean; message?: string; code?: string }> {
   const res = await fetch("/api/auth/otp/request", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -94,19 +94,19 @@ export async function register(userData: RegisterData): Promise<{ success: boole
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData),
   });
-  
+
   if (!res.ok) {
     const errorData = await res.json();
     throw new Error(errorData.error || "Registration failed");
   }
-  
+
   const data = await res.json();
-  
+
   // Set token in cookies if provided (for auto-login)
   if (data.token) {
     setAuthToken(data.token);
   }
-  
+
   return data;
 }
 
