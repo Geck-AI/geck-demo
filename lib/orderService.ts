@@ -7,6 +7,6 @@ export async function checkoutOrder(payload: unknown) {
   if (!res.ok) {
     throw new Error("Checkout failed");
   }
-  const data: { orderId: string; status?: string; arrivalDate?: string } = await res.json();
+  const data: { orderId: string; status?: string; arrivalDate?: string; message?: string } = await res.json();
   return data;
 }
