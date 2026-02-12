@@ -3,6 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -21,6 +24,18 @@ interface ItemData {
   imageURL: string;
 }
 
+const checkoutSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  streetAddress: z.string().min(5, "Address must be at least 5 characters"),
+  country: z.string().min(1, "Please select a country"),
+  city: z.string().min(1, "Please select a city"),
+  state: z.string().min(2, "State must be at least 2 characters"),
+  zipcode: z.string().min(3, "Zipcode must be at least 3 characters"),
+});
+
+type CheckoutFormData = z.infer<typeof checkoutSchema>;
+
 export default function CheckoutPage() {
   const { toast } = useToast();
   const router = useRouter();
@@ -32,28 +47,36 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
 
-  const [address, setAddress] = useState<{
-    name: string;
-    email: string;
-    streetAddress: string;
-    country: string;
-    city: string;
-    state: string;
-    zipcode: string;
-    [key: string]: string;
-  }>({
-    name: "",
-    email: "",
-    streetAddress: "",
-    country: "",
-    city: "",
-    state: "",
-    zipcode: "",
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isValid },
+  } = useForm<CheckoutFormData>({
+    resolver: zodResolver(checkoutSchema),
+    mode: "onBlur",
+    defaultValues: {
+      name: "",
+      email: "",
+      streetAddress: "",
+      country: "",
+      city: "",
+      state: "",
+      zipcode: "",
+    },
   });
 
-  const [errors, setErrors] = useState<
-    Partial<Record<keyof typeof address, boolean>>
-  >({});
+  const selectedCountry = watch("country");
+
+  const onInvalid = (errors: any) => {
+    console.error("Form errors:", errors);
+    toast({
+      title: "Form Validation Failed",
+      description: "Please check the required fields and try again.",
+      variant: "destructive",
+    });
+  };
+
 
   // Redirect if cart is empty
   useEffect(() => {
@@ -88,24 +111,10 @@ export default function CheckoutPage() {
     0
   );
 
-  const handleCheckout = async () => {
+  const onSubmit = async (data: CheckoutFormData) => {
     if (cartItems.length === 0) {
       toast({ title: "Cart is empty", variant: "destructive" });
       router.push("/cart");
-      return;
-    }
-
-    // Validate form
-    const newErrors: Partial<Record<keyof typeof address, boolean>> = {};
-    (Object.keys(address) as (keyof typeof address)[]).forEach((k) => {
-      if (!address[k].trim()) newErrors[k] = true;
-    });
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) {
-      toast({
-        title: "Please fill in all required fields",
-        variant: "destructive",
-      });
       return;
     }
 
@@ -121,7 +130,7 @@ export default function CheckoutPage() {
 
     try {
       const res = await checkoutOrder({
-        ...address,
+        ...data,
         items: itemsForOrder,
         totalAmount: total,
         timestamp: Date.now(),
@@ -134,11 +143,11 @@ export default function CheckoutPage() {
           items: itemsForOrder,
           totalAmount: total,
           timestamp: Date.now(),
-          name: address.name,
-          streetAddress: address.streetAddress,
-          city: address.city,
-          state: address.state,
-          zipcode: address.zipcode,
+          name: data.name,
+          streetAddress: data.streetAddress,
+          city: data.city,
+          state: data.state,
+          zipcode: data.zipcode,
         });
 
         // Track conversion by agent source
@@ -208,37 +217,37 @@ export default function CheckoutPage() {
   const fields = [
     {
       label: "Name",
-      name: "name",
+      name: "name" as const,
       placeholder: "First and last name",
     },
     {
       label: "Email",
-      name: "email",
+      name: "email" as const,
       placeholder: "email@example.com",
     },
     {
       label: "Street Address",
-      name: "streetAddress",
+      name: "streetAddress" as const,
       placeholder: "100, Main St",
     },
     {
       label: "Country",
-      name: "country",
+      name: "country" as const,
       placeholder: "Country",
     },
     {
       label: "City",
-      name: "city",
+      name: "city" as const,
       placeholder: "City",
     },
     {
       label: "State",
-      name: "state",
+      name: "state" as const,
       placeholder: "State",
     },
     {
       label: "Zipcode",
-      name: "zipcode",
+      name: "zipcode" as const,
       placeholder: "Zip / Postal code",
     },
   ];
@@ -335,10 +344,7 @@ export default function CheckoutPage() {
           <aside className="lg:w-1/3" role="complementary" aria-label="Shipping information">
             <form
               className="bg-stone-50 rounded-sm p-4 flex flex-col gap-4"
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleCheckout();
-              }}
+              onSubmit={handleSubmit(onSubmit, onInvalid)}
               aria-label="Shipping and checkout form"
               data-agent-role="checkout-form"
               data-agent-hint="Complete all required fields (name, email, address, city, state, zipcode, country) to proceed with checkout. Form validates on submit."
@@ -358,26 +364,26 @@ export default function CheckoutPage() {
                   const options = isSelect
                     ? name === "country"
                       ? countryOptions
-                      : address.country && citiesByCountry[address.country]
-                        ? citiesByCountry[address.country]
+                      : selectedCountry && citiesByCountry[selectedCountry]
+                        ? citiesByCountry[selectedCountry]
                         : []
                     : [];
 
                   return (
                     <div className="grid gap-1" key={name}>
-                      <Label htmlFor={name}>{label}</Label>
+                      <Label htmlFor={name} className={clsx(errors[name] && "text-red-500")}>
+                        {label}
+                      </Label>
                       {isSelect ? (
                         <select
                           id={name}
-                          value={address[name]}
-                          onChange={(e) => setAddress((p) => ({ ...p, [name]: e.target.value }))}
+                          {...register(name)}
                           aria-invalid={!!errors[name]}
                           className={clsx(
                             "peer h-9 w-full cursor-pointer rounded-md border border-input bg-white px-3 pr-8 text-sm outline-none",
                             "hover:bg-accent/30 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
                             errors[name] ? "border-red-500 focus:ring-red-500" : ""
                           )}
-                          required
                           aria-required="true"
                           aria-describedby={errors[name] ? `${name}-error` : undefined}
                           data-testid={`checkout-${name}-select`}
@@ -396,15 +402,11 @@ export default function CheckoutPage() {
                           id={name}
                           type={name === "email" ? "email" : "text"}
                           placeholder={placeholder}
-                          value={address[name]}
-                          onChange={(e) =>
-                            setAddress((p) => ({ ...p, [name]: e.target.value }))
-                          }
+                          {...register(name)}
                           className={clsx(
                             "bg-white focus:ring-2 focus:ring-blue-500",
                             errors[name] ? "border-red-500 focus:ring-red-500" : ""
                           )}
-                          required
                           aria-invalid={!!errors[name]}
                           aria-required="true"
                           aria-describedby={errors[name] ? `${name}-error` : undefined}
@@ -412,8 +414,8 @@ export default function CheckoutPage() {
                         />
                       )}
                       {errors[name] && (
-                        <span id={`${name}-error`} className="text-xs text-red-600" role="alert">
-                          This field is required
+                        <span id={`${name}-error`} className="text-xs text-red-600 font-medium" role="alert">
+                          {errors[name]?.message}
                         </span>
                       )}
                     </div>

@@ -436,5 +436,27 @@
     "orderId": "WTVV-260211",
     "url": "http://localhost:3001/checkout",
     "ip": "::1"
+  },
+  {
+    "timestamp": "2026-02-12T13:12:16.851Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 44.97,
+    "productId": 39386,
+    "url": "http://localhost:3001/product/39386",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-02-12T13:19:57.225Z",
+    "agentName": "Human",
+    "agentType": "unknown",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+    "conversionType": "add_to_cart",
+    "value": 44.97,
+    "productId": 39386,
+    "url": "http://localhost:3001/product/39386",
+    "ip": "::1"
   }
 ]
