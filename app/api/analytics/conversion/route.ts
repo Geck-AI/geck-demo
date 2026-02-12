@@ -44,16 +44,20 @@ function readConversions(): Conversion[] {
 
 // Write conversions to file
 function writeConversions(conversions: Conversion[]) {
-  ensureDataDirectory();
-  // Keep only last 5,000 conversions
-  const recentConversions = conversions.slice(-5000);
-  fs.writeFileSync(CONVERSIONS_FILE, JSON.stringify(recentConversions, null, 2));
+  try {
+    ensureDataDirectory();
+    // Keep only last 5,000 conversions
+    const recentConversions = conversions.slice(-5000);
+    fs.writeFileSync(CONVERSIONS_FILE, JSON.stringify(recentConversions, null, 2));
+  } catch (error) {
+    console.warn('Failed to write conversions file (expected on Vercel):', error);
+  }
 }
 
 export async function POST(request: NextRequest) {
   // Add rate limit headers
   const rateLimitHeaders = getRateLimitHeadersForEndpoint('/api/analytics/conversion');
-  
+
   try {
     const body = await request.json();
     const { conversionType, value, orderId, productId, url, userAgent, ip } = body;
@@ -84,10 +88,10 @@ export async function POST(request: NextRequest) {
 
     // Read existing conversions
     const conversions = readConversions();
-    
+
     // Add new conversion
     conversions.push(conversion);
-    
+
     // Write back to file
     writeConversions(conversions);
 
@@ -100,10 +104,10 @@ export async function POST(request: NextRequest) {
         agentType: agent.type,
       },
     }, { status: 201 });
-    
+
     // Add rate limit headers
     rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
-    
+
     return response;
 
   } catch (error) {
@@ -120,7 +124,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   // Add rate limit headers
   const rateLimitHeaders = getRateLimitHeadersForEndpoint('/api/analytics/conversion');
-  
+
   try {
     const conversions = readConversions();
     const searchParams = request.nextUrl.searchParams;

@@ -41,14 +41,18 @@ function readCorrections(): CorrectionSubmission[] {
 
 // Write corrections to file
 function writeCorrections(corrections: CorrectionSubmission[]) {
-  ensureDataDirectory();
-  fs.writeFileSync(CORRECTIONS_FILE, JSON.stringify(corrections, null, 2));
+  try {
+    ensureDataDirectory();
+    fs.writeFileSync(CORRECTIONS_FILE, JSON.stringify(corrections, null, 2));
+  } catch (error) {
+    console.warn('Failed to write corrections file (expected on Vercel):', error);
+  }
 }
 
 export async function POST(request: NextRequest) {
   // Add rate limit headers
   const rateLimitHeaders = getRateLimitHeadersForEndpoint('/api/feedback/corrections');
-  
+
   try {
     const body = await request.json();
     const { type, url, description, correctInformation, name, email } = body;
@@ -89,10 +93,10 @@ export async function POST(request: NextRequest) {
 
     // Read existing corrections
     const corrections = readCorrections();
-    
+
     // Add new correction
     corrections.push(correction);
-    
+
     // Write back to file
     writeCorrections(corrections);
 
@@ -101,10 +105,10 @@ export async function POST(request: NextRequest) {
       message: 'Correction submitted successfully',
       id: corrections.length - 1,
     }, { status: 201 });
-    
+
     // Add rate limit headers
     rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
-    
+
     return response;
 
   } catch (error) {
@@ -121,21 +125,21 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   // Add rate limit headers
   const rateLimitHeaders = getRateLimitHeadersForEndpoint('/api/feedback/corrections');
-  
+
   try {
     const corrections = readCorrections();
-    
+
     // Return only pending and reviewed corrections (not resolved ones for privacy)
     const activeCorrections = corrections.filter(c => c.status !== 'resolved');
-    
+
     const response = NextResponse.json({
       corrections: activeCorrections,
       total: activeCorrections.length,
     });
-    
+
     // Add rate limit headers
     rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
-    
+
     return response;
   } catch (error) {
     console.error('Error reading corrections:', error);

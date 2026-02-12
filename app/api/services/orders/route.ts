@@ -10,14 +10,28 @@ const CSV_HEADER =
   "orderId,name,streetAddress,city,state,zipcode,totalAmount,timestamp,itemsJson\n";
 
 function append(row: string) {
-  if (!fs.existsSync(ORDERS_CSV)) fs.writeFileSync(ORDERS_CSV, CSV_HEADER);
-  fs.appendFileSync(ORDERS_CSV, row);
+  try {
+    // Check if we are in an environment where we can write to the public folder
+    // On Vercel this will fail, so we catch the error
+    if (!fs.existsSync(ORDERS_CSV)) {
+      const dir = path.dirname(ORDERS_CSV);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      fs.writeFileSync(ORDERS_CSV, CSV_HEADER);
+    }
+    fs.appendFileSync(ORDERS_CSV, row);
+  } catch (error) {
+    console.warn("Failed to append to orders.csv (expected on Vercel):", error);
+    // On Vercel / serverless environments, we might want to log this or use a database
+    // For this demo, we'll allow it to fail silently to avoid 500 errors
+  }
 }
 
 export async function POST(req: NextRequest) {
   // Add rate limit headers
   const rateLimitHeaders = getRateLimitHeadersForEndpoint('/api/services/orders');
-  
+
   // Handle idempotent request
   const idempotencyKey = getIdempotencyKey(req);
   const result = await handleIdempotentRequest(
@@ -61,21 +75,24 @@ export async function POST(req: NextRequest) {
         .toISOString()
         .split("T")[0];
 
-      /* very-naïve CSV escaping */
-      const safe = (v: string | number) =>
-        String(v).replace(/"/g, '""').replace(/,/g, " ");
+      /* Improved CSV escaping */
+      const toCsvField = (v: any) => {
+        const str = String(v ?? "");
+        // Escape quotes and wrap in quotes
+        return `"${str.replace(/"/g, '""')}"`;
+      };
 
       append(
         [
           orderId,
-          safe(name),
-          safe(streetAddress),
-          safe(city),
-          safe(state),
-          safe(zipcode),
+          toCsvField(name),
+          toCsvField(streetAddress),
+          toCsvField(city),
+          toCsvField(state),
+          toCsvField(zipcode),
           totalAmount,
           timestamp,
-          `"${safe(JSON.stringify(items))}"`,
+          toCsvField(JSON.stringify(items)),
         ].join(",") + "\n"
       );
 
@@ -107,15 +124,16 @@ export async function POST(req: NextRequest) {
   const response = NextResponse.json(result.response, {
     status: result.statusCode,
   });
-  
+
   // Add rate limit headers
   rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
-  
+
   // Add idempotency headers
   if (idempotencyKey) {
     response.headers.set('Idempotency-Key', idempotencyKey);
     response.headers.set('Idempotency-Replay', result.fromCache ? 'true' : 'false');
   }
-  
+
   return response;
 }
+

@@ -42,16 +42,20 @@ function readAgentVisits(): AgentVisit[] {
 
 // Write agent visits to file
 function writeAgentVisits(visits: AgentVisit[]) {
-  ensureDataDirectory();
-  // Keep only last 10,000 visits to prevent file from growing too large
-  const recentVisits = visits.slice(-10000);
-  fs.writeFileSync(AGENT_VISITS_FILE, JSON.stringify(recentVisits, null, 2));
+  try {
+    ensureDataDirectory();
+    // Keep only last 10,000 visits to prevent file from growing too large
+    const recentVisits = visits.slice(-10000);
+    fs.writeFileSync(AGENT_VISITS_FILE, JSON.stringify(recentVisits, null, 2));
+  } catch (error) {
+    console.warn('Failed to write agent visits file (expected on Vercel):', error);
+  }
 }
 
 export async function POST(request: NextRequest) {
   // Add rate limit headers
   const rateLimitHeaders = getRateLimitHeadersForEndpoint('/api/analytics/agent-visit');
-  
+
   try {
     const body = await request.json();
     const { url, userAgent, referer, ip, country } = body;
@@ -89,10 +93,10 @@ export async function POST(request: NextRequest) {
 
     // Read existing visits
     const visits = readAgentVisits();
-    
+
     // Add new visit
     visits.push(visit);
-    
+
     // Write back to file
     writeAgentVisits(visits);
 
@@ -104,10 +108,10 @@ export async function POST(request: NextRequest) {
         type: agent.type,
       },
     }, { status: 201 });
-    
+
     // Add rate limit headers
     rateLimitHeaders.forEach((value, key) => response.headers.set(key, value));
-    
+
     return response;
 
   } catch (error) {
@@ -124,7 +128,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   // Add rate limit headers
   const rateLimitHeaders = getRateLimitHeadersForEndpoint('/api/analytics/agent-visit');
-  
+
   try {
     const visits = readAgentVisits();
     const searchParams = request.nextUrl.searchParams;
