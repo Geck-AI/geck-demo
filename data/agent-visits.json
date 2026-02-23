@@ -1636,5 +1636,21 @@
     "url": "/api/store/styles",
     "ip": "::1",
     "referer": "http://localhost:3006/"
+  },
+  {
+    "timestamp": "2026-02-18T08:04:14.923Z",
+    "agentName": "GPTBot",
+    "agentType": "ai_bot",
+    "userAgent": "GPTBot",
+    "url": "/",
+    "ip": "::1"
+  },
+  {
+    "timestamp": "2026-02-18T08:04:14.997Z",
+    "agentName": "PerplexityBot",
+    "agentType": "ai_bot",
+    "userAgent": "PerplexityBot",
+    "url": "/",
+    "ip": "::1"
   }
 ]

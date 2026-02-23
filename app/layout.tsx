@@ -160,8 +160,8 @@ export default function RootLayout({
                 window.fetch = function(url, options) {
                   if (typeof url === 'string') {
                     // Redirect tracking API requests to our proxied endpoint
-                    if (url.includes('http://localhost:3005/api/tracking')) {
-                      url = url.replace('http://localhost:3005/api/tracking', '/api/tracking');
+                    if (url.includes('https://api-dev.geck.ai/api/tracking')) {
+                      url = url.replace('https://api-dev.geck.ai/api/tracking', '/api/tracking');
                     }
                     // Redirect rrweb script requests if needed
                     if (url.includes('http://localhost:3001/rrweb-record.min.js')) {
@@ -175,12 +175,25 @@ export default function RootLayout({
                 const originalXHROpen = XMLHttpRequest.prototype.open;
                 XMLHttpRequest.prototype.open = function(method, url, ...rest) {
                   if (typeof url === 'string') {
-                    if (url.includes('http://localhost:3005/api/tracking')) {
-                      url = url.replace('http://localhost:3005/api/tracking', '/api/tracking');
+                    if (url.includes('https://api-dev.geck.ai/api/tracking')) {
+                      url = url.replace('https://api-dev.geck.ai/api/tracking', '/api/tracking');
                     }
                   }
                   return originalXHROpen.apply(this, [method, url, ...rest]);
                 };
+
+                // Patch sendBeacon for session exit tracking
+                if (navigator.sendBeacon) {
+                  const originalSendBeacon = navigator.sendBeacon;
+                  navigator.sendBeacon = function(url, data) {
+                    if (typeof url === 'string') {
+                      if (url.includes('https://api-dev.geck.ai/api/tracking')) {
+                        url = url.replace('https://api-dev.geck.ai/api/tracking', '/api/tracking');
+                      }
+                    }
+                    return originalSendBeacon.apply(this, [url, data]);
+                  };
+                }
               })();
             `,
           }}
@@ -188,7 +201,7 @@ export default function RootLayout({
         {/* AXO Agent Tracker */}
         <Script
           src="/tracker.js"
-          data-site-id="7"
+          data-site-id="173"
           strategy="afterInteractive"
         />
       </head>

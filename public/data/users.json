@@ -44,5 +44,47 @@
       "zipcode": "21324"
     },
     "createdAt": "2026-02-11T09:20:54.897Z"
+  },
+  {
+    "username": "john.doe@example.com",
+    "password": "$2b$12$zEugO1e01Sz7lOgudp5IveTZlXFXhTW5xohTJJnlfHfnRuXu6PUty",
+    "name": "Mukesh VermaJohn Doe",
+    "email": "john.doe@example.com",
+    "phone": "5551234567",
+    "address": {
+      "street": "Rampura",
+      "city": "Bhiwadi",
+      "state": "Rajasthan",
+      "zipcode": "301019"
+    },
+    "createdAt": "2026-02-18T09:55:50.494Z"
+  },
+  {
+    "username": "res@gmail.com",
+    "password": "$2b$12$ZRaYncWUJzOlFbgQO8zECuW4IBqLvuu.Neu.AoeOIVbbPqzNXnwn.",
+    "name": "Res",
+    "email": "res@gmail.com",
+    "phone": "23423423434",
+    "address": {
+      "street": "sd",
+      "city": "sd",
+      "state": "sds",
+      "zipcode": "23423423"
+    },
+    "createdAt": "2026-02-23T02:46:49.929Z"
+  },
+  {
+    "username": "sss@gmail.com",
+    "password": "$2b$12$X1Ln2OzTB76o240kLuAp/.v9ovb.d2I/Fhtqnxe1K8XJqN1LnBEp2",
+    "name": "ss",
+    "email": "sss@gmail.com",
+    "phone": "23423423434",
+    "address": {
+      "street": "dsf",
+      "city": "324",
+      "state": "34",
+      "zipcode": "324324324"
+    },
+    "createdAt": "2026-02-23T03:58:23.289Z"
   }
 ]
