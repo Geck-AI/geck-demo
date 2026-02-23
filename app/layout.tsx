@@ -148,61 +148,12 @@ export default function RootLayout({
             }}
           />
         )}
-        {/* AXO Agent Tracker Configuration */}
-        <Script
-          id="tracker-config"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                // Patch fetch to redirect tracking requests to our proxy
-                const originalFetch = window.fetch;
-                window.fetch = function(url, options) {
-                  if (typeof url === 'string') {
-                    // Redirect tracking API requests to our proxied endpoint
-                    if (url.includes('https://api-dev.geck.ai/api/tracking')) {
-                      url = url.replace('https://api-dev.geck.ai/api/tracking', '/api/tracking');
-                    }
-                    // Redirect rrweb script requests if needed
-                    if (url.includes('http://localhost:3001/rrweb-record.min.js')) {
-                      url = url.replace('http://localhost:3001/rrweb-record.min.js', '/rrweb-record.min.js');
-                    }
-                  }
-                  return originalFetch.apply(this, arguments);
-                };
-                
-                // Patch XMLHttpRequest for compatibility
-                const originalXHROpen = XMLHttpRequest.prototype.open;
-                XMLHttpRequest.prototype.open = function(method, url, ...rest) {
-                  if (typeof url === 'string') {
-                    if (url.includes('https://api-dev.geck.ai/api/tracking')) {
-                      url = url.replace('https://api-dev.geck.ai/api/tracking', '/api/tracking');
-                    }
-                  }
-                  return originalXHROpen.apply(this, [method, url, ...rest]);
-                };
-
-                // Patch sendBeacon for session exit tracking
-                if (navigator.sendBeacon) {
-                  const originalSendBeacon = navigator.sendBeacon;
-                  navigator.sendBeacon = function(url, data) {
-                    if (typeof url === 'string') {
-                      if (url.includes('https://api-dev.geck.ai/api/tracking')) {
-                        url = url.replace('https://api-dev.geck.ai/api/tracking', '/api/tracking');
-                      }
-                    }
-                    return originalSendBeacon.apply(this, [url, data]);
-                  };
-                }
-              })();
-            `,
-          }}
-        />
         {/* AXO Agent Tracker */}
         <Script
-          src="/tracker.js"
+          src="https://api-dev.geck.ai/tracker.js"
           data-site-id="152"
           strategy="afterInteractive"
+          async
         />
       </head>
       <body
