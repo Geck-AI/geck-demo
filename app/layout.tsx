@@ -201,7 +201,7 @@ export default function RootLayout({
         {/* AXO Agent Tracker */}
         <Script
           src="/tracker.js"
-          data-site-id="173"
+          data-site-id="152"
           strategy="afterInteractive"
         />
       </head>
