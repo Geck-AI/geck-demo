@@ -1,15 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const GECK_COLLECT_URL =
+  process.env.GECK_TRACKING_COLLECT_URL ||
+  'https://api-dev.geck.ai/tracking/collect';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
-    // Forward the request to the actual tracking server
-    const response = await fetch('http://localhost:3005/api/tracking/collect', {
+
+    // Forward to Geck backend (use GECK_TRACKING_COLLECT_URL for local dev)
+    const response = await fetch(GECK_COLLECT_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // Forward any relevant headers
         ...Object.fromEntries(
           Array.from(request.headers.entries()).filter(([key]) =>
             ['user-agent', 'referer', 'origin'].includes(key.toLowerCase())
@@ -19,7 +22,10 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(body),
     });
 
-    const data = await response.json();
+    const contentType = response.headers.get('content-type');
+    const data = contentType?.includes('application/json')
+      ? await response.json()
+      : { ok: response.ok };
 
     return NextResponse.json(data, {
       status: response.status,

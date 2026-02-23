@@ -148,12 +148,11 @@ export default function RootLayout({
             }}
           />
         )}
-        {/* AXO Agent Tracker */}
+        {/* AXO Agent Tracker (proxied to avoid CORS/NotSameOrigin blocking) */}
         <Script
-          src="https://api-dev.geck.ai/tracker.js"
+          src="/api/geck-tracker"
           data-site-id="152"
           strategy="afterInteractive"
-          async
         />
       </head>
       <body

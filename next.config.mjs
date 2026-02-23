@@ -58,6 +58,11 @@ const nextConfig = {
         source: '/rrweb-record.min.js',
         destination: 'http://localhost:3001/rrweb-record.min.js',
       },
+      // Tracker expects /tracking/collect; proxy to our API
+      {
+        source: '/tracking/collect',
+        destination: '/api/tracking/collect',
+      },
     ];
   },
 };
