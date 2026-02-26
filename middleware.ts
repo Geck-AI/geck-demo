@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { detectAgent } from '@/lib/agentDetection';
 import { isStaging, getEnvironment } from '@/lib/environment';
 
+/** Base URL for internal API calls (avoids infinite loop when calling /api/bot-log from same origin). */
+function getBaseUrl(request: NextRequest): string {
+  return process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
+}
+
 export const config = {
   matcher: [
     '/api/:path*',
@@ -72,6 +77,28 @@ export async function middleware(request: NextRequest) {
   // Get environment info once at the top
   const environment = getEnvironment();
   const isStagingEnv = isStaging();
+
+  // Bot/crawler/scraper logging: POST to /api/bot-log (skip /api/bot-log to avoid infinite loop)
+  // Logs any detected agent: AI bots, search engines, generic bot/crawler/spider/scraper patterns
+  // In development, ?_log_bot=1 forces a log entry for testing
+  const forceLogBot =
+    process.env.NODE_ENV !== 'production' &&
+    request.nextUrl.searchParams.get('_log_bot') === '1';
+  const shouldLogBot =
+    !pathname.startsWith('/api/bot-log') &&
+    (agent.isAgent || forceLogBot);
+
+  if (shouldLogBot) {
+    const ip = getRateLimitKey(request);
+    const baseUrl = getBaseUrl(request);
+    fetch(`${baseUrl}/api/bot-log`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ip, userAgent, path: pathname, method: request.method }),
+    }).catch(() => {
+      // Fire-and-forget; do not block the request
+    });
+  }
 
   // Rate limiting for API routes only (not read-only pages)
   // Read-only pages (homepage, product pages, FAQ, guides) should never be rate limited

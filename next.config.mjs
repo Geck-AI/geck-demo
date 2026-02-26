@@ -52,7 +52,7 @@ const nextConfig = {
     return [
       {
         source: '/tracker.js',
-        destination: 'http://localhost:3005/tracker.js',
+        destination: '/api/geck-tracker',
       },
       {
         source: '/rrweb-record.min.js',

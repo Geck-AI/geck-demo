@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server';
 
-const TRACKER_URL = 'https://api-dev.geck.ai/tracker.js';
+// Source of the tracker script (defaults to your local Geck backend)
+const TRACKER_URL =
+  process.env.GECK_TRACKER_URL || 'http://localhost:3005/tracker.js';
+
+// Backend URL the tracker should send events to.
+// This will replace whatever backendUrl the bundled script defines
+// (which currently uses http://localhost:3000 for localhost).
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_GECK_BACKEND_URL || 'http://localhost:3005';
 
 export async function GET() {
   try {
@@ -17,11 +25,11 @@ export async function GET() {
 
     let script = await response.text();
 
-    // Rewrite backendUrl: tracker uses CONFIG.backendUrl + '/tracking/collect'
-    // Non-localhost: use '' (same-origin) so it hits our /tracking/collect rewrite -> /api/tracking/collect
+    // Force CONFIG.backendUrl to use BACKEND_URL, overriding the default
+    // "(location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://api-dev.geck.ai')"
     script = script.replace(
-      /:\s*['"]https:\/\/dev\.geck\.ai['"]/,
-      ": ''"
+      /backendUrl:\s*[^,]+,/,
+      `backendUrl: '${BACKEND_URL}',`
     );
 
     return new NextResponse(script, {
